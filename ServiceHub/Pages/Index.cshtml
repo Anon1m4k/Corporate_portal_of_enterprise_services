@@ -1,10 +1,92 @@
 ﻿@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = "ServiceHub - Портал внутренних услуг";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="container mt-5">
+    <!-- Главный заголовок -->
+    <div class="text-center mb-5">
+        <h1 class="display-4 text-primary mb-3">Добро пожаловать в ServiceHub</h1>
+        <h2 class="h4 text-muted">Единый портал для заказа внутренних услуг предприятия</h2>
+    </div>
+    <!-- Сетка карточек сервисов -->
+    <div class="row g-4">
+        <!-- Карточка "Заказ транспорта" -->
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <div class="mb-3" style="font-size: 3rem;">🚗</div>
+                    <h5 class="card-title">Заказ транспорта</h5>
+                    <p class="card-text text-muted">Служебные поездки и трансферы</p>
+                    <a href="/transport" class="btn btn-primary">Перейти</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Карточка "Служба поддержки" -->
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <div class="mb-3" style="font-size: 3rem;">🛠️</div>
+                    <h5 class="card-title">Служба поддержки</h5>
+                    <p class="card-text text-muted">Техническая помощь и IT-вопросы</p>
+                    <a href="/support" class="btn btn-primary">Перейти</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Карточка "Заказ питания" -->
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <div class="mb-3" style="font-size: 3rem;">🍽️</div>
+                    <h5 class="card-title">Заказ питания</h5>
+                    <p class="card-text text-muted">Предзаказ обедов из столовой</p>
+                    <a href="/food" class="btn btn-primary">Перейти</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Карточка "Бронирование помещений" -->
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <div class="mb-3" style="font-size: 3rem;">🏢</div>
+                    <h5 class="card-title">Бронирование помещений</h5>
+                    <p class="card-text text-muted">Переговорные и залы для встреч</p>
+                    <a href="/rooms" class="btn btn-primary">Перейти</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Карточка "Личный кабинет" -->
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <div class="mb-3" style="font-size: 3rem;">👤</div>
+                    <h5 class="card-title">Личный кабинет</h5>
+                    <p class="card-text text-muted">Профиль и история заявок</p>
+                    <a href="/profile" class="btn btn-primary">Перейти</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Дополнительный раздел с контактной информацией -->
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-12">
+            <div class="card bg-light">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Нужна помощь?</h5>
+                    <p class="card-text">                     
+                        <a href="/support" class="btn btn-link"><strong>Служба поддержки</strong></a> |
+                        Телефон: <strong>+7 (XXX) XXX-XX-XX</strong>
+                    </p>                   
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
