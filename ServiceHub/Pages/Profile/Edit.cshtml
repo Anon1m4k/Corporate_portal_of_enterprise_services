@@ -1,0 +1,51 @@
+﻿@page
+@model ServiceHub.Pages.Profile.EditModel
+@{
+    ViewData["Title"] = "Редактирование профиля";
+    Layout = "_ProfileLayout";
+}
+
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Редактирование профиля</h1>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <form method="post">
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="firstName" class="form-label">Имя</label>
+                    <input type="text" class="form-control" id="firstName" asp-for="FirstName" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="lastName" class="form-label">Фамилия</label>
+                    <input type="text" class="form-control" id="lastName" asp-for="LastName" required>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" class="form-control" id="email" asp-for="Email" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="phone" class="form-label">Телефон</label>
+                <input type="tel" class="form-control" id="phone" asp-for="Phone">
+            </div>
+
+            <div class="mb-3">
+                <label for="department" class="form-label">Отдел</label>
+                <select class="form-select" id="department" asp-for="Department">
+                    <option value="">Выберите отдел</option>
+                    <option value="IT">IT отдел</option>
+                    <option value="HR">HR</option>
+                    <option value="Marketing">Маркетинг</option>
+                    <option value="Sales">Продажи</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Сохранить изменения</button>
+            <a href="/Profile/Index" class="btn btn-secondary">Отмена</a>
+        </form>
+    </div>
+</div>
