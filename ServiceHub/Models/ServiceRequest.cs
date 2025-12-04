@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using ServiceHub.Models.Account;
+using System.ComponentModel.DataAnnotations;
 
 namespace ServiceHub.Models
 {

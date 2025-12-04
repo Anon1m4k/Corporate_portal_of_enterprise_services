@@ -1,18 +1,16 @@
-﻿@page
+﻿﻿
+@page
 @model IndexModel
 @{
     ViewData["Title"] = "ServiceHub - Портал внутренних услуг";
 }
 
 <div class="container mt-5">
-    <!-- Главный заголовок -->
     <div class="text-center mb-5">
         <h1 class="display-4 text-primary mb-3">Добро пожаловать в ServiceHub</h1>
         <h2 class="h4 text-muted">Единый портал для заказа внутренних услуг предприятия</h2>
     </div>
-    <!-- Сетка карточек сервисов -->
     <div class="row g-4">
-        <!-- Карточка "Заказ транспорта" -->
         <div class="col-md-4">
             <div class="card h-100 shadow-sm">
                 <div class="card-body text-center">
@@ -24,7 +22,6 @@
             </div>
         </div>
 
-        <!-- Карточка "Служба поддержки" -->
         <div class="col-md-4">
             <div class="card h-100 shadow-sm">
                 <div class="card-body text-center">
@@ -36,7 +33,6 @@
             </div>
         </div>
 
-        <!-- Карточка "Заказ питания" -->
         <div class="col-md-4">
             <div class="card h-100 shadow-sm">
                 <div class="card-body text-center">
@@ -48,7 +44,6 @@
             </div>
         </div>
 
-        <!-- Карточка "Бронирование помещений" -->
         <div class="col-md-4">
             <div class="card h-100 shadow-sm">
                 <div class="card-body text-center">
@@ -60,21 +55,19 @@
             </div>
         </div>
 
-        <!-- Карточка "Личный кабинет" -->
         <div class="col-md-4">
             <div class="card h-100 shadow-sm">
                 <div class="card-body text-center">
                     <div class="mb-3" style="font-size: 3rem;">👤</div>
                     <h5 class="card-title">Личный кабинет</h5>
                     <p class="card-text text-muted">Профиль и история заявок</p>
-                    <a href="/Profile/Index" class="btn btn-primary">Перейти</a>
+                    <a href="/Account/Dashboard" class="btn btn-primary">Перейти</a>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Дополнительный раздел с контактной информацией -->
 <div class="container mt-5">
     <div class="row">
         <div class="col-12">

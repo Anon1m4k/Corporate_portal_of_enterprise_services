@@ -1,12 +1,23 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
+using ServiceHub.Data;
+using ServiceHub.Models;
+using System.Security.Claims;
 
-namespace ServiceHub.Pages.Profile
+namespace ServiceHub.Pages.Account
 {
     [Authorize]
     public class ChangePasswordModel : PageModel
     {
+        private readonly ApplicationDbContext _context;
+
+        public ChangePasswordModel(ApplicationDbContext context)
+        {
+            _context = context;
+        }
+
         [BindProperty]
         public string CurrentPassword { get; set; } = string.Empty;
 
@@ -20,7 +31,7 @@ namespace ServiceHub.Pages.Profile
         {
         }
 
-        public IActionResult OnPost()
+        public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)
             {
@@ -38,6 +49,23 @@ namespace ServiceHub.Pages.Profile
                 ModelState.AddModelError("NewPassword", "Пароль должен содержать не менее 8 символов");
                 return Page();
             }
+
+            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+            var user = await _context.Users.FindAsync(userId);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            if (user.Password != CurrentPassword)
+            {
+                ModelState.AddModelError("CurrentPassword", "Текущий пароль неверен");
+                return Page();
+            }
+
+            user.Password = NewPassword;
+            await _context.SaveChangesAsync();
 
             TempData["SuccessMessage"] = "Пароль успешно изменен";
             return Page();

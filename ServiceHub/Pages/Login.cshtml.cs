@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using ServiceHub.Data;
 using ServiceHub.Models;
+using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 
 namespace ServiceHub.Pages
@@ -18,21 +19,22 @@ namespace ServiceHub.Pages
             _context = context;
         }
 
+        [BindProperty]
+        public Models.Account.LoginModel Input { get; set; } 
+
         public void OnGet()
         {
         }
 
-        public async Task<IActionResult> OnPostAsync(string email, string password)
+        public async Task<IActionResult> OnPostAsync()
         {
-            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
+            if (!ModelState.IsValid)
             {
-                ModelState.AddModelError(string.Empty, "Email и пароль обязательны");
                 return Page();
             }
 
-            // Временная проверка
             var user = await _context.Users
-                .FirstOrDefaultAsync(u => u.Email == email && u.PasswordHash == password && u.IsActive);
+                .FirstOrDefaultAsync(u => u.Email == Input.Email && u.Password == Input.Password && u.IsActive);
 
             if (user != null)
             {
@@ -41,14 +43,14 @@ namespace ServiceHub.Pages
                     new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                     new Claim(ClaimTypes.Name, $"{user.FirstName} {user.LastName}"),
                     new Claim(ClaimTypes.Email, user.Email),
+                    new Claim(ClaimTypes.Role, user.Role),
                     new Claim("Department", user.Department)
                 };
 
-                var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                var claimsIdentity = new ClaimsIdentity(claims, "Cookies");
+                var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
 
-                await HttpContext.SignInAsync(
-                    CookieAuthenticationDefaults.AuthenticationScheme,
-                    new ClaimsPrincipal(claimsIdentity));
+                await HttpContext.SignInAsync("Cookies", claimsPrincipal);
 
                 return RedirectToPage("/Index");
             }

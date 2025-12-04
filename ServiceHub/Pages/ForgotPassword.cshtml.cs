@@ -11,8 +11,9 @@ namespace ServiceHub.Pages
 
         public IActionResult OnPost(string email)
         {
-            // Заглушка
             return RedirectToPage("/Login");
         }
     }
 }
+
+//Пока страница не используется
