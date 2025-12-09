@@ -1,13 +1,11 @@
-﻿@{
-    Layout = "_Layout";
+﻿﻿@{
+Layout = "_Layout";
 }
 
 <div class="container-fluid">
     <div class="row">
-        <!-- Боковое меню -->
         <nav class="col-md-3 col-lg-2 d-md-block bg-light sidebar">
             <div class="position-sticky pt-3">
-                <!-- Шапка с информацией о пользователе -->
                 <div class="text-center mb-4">
                     <h5>Личный кабинет</h5>
                     <small class="text-muted">@User.Identity.Name</small>
@@ -16,25 +14,25 @@
                 <ul class="nav flex-column">
                     <li class="nav-item">
                         <a class="nav-link @(ViewContext.RouteData.Values["Page"]?.ToString() == "/Profile/Index" ? "active" : "")"
-                           asp-page="/Profile/Index">
+                           asp-page="/Account/Dashboard">
                             📊 Главная
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link @(ViewContext.RouteData.Values["Page"]?.ToString() == "/Profile/Edit" ? "active" : "")"
-                           asp-page="/Profile/Edit">
+                           asp-page="/Account/Profile">
                             👤 Профиль
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link @(ViewContext.RouteData.Values["Page"]?.ToString() == "/Profile/History" ? "active" : "")"
-                           asp-page="/Profile/History">
+                           asp-page="/Account/History">
                             📋 История заявок
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link @(ViewContext.RouteData.Values["Page"]?.ToString() == "/Profile/ChangePassword" ? "active" : "")"
-                           asp-page="/Profile/ChangePassword">
+                           asp-page="/Account/ChangePassword">
                             🔒 Смена пароля
                         </a>
                     </li>
@@ -42,7 +40,6 @@
             </div>
         </nav>
 
-        <!-- Основная область контента -->
         <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
             @RenderBody()
         </main>

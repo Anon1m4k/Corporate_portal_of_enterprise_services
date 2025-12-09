@@ -1,0 +1,61 @@
+﻿@page
+@model ProfileModel
+@{
+    ViewData["Title"] = "Профиль";
+    Layout = "_ProfileLayout";
+}
+
+<div class="card border-0 shadow">
+    <div class="card-body p-4">
+        <h5 class="card-title">Добро пожаловать, @Model.CurrentUser.Email!</h5>
+
+        <form method="post" class="mt-3">
+            <input type="hidden" asp-for="CurrentUser.Id" />
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label asp-for="CurrentUser.FirstName" class="form-label">Имя</label>
+                    <input asp-for="CurrentUser.FirstName" class="form-control" />
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label asp-for="CurrentUser.LastName" class="form-label">Фамилия</label>
+                    <input asp-for="CurrentUser.LastName" class="form-control" />
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="CurrentUser.Email" class="form-label">Email</label>
+                <input asp-for="CurrentUser.Email" class="form-control" />
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="CurrentUser.Department" class="form-label">Отдел</label>
+                <input asp-for="CurrentUser.Department" class="form-control" />
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="CurrentUser.Role" class="form-label">Роль</label>
+                @if (Model.IsAdmin)
+                {
+                    <select asp-for="CurrentUser.Role" class="form-select">
+                        <option value="User">Пользователь</option>
+                        <option value="Admin">Администратор</option>
+                    </select>
+                }
+                else
+                {
+                    <input asp-for="CurrentUser.Role" class="form-control" readonly />
+                }
+            </div>
+
+            @if (Model.IsAdmin)
+            {
+                <button type="submit" class="btn btn-primary">Сохранить изменения</button>
+            }
+            else
+            {
+                <button type="submit" class="btn btn-primary">Обновить профиль</button>
+            }
+        </form>
+    </div>
+</div>

@@ -1,0 +1,170 @@
+﻿@page
+@model HistoryModel
+@{
+    ViewData["Title"] = "История заявок";
+    Layout = "_ProfileLayout";
+}
+
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">История заявок</h1>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <div class="row">
+            <div class="col-md-6">
+                <select class="form-select form-select-sm" id="filterType">
+                    <option value="">Все типы заявок</option>
+                    <option value="Транспорт">Транспорт</option>
+                    <option value="Поддержка">Поддержка</option>
+                    <option value="Питание">Питание</option>
+                    <option value="Помещения">Помещения</option>
+                </select>
+            </div>
+            <div class="col-md-6">
+                <select class="form-select form-select-sm" id="filterStatus">
+                    <option value="">Все статусы</option>
+                    <option value="Ожидание">Ожидание</option>
+                    <option value="В работе">В работе</option>
+                    <option value="Завершено">Завершено</option>
+                    <option value="Отменено">Отменено</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Тип</th>
+                        <th>Заголовок</th>
+                        <th>Дата создания</th>
+                        <th>Статус</th>
+                        <th>Действия</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var request in Model.ServiceRequests)
+                    {
+                        <tr>
+                            <td>#@request.Id</td>
+                            <td>
+                                @if (request.ServiceType == "Транспорт")
+                                {
+                                    <span class="badge bg-info">🚗 @request.ServiceType</span>
+                                }
+                                else if (request.ServiceType == "Поддержка")
+                                {
+                                    <span class="badge bg-warning">🛠️ @request.ServiceType</span>
+                                }
+                                else if (request.ServiceType == "Питание")
+                                {
+                                    <span class="badge bg-success">🍽️ @request.ServiceType</span>
+                                }
+                                else if (request.ServiceType == "Помещения")
+                                {
+                                    <span class="badge bg-primary">🏢 @request.ServiceType</span>
+                                }
+                            </td>
+                            <td>@request.Title</td>
+                            <td>@request.CreatedAt.ToString("dd.MM.yyyy HH:mm")</td>
+                            <td>
+                                @if (request.Status == "Ожидание")
+                                {
+                                    <span class="badge bg-secondary">@request.Status</span>
+                                }
+                                else if (request.Status == "В работе")
+                                {
+                                    <span class="badge bg-warning">@request.Status</span>
+                                }
+                                else if (request.Status == "Завершено")
+                                {
+                                    <span class="badge bg-success">@request.Status</span>
+                                }
+                                else if (request.Status == "Отменено")
+                                {
+                                    <span class="badge bg-danger">@request.Status</span>
+                                }
+                            </td>
+                            <td>
+                                <button class="btn btn-sm btn-outline-primary view-details"
+                                        data-id="@request.Id"
+                                        data-title="@request.Title"
+                                        data-type="@request.ServiceType"
+                                        data-status="@request.Status"
+                                        data-date="@request.CreatedAt.ToString("dd.MM.yyyy HH:mm")"
+                                        data-description="@request.Description">
+                                    Подробнее
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Модальное окно для деталей заявки -->
+<div class="modal fade" id="detailsModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Детали заявки</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p><strong>ID:</strong> <span id="modalId"></span></p>
+                <p><strong>Тип:</strong> <span id="modalType"></span></p>
+                <p><strong>Заголовок:</strong> <span id="modalTitle"></span></p>
+                <p><strong>Дата создания:</strong> <span id="modalDate"></span></p>
+                <p><strong>Статус:</strong> <span id="modalStatus"></span></p>
+                <p><strong>Описание:</strong> <span id="modalDescription"></span></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Фильтрация таблицы
+        document.getElementById('filterType').addEventListener('change', filterTable);
+        document.getElementById('filterStatus').addEventListener('change', filterTable);
+
+        function filterTable() {
+            const typeFilter = document.getElementById('filterType').value;
+            const statusFilter = document.getElementById('filterStatus').value;
+            const rows = document.querySelectorAll('tbody tr');
+
+            rows.forEach(row => {
+                const type = row.cells[1].textContent;
+                const status = row.cells[4].textContent;
+
+                const showType = !typeFilter || type.includes(typeFilter);
+                const showStatus = !statusFilter || status.includes(statusFilter);
+
+                row.style.display = (showType && showStatus) ? '' : 'none';
+            });
+        }
+
+        // Модальное окно с деталями
+        document.querySelectorAll('.view-details').forEach(button => {
+            button.addEventListener('click', function() {
+                document.getElementById('modalId').textContent = this.dataset.id;
+                document.getElementById('modalType').textContent = this.dataset.type;
+                document.getElementById('modalTitle').textContent = this.dataset.title;
+                document.getElementById('modalDate').textContent = this.dataset.date;
+                document.getElementById('modalStatus').textContent = this.dataset.status;
+                document.getElementById('modalDescription').textContent = this.dataset.description || 'Нет описания';
+
+                const modal = new bootstrap.Modal(document.getElementById('detailsModal'));
+                modal.show();
+            });
+        });
+    </script>
+}

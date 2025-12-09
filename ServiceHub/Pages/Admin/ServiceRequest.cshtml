@@ -1,0 +1,69 @@
+﻿@page
+@model ServiceHub.Pages.Admin.ServiceRequestModel
+@{
+    ViewData["Title"] = Model.ServiceRequest.Id == 0 ? "Новая заявка" : "Редактирование заявки";
+}
+
+<div class="container mt-4">
+    <div class="card border-0 shadow">
+        <div class="card-body p-4">
+            <h2 class="mb-4">@ViewData["Title"]</h2>
+            <form method="post">
+                <input type="hidden" asp-for="ServiceRequest.Id" />
+                <input type="hidden" asp-for="ServiceRequest.UserId" />
+
+                <div class="form-group mb-3">
+                    <label asp-for="ServiceRequest.ServiceType">Тип услуги</label>
+                    <select asp-for="ServiceRequest.ServiceType" class="form-select">
+                        <option value="">Выберите тип услуги</option>
+                        <option value="Транспорт">Транспорт</option>
+                        <option value="Поддержка">Поддержка</option>
+                        <option value="Питание">Питание</option>
+                        <option value="Помещения">Помещения</option>
+                    </select>
+                    <span asp-validation-for="ServiceRequest.ServiceType" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label asp-for="ServiceRequest.Title">Заголовок</label>
+                    <input asp-for="ServiceRequest.Title" type="text" class="form-control" />
+                    <span asp-validation-for="ServiceRequest.Title" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label asp-for="ServiceRequest.Description">Описание</label>
+                    <textarea asp-for="ServiceRequest.Description" class="form-control" rows="3"></textarea>
+                    <span asp-validation-for="ServiceRequest.Description" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label asp-for="ServiceRequest.Status">Статус</label>
+                    <select asp-for="ServiceRequest.Status" class="form-select">
+                        <option value="Ожидание">Ожидание</option>
+                        <option value="В работе">В работе</option>
+                        <option value="Завершено">Завершено</option>
+                        <option value="Отменено">Отменено</option>
+                    </select>
+                    <span asp-validation-for="ServiceRequest.Status" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label asp-for="ServiceRequest.UserId">Пользователь</label>
+                    <select asp-for="ServiceRequest.UserId" class="form-select">
+                        <option value="">Выберите пользователя</option>
+                        @foreach (var user in Model.Users)
+                        {
+                            <option value="@user.Id">@user.FirstName @user.LastName (@user.Email)</option>
+                        }
+                    </select>
+                    <span asp-validation-for="ServiceRequest.UserId" class="text-danger"></span>
+                </div>
+
+                <button type="submit" class="btn btn-primary mt-3">
+                    <i class="fas fa-save me-2"></i>Сохранить
+                </button>
+                <a href="/Admin/ServiceRequests" class="btn btn-secondary mt-3">Отмена</a>
+            </form>
+        </div>
+    </div>
+</div>
