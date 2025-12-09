@@ -19,7 +19,7 @@ namespace ServiceHub.Pages.Account
         }
 
         [BindProperty]
-        public User CurrentUser { get; set; }
+        public AuthUser CurrentUser { get; set; }
 
         public bool IsAdmin => User.IsInRole("Admin");
 

@@ -2,7 +2,7 @@
 
 namespace ServiceHub.Models.Account
 {
-    public class User
+    public class AuthUser
     {
         public int Id { get; set; }
 

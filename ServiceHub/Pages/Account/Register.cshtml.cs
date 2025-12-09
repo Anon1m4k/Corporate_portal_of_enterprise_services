@@ -5,10 +5,9 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using ServiceHub.Data;
 using ServiceHub.Models;
 using ServiceHub.Models.Account;
-using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 
-namespace ServiceHub.Pages
+namespace ServiceHub.Pages.Account
 {
     public class RegisterModel : PageModel
     {
@@ -20,31 +19,7 @@ namespace ServiceHub.Pages
         }
 
         [BindProperty]
-        public RegisterInputModel Input { get; set; }
-
-        public class RegisterInputModel
-        {
-            [Required(ErrorMessage = "Не указан Email")]
-            [EmailAddress(ErrorMessage = "Некорректный формат Email")]
-            public string Email { get; set; } = string.Empty;
-
-            [Required(ErrorMessage = "Не указан пароль")]
-            [DataType(DataType.Password)]
-            public string Password { get; set; } = string.Empty;
-
-            [DataType(DataType.Password)]
-            [Required(ErrorMessage = "Пожалуйста, подтвердите пароль")]
-            [Compare("Password", ErrorMessage = "Пароли не совпадают")]
-            public string ConfirmPassword { get; set; } = string.Empty;
-
-            [Required(ErrorMessage = "Не указано имя")]
-            public string FirstName { get; set; } = string.Empty;
-
-            [Required(ErrorMessage = "Не указана фамилия")]
-            public string LastName { get; set; } = string.Empty;
-
-            public string Department { get; set; } = string.Empty;
-        }
+        public Models.Account.RegisterModel Input { get; set; }
 
         public void OnGet() { }
 
@@ -63,7 +38,7 @@ namespace ServiceHub.Pages
             bool isFirstUser = !_context.Users.Any();
             var role = isFirstUser ? "Admin" : "User";
 
-            var user = new User
+            var user = new AuthUser
             {
                 Email = Input.Email,
                 Password = Input.Password,

@@ -21,7 +21,7 @@ namespace ServiceHub.Pages.Admin
         [BindProperty]
         public ServiceRequest ServiceRequest { get; set; }
 
-        public List<User> Users { get; set; }
+        public List<AuthUser> Users { get; set; }
 
         public void OnGet(int id)
         {
