@@ -17,7 +17,7 @@ namespace ServiceHub.Pages.Admin
             _context = context;
         }
 
-        public List<User> Users { get; set; } = new();
+        public List<AuthUser> Users { get; set; } = new();
 
         public void OnGet()
         {

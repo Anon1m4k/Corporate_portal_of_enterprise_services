@@ -19,7 +19,7 @@ namespace ServiceHub.Pages.Account
         }
 
         [BindProperty]
-        public User CurrentUser { get; set; }
+        public AuthUser CurrentUser { get; set; }
 
         public bool IsAdmin => User.IsInRole("Admin");
 
@@ -48,7 +48,7 @@ namespace ServiceHub.Pages.Account
 
             if (string.IsNullOrEmpty(userEmail))
             {
-                return RedirectToPage("/Login");
+                return RedirectToPage("/Account/Login");
             }
 
             CurrentUser = _context.Users.FirstOrDefault(u => u.Email == userEmail);

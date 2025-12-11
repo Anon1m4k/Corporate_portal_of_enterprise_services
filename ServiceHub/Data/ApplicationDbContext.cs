@@ -10,7 +10,7 @@ namespace ServiceHub.Data
         {
         }
 
-        public DbSet<User> Users { get; set; }
+        public DbSet<AuthUser> Users { get; set; }
         public DbSet<ServiceRequest> ServiceRequests { get; set; }       
     }
 }

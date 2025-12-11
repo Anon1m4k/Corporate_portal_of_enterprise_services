@@ -35,14 +35,14 @@ namespace ServiceHub.Pages.Account
 
             if (string.IsNullOrEmpty(userEmail))
             {
-                RedirectToPage("/Login");
+                RedirectToPage("/Account/Login");
                 return;
             }
 
             var user = _context.Users.FirstOrDefault(u => u.Email == userEmail);
             if (user == null)
             {
-                RedirectToPage("/Login");
+                RedirectToPage("/Account/Login");
                 return;
             }
 
