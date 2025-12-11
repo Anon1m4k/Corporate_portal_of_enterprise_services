@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace ServiceHub.Pages
+namespace ServiceHub.Pages.Account
 {
     public class LogoutModel : PageModel
     {
