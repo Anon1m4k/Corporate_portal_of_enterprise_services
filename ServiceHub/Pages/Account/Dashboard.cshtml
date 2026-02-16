@@ -79,19 +79,19 @@
                                         <span class="badge bg-primary">🏢</span>
                                     }
                                     <strong>@request.Title</strong> -
-                                    @if (request.Status == "Ожидание")
-                                    {
-                                        <span class="badge bg-secondary">@request.Status</span>
-                                    }
-                                    else if (request.Status == "В работе")
+                                    @if (request.Status == "На согласовании")
                                     {
                                         <span class="badge bg-warning">@request.Status</span>
                                     }
-                                    else if (request.Status == "Завершено")
+                                    else if (request.Status == "Подтверждена")
                                     {
                                         <span class="badge bg-success">@request.Status</span>
                                     }
-                                    else if (request.Status == "Отменено")
+                                    else if (request.Status == "Выполнена")
+                                    {
+                                        <span class="badge bg-info">@request.Status</span>
+                                    }
+                                    else if (request.Status == "Отклонена")
                                     {
                                         <span class="badge bg-danger">@request.Status</span>
                                     }
