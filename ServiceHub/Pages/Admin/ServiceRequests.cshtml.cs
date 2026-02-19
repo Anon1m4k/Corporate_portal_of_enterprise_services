@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authorization;
+п»їusing Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
@@ -18,14 +18,14 @@ namespace ServiceHub.Pages.Admin
             _context = context;
         }
 
-        // Используем тот же тип, что и в представлении — List<ServiceRequest>
+        // РСЃРїРѕР»СЊР·СѓРµРј С‚РѕС‚ Р¶Рµ С‚РёРї, С‡С‚Рѕ Рё РІ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРё вЂ” List<ServiceRequest>
         public List<ServiceRequest> ServiceRequests { get; set; } = new();
         public List<string> AllStatuses { get; } = new()
         {
-            "На согласовании",
-            "Подтверждена",
-            "Выполнена",
-            "Отклонена"
+            "РќР° СЃРѕРіР»Р°СЃРѕРІР°РЅРёРё",
+            "РџРѕРґС‚РІРµСЂР¶РґРµРЅР°",
+            "Р’С‹РїРѕР»РЅРµРЅР°",
+            "РћС‚РєР»РѕРЅРµРЅР°"
         };
         public string? CurrentStatus { get; set; }
         public string? CurrentType { get; set; }
@@ -35,19 +35,19 @@ namespace ServiceHub.Pages.Admin
             CurrentStatus = status;
             CurrentType = type;
 
-            // Загружаем обычные заявки
+            // Р—Р°РіСЂСѓР¶Р°РµРј РѕР±С‹С‡РЅС‹Рµ Р·Р°СЏРІРєРё
             var serviceQuery = _context.ServiceRequests
                 .Include(sr => sr.User)
                 .AsQueryable();
 
             if (!string.IsNullOrEmpty(status) && AllStatuses.Contains(status))
                 serviceQuery = serviceQuery.Where(sr => sr.Status == status);
-            if (!string.IsNullOrEmpty(type) && type != "Транспорт")
+            if (!string.IsNullOrEmpty(type) && type != "РўСЂР°РЅСЃРїРѕСЂС‚")
                 serviceQuery = serviceQuery.Where(sr => sr.ServiceType == type);
 
             var serviceRequests = await serviceQuery.ToListAsync();
 
-            // Загружаем транспортные заявки
+            // Р—Р°РіСЂСѓР¶Р°РµРј С‚СЂР°РЅСЃРїРѕСЂС‚РЅС‹Рµ Р·Р°СЏРІРєРё
             var transportQuery = _context.TransportRequests
                 .Include(tr => tr.User)
                 .Include(tr => tr.Approver)
@@ -55,22 +55,29 @@ namespace ServiceHub.Pages.Admin
 
             if (!string.IsNullOrEmpty(status) && AllStatuses.Contains(status))
                 transportQuery = transportQuery.Where(tr => tr.Status == status);
-            if (!string.IsNullOrEmpty(type) && type == "Транспорт")
+            if (!string.IsNullOrEmpty(type) && type == "РўСЂР°РЅСЃРїРѕСЂС‚")
                 transportQuery = transportQuery.Where(tr => true);
             else if (!string.IsNullOrEmpty(type))
-                transportQuery = transportQuery.Where(tr => false); // если выбран другой тип, транспорт не показываем
+                transportQuery = transportQuery.Where(tr => false); // РµСЃР»Рё РІС‹Р±СЂР°РЅ РґСЂСѓРіРѕР№ С‚РёРї, С‚СЂР°РЅСЃРїРѕСЂС‚ РЅРµ РїРѕРєР°Р·С‹РІР°РµРј
 
             var transportRequests = await transportQuery.ToListAsync();
 
-            // Преобразуем транспортные заявки в объекты ServiceRequest для отображения
+            // РџСЂРµРѕР±СЂР°Р·СѓРµРј С‚СЂР°РЅСЃРїРѕСЂС‚РЅС‹Рµ Р·Р°СЏРІРєРё РІ РѕР±СЉРµРєС‚С‹ ServiceRequest РґР»СЏ РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ
             foreach (var tr in transportRequests)
             {
+                var description = $"{tr.StartPoint} в†’ {tr.EndPoint}, {tr.PassengerCount} С‡РµР»., {tr.VehicleType}";
+                if (!string.IsNullOrEmpty(tr.VehicleModel))
+                {
+                    description += $" ({tr.VehicleModel})";
+                }
+                description += $". Р¦РµР»СЊ: {tr.Purpose}";
+
                 serviceRequests.Add(new ServiceRequest
                 {
-                    Id = tr.Id, // ID из таблицы TransportRequest
-                    ServiceType = "Транспорт",
-                    Title = $"Транспорт: {tr.TripType} {tr.TripDateTime:dd.MM HH:mm}",
-                    Description = $"{tr.StartPoint} ? {tr.EndPoint}, {tr.PassengerCount} чел., {tr.VehicleType}",
+                    Id = tr.Id,
+                    ServiceType = "РўСЂР°РЅСЃРїРѕСЂС‚",
+                    Title = $"{tr.TripType} {tr.TripDateTime:dd.MM HH:mm}",
+                    Description = description,
                     Status = tr.Status,
                     CreatedAt = tr.CreatedAt,
                     User = tr.User,
@@ -78,13 +85,13 @@ namespace ServiceHub.Pages.Admin
                 });
             }
 
-            // Сортируем по дате создания
+            // РЎРѕСЂС‚РёСЂСѓРµРј РїРѕ РґР°С‚Рµ СЃРѕР·РґР°РЅРёСЏ
             ServiceRequests = serviceRequests.OrderByDescending(r => r.CreatedAt).ToList();
         }
 
-        public async Task<IActionResult> OnPostChangeStatusAsync(int id, string type, string newStatus)
+        public async Task<IActionResult> OnPostChangeStatusAsync(int id, string type, string newStatus, string currentStatus, string currentType)
         {
-            if (type == "Транспорт")
+            if (type == "РўСЂР°РЅСЃРїРѕСЂС‚")
             {
                 var request = await _context.TransportRequests.FindAsync(id);
                 if (request == null)
@@ -93,8 +100,7 @@ namespace ServiceHub.Pages.Admin
                 request.Status = newStatus;
                 request.UpdatedAt = DateTime.UtcNow;
 
-                // Если статус "Подтверждена", записываем утвердившего администратора
-                if (newStatus == "Подтверждена" && request.ApproverId == null)
+                if (newStatus == "РџРѕРґС‚РІРµСЂР¶РґРµРЅР°" && request.ApproverId == null)
                 {
                     var adminEmail = User.FindFirst(ClaimTypes.Email)?.Value ?? User.Identity?.Name;
                     var admin = await _context.Users.FirstOrDefaultAsync(u => u.Email == adminEmail);
@@ -116,8 +122,10 @@ namespace ServiceHub.Pages.Admin
             }
 
             await _context.SaveChangesAsync();
-            TempData["SuccessMessage"] = "Статус обновлён.";
-            return RedirectToPage(new { status = CurrentStatus, type = CurrentType });
+            TempData["SuccessMessage"] = "РЎС‚Р°С‚СѓСЃ РѕР±РЅРѕРІР»С‘РЅ.";
+
+            // Р’РѕР·РІСЂР°С‰Р°РµРјСЃСЏ СЃ СЃРѕС…СЂР°РЅРµРЅРёРµРј С„РёР»СЊС‚СЂРѕРІ
+            return RedirectToPage(new { status = currentStatus, type = currentType });
         }
     }
 }

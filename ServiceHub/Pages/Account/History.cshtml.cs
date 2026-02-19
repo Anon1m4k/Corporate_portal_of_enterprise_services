@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authorization;
+п»їusing Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
@@ -46,12 +46,19 @@ namespace ServiceHub.Pages.Account
 
             foreach (var tr in transportRequests)
             {
+                var description = $"{tr.StartPoint} в†’ {tr.EndPoint}, {tr.PassengerCount} С‡РµР»., {tr.VehicleType}";
+                if (!string.IsNullOrEmpty(tr.VehicleModel))
+                {
+                    description += $" ({tr.VehicleModel})";
+                }
+                description += $". Р¦РµР»СЊ: {tr.Purpose}";
+
                 allRequests.Add(new ServiceRequest
                 {
                     Id = tr.Id,
-                    ServiceType = "Транспорт",
-                    Title = $"Транспорт: {tr.TripType} {tr.TripDateTime:dd.MM HH:mm}",
-                    Description = $"{tr.StartPoint} ? {tr.EndPoint}, {tr.PassengerCount} чел., {tr.VehicleType}",
+                    ServiceType = "РўСЂР°РЅСЃРїРѕСЂС‚",
+                    Title = $"{tr.TripType} {tr.TripDateTime:dd.MM HH:mm}",
+                    Description = description,
                     Status = tr.Status,
                     CreatedAt = tr.CreatedAt,
                     User = tr.User,

@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authorization;
+п»їusing Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
@@ -40,39 +40,49 @@ namespace ServiceHub.Pages.Account
                 return;
             }
 
+            var isAdmin = User.IsInRole("Admin");
             var userId = user.Id;
 
-            // Загружаем обычные заявки
-            var serviceRequests = await _context.ServiceRequests
-                .Where(sr => sr.UserId == userId)
-                .ToListAsync();
+            // Р‘Р°Р·РѕРІС‹Рµ Р·Р°РїСЂРѕСЃС‹
+            var serviceQuery = _context.ServiceRequests.AsQueryable();
+            var transportQuery = _context.TransportRequests.AsQueryable();
 
-            // Загружаем транспортные заявки
-            var transportRequests = await _context.TransportRequests
-                .Where(tr => tr.UserId == userId)
-                .ToListAsync();
+            if (!isAdmin)
+            {
+                serviceQuery = serviceQuery.Where(sr => sr.UserId == userId);
+                transportQuery = transportQuery.Where(tr => tr.UserId == userId);
+            }
 
-            // Подсчёт статусов
-            ActiveRequests = serviceRequests.Count(sr => sr.Status == "Подтверждена") +
-                             transportRequests.Count(tr => tr.Status == "Подтверждена");
-            CompletedRequests = serviceRequests.Count(sr => sr.Status == "Выполнена") +
-                                transportRequests.Count(tr => tr.Status == "Выполнена");
-            PendingRequests = serviceRequests.Count(sr => sr.Status == "На согласовании") +
-                              transportRequests.Count(tr => tr.Status == "На согласовании");
+            var serviceRequests = await serviceQuery.ToListAsync();
+            var transportRequests = await transportQuery.ToListAsync();
+
+            // РџРѕРґСЃС‡С‘С‚ СЃС‚Р°С‚СѓСЃРѕРІ
+            ActiveRequests = serviceRequests.Count(sr => sr.Status == "РџРѕРґС‚РІРµСЂР¶РґРµРЅР°") +
+                             transportRequests.Count(tr => tr.Status == "РџРѕРґС‚РІРµСЂР¶РґРµРЅР°");
+            CompletedRequests = serviceRequests.Count(sr => sr.Status == "Р’С‹РїРѕР»РЅРµРЅР°") +
+                                transportRequests.Count(tr => tr.Status == "Р’С‹РїРѕР»РЅРµРЅР°");
+            PendingRequests = serviceRequests.Count(sr => sr.Status == "РќР° СЃРѕРіР»Р°СЃРѕРІР°РЅРёРё") +
+                              transportRequests.Count(tr => tr.Status == "РќР° СЃРѕРіР»Р°СЃРѕРІР°РЅРёРё");
             TotalRequests = serviceRequests.Count + transportRequests.Count;
 
-            // Формирование списка последних заявок
+            // Р¤РѕСЂРјРёСЂРѕРІР°РЅРёРµ СЃРїРёСЃРєР° РїРѕСЃР»РµРґРЅРёС… Р·Р°СЏРІРѕРє (СЃ РёРјРµРЅРµРј РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РґР»СЏ Р°РґРјРёРЅР°)
             var recent = new List<ServiceRequest>();
-            recent.AddRange(serviceRequests);
+            foreach (var sr in serviceRequests)
+            {
+                recent.Add(sr);
+            }
             foreach (var tr in transportRequests)
             {
+                var userName = tr.User != null ? $"{tr.User.FirstName} {tr.User.LastName}" : "";
                 recent.Add(new ServiceRequest
                 {
                     Id = tr.Id,
-                    ServiceType = "Транспорт",
-                    Title = $"Транспорт: {tr.TripType} {tr.TripDateTime:dd.MM HH:mm}",
+                    ServiceType = "РўСЂР°РЅСЃРїРѕСЂС‚",
+                    Title = $"{tr.TripType} {tr.TripDateTime:dd.MM HH:mm}",
+                    Description = $"{tr.StartPoint} в†’ {tr.EndPoint}, {tr.PassengerCount} С‡РµР»., {tr.VehicleType}",
                     Status = tr.Status,
-                    CreatedAt = tr.CreatedAt
+                    CreatedAt = tr.CreatedAt,
+                    User = tr.User
                 });
             }
 

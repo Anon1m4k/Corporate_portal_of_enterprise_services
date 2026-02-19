@@ -28,7 +28,7 @@ namespace ServiceHub.Models
         public string EndPoint { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "Укажите количество пассажиров")]
-        [Range(1, 30, ErrorMessage = "Количество пассажиров должно быть от 1 до 50")]
+        [Range(1, 30, ErrorMessage = "Количество пассажиров должно быть от 1 до 30")]
         [Display(Name = "Количество пассажиров")]
         public int PassengerCount { get; set; }
 

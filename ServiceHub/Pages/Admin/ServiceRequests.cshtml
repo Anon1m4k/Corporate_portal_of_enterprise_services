@@ -101,12 +101,15 @@
                                 </td>
                                 <td>
                                     <div class="d-flex flex-column gap-1">
-
+                                        @if (item.Status != "Выполнена")
+                                        {
 
                                         <!-- Форма изменения статуса -->
                                         <form method="post" asp-page-handler="ChangeStatus" class="d-flex gap-1">
                                             <input type="hidden" name="id" value="@item.Id" />
                                             <input type="hidden" name="type" value="@item.ServiceType" />
+                                            <input type="hidden" name="currentStatus" value="@Model.CurrentStatus" />
+                                            <input type="hidden" name="currentType" value="@Model.CurrentType" />
                                             <select name="newStatus" class="form-select form-select-sm" style="width: 130px;">
                                                 @foreach (var s in Model.AllStatuses)
                                                 {
@@ -115,6 +118,10 @@
                                             </select>
                                             <button type="submit" class="btn btn-sm btn-outline-primary" title="Изменить статус">✓</button>
                                         </form>
+                                        }
+                                        else
+                                        {
+                                        }
                                     </div>
                                 </td>
                             </tr>
