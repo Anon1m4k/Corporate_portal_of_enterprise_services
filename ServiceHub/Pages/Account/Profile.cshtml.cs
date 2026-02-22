@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
 using ServiceHub.Data;
-using ServiceHub.Models;
 using ServiceHub.Models.Account;
 using System.Security.Claims;
 
@@ -19,78 +19,63 @@ namespace ServiceHub.Pages.Account
         }
 
         [BindProperty]
-        public AuthUser CurrentUser { get; set; }
+        public AuthUser CurrentUser { get; set; } = new();
 
         public bool IsAdmin => User.IsInRole("Admin");
 
-        public IActionResult OnGet(int? id = null)
+        public async Task<IActionResult> OnGetAsync(int? id = null)
         {
+            AuthUser? user = null;
+
             if (id.HasValue && id > 0)
             {
-                if (!IsAdmin)
-                {
-                    return Forbid();
-                }
-
-                CurrentUser = _context.Users.FirstOrDefault(u => u.Id == id.Value);
-                if (CurrentUser == null)
-                    return NotFound();
-
-                return Page();
+                // Просмотр чужого профиля разрешён только администратору
+                if (!IsAdmin) return Forbid();
+                user = await _context.Users.FindAsync(id.Value);
+                if (user == null) return NotFound();
             }
-
-            var userEmail = User.FindFirst(ClaimTypes.Email)?.Value;
-
-            if (string.IsNullOrEmpty(userEmail))
+            else
             {
-                userEmail = User.Identity?.Name;
+                // Свой профиль
+                var userEmail = User.FindFirst(ClaimTypes.Email)?.Value ?? User.Identity?.Name;
+                if (string.IsNullOrEmpty(userEmail)) return RedirectToPage("/Account/Login");
+                user = await _context.Users.FirstOrDefaultAsync(u => u.Email == userEmail);
+                if (user == null) return NotFound();
             }
 
-            if (string.IsNullOrEmpty(userEmail))
-            {
-                return RedirectToPage("/Account/Login");
-            }
-
-            CurrentUser = _context.Users.FirstOrDefault(u => u.Email == userEmail);
-
-            if (CurrentUser == null)
-                return NotFound();
-
+            CurrentUser = user;
             return Page();
         }
 
-        public IActionResult OnPost()
+        public async Task<IActionResult> OnPostAsync()
         {
-            if (!ModelState.IsValid)
-                return Page();
+            // Только администратор может изменять профили
+            if (!IsAdmin) return Forbid();
 
-            var user = _context.Users.FirstOrDefault(u => u.Id == CurrentUser.Id);
-            if (user == null)
-                return NotFound();
+            var user = await _context.Users.FindAsync(CurrentUser.Id);
+            if (user == null) return NotFound();
 
-            if (CurrentUser.Email != user.Email)
+            // Проверка уникальности email
+            if (await _context.Users.AnyAsync(u => u.Email == CurrentUser.Email && u.Id != CurrentUser.Id))
             {
-                var existingUser = _context.Users.FirstOrDefault(u => u.Email == CurrentUser.Email && u.Id != CurrentUser.Id);
-                if (existingUser != null)
-                {
-                    ModelState.AddModelError("CurrentUser.Email", "Пользователь с таким email уже существует");
-                    return Page();
-                }
+                ModelState.AddModelError("CurrentUser.Email", "Пользователь с таким email уже существует");
+                return Page();
             }
 
+            // Обновление полей
             user.FirstName = CurrentUser.FirstName;
             user.LastName = CurrentUser.LastName;
-            user.Department = CurrentUser.Department;
             user.Email = CurrentUser.Email;
+            user.Department = CurrentUser.Department;
+            user.Role = CurrentUser.Role; // администратор может менять роль
 
-            if (IsAdmin)
-            {
-                user.Role = CurrentUser.Role;
-            }
+            await _context.SaveChangesAsync();
+            TempData["SuccessMessage"] = "Профиль обновлён";
 
-            _context.SaveChanges();
-
-            TempData["SuccessMessage"] = "Данные профиля обновлены";
+            // Если редактировали чужой профиль, возвращаемся к списку пользователей
+            var currentUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+            if (user.Id != currentUserId)
+                return RedirectToPage("/Admin/Users");
 
             return RedirectToPage();
         }

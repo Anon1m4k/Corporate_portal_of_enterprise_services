@@ -103,21 +103,20 @@
                                     <div class="d-flex flex-column gap-1">
                                         @if (item.Status != "Выполнена")
                                         {
-
-                                        <!-- Форма изменения статуса -->
-                                        <form method="post" asp-page-handler="ChangeStatus" class="d-flex gap-1">
-                                            <input type="hidden" name="id" value="@item.Id" />
-                                            <input type="hidden" name="type" value="@item.ServiceType" />
-                                            <input type="hidden" name="currentStatus" value="@Model.CurrentStatus" />
-                                            <input type="hidden" name="currentType" value="@Model.CurrentType" />
-                                            <select name="newStatus" class="form-select form-select-sm" style="width: 130px;">
-                                                @foreach (var s in Model.AllStatuses)
-                                                {
-                                                    <option value="@s" selected="@(s == item.Status)">@s</option>
-                                                }
-                                            </select>
-                                            <button type="submit" class="btn btn-sm btn-outline-primary" title="Изменить статус">✓</button>
-                                        </form>
+                                            <!-- Форма изменения статуса -->
+                                            <form method="post" asp-page-handler="ChangeStatus" class="d-flex gap-1">
+                                                <input type="hidden" name="id" value="@item.Id" />
+                                                <input type="hidden" name="type" value="@item.ServiceType" />
+                                                <input type="hidden" name="currentStatus" value="@Model.CurrentStatus" />
+                                                <input type="hidden" name="currentType" value="@Model.CurrentType" />
+                                                <select name="newStatus" class="form-select form-select-sm" style="width: 130px;">
+                                                    @foreach (var s in Model.AllStatuses)
+                                                    {
+                                                        <option value="@s" selected="@(s == item.Status)">@s</option>
+                                                    }
+                                                </select>
+                                                <button type="submit" class="btn btn-sm btn-outline-primary" title="Изменить статус">✓</button>
+                                            </form>
                                         }
                                         else
                                         {
@@ -136,3 +135,27 @@
         }
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        function filterChanged() {
+            const type = document.getElementById('typeFilter').value;
+            const status = document.getElementById('statusFilter').value;
+            const url = new URL(window.location.href);
+
+            if (type) {
+                url.searchParams.set('type', type);
+            } else {
+                url.searchParams.delete('type');
+            }
+
+            if (status) {
+                url.searchParams.set('status', status);
+            } else {
+                url.searchParams.delete('status');
+            }
+
+            window.location.href = url.toString();
+        }
+    </script>
+}

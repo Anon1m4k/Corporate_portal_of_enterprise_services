@@ -36,12 +36,12 @@ namespace ServiceHub.Pages.Transport
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == userEmail);
             if (user == null)
             {
-                // Перенаправим на страницу входа, если пользователь не найден
                 RedirectToPage("/Account/Login");
                 return;
             }
 
             var query = _context.TransportRequests
+                .Include(r => r.Car)
                 .Where(r => r.UserId == user.Id)
                 .AsQueryable();
 
@@ -55,7 +55,7 @@ namespace ServiceHub.Pages.Transport
                 .ToListAsync();
         }
 
-        public async Task<IActionResult> OnPostCancelAsync(int id)
+        public async Task<IActionResult> OnPostDeleteAsync(int id)
         {
             var userEmail = User.FindFirst(ClaimTypes.Email)?.Value ?? User.Identity?.Name;
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == userEmail);
@@ -66,17 +66,15 @@ namespace ServiceHub.Pages.Transport
 
             if (request == null) return NotFound();
 
-            // Можно отменить только если статус "На согласовании"
             if (request.Status == "На согласовании")
             {
-                request.Status = "Отклонена"; // Пользователь отменяет сам
-                request.UpdatedAt = DateTime.UtcNow;
+                _context.TransportRequests.Remove(request);
                 await _context.SaveChangesAsync();
-                TempData["SuccessMessage"] = "Заявка отменена.";
+                TempData["SuccessMessage"] = "Заявка удалена.";
             }
             else
             {
-                TempData["ErrorMessage"] = "Нельзя отменить заявку в текущем статусе.";
+                TempData["ErrorMessage"] = "Нельзя удалить заявку в текущем статусе.";
             }
 
             return RedirectToPage();

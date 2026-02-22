@@ -37,6 +37,7 @@ namespace ServiceHub.Pages.Account
                 .ToList();
 
             var transportRequests = _context.TransportRequests
+                .Include(tr => tr.Car)           // <-- добавляем
                 .Where(tr => tr.UserId == userId)
                 .OrderByDescending(tr => tr.CreatedAt)
                 .ToList();
@@ -46,12 +47,8 @@ namespace ServiceHub.Pages.Account
 
             foreach (var tr in transportRequests)
             {
-                var description = $"{tr.StartPoint} → {tr.EndPoint}, {tr.PassengerCount} чел., {tr.VehicleType}";
-                if (!string.IsNullOrEmpty(tr.VehicleModel))
-                {
-                    description += $" ({tr.VehicleModel})";
-                }
-                description += $". Цель: {tr.Purpose}";
+                var carInfo = tr.Car != null ? $"{tr.Car.Brand} {tr.Car.Model}" : "не указан";
+                var description = $"{tr.StartPoint} → {tr.EndPoint}, {tr.PassengerCount} чел., авто: {carInfo}. Цель: {tr.Purpose}";
 
                 allRequests.Add(new ServiceRequest
                 {

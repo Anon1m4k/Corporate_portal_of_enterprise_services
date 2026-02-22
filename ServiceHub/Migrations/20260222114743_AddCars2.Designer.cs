@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ServiceHub.Data;
 
@@ -11,9 +12,11 @@ using ServiceHub.Data;
 namespace ServiceHub.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260222114743_AddCars2")]
+    partial class AddCars2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -81,7 +84,6 @@ namespace ServiceHub.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("LicensePlate")
-                        .IsRequired()
                         .HasMaxLength(9)
                         .HasColumnType("nvarchar(9)");
 
@@ -89,7 +91,7 @@ namespace ServiceHub.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("PassengerCapacity")
+                    b.Property<int?>("PassengerCapacity")
                         .HasColumnType("int");
 
                     b.Property<string>("VehicleType")
@@ -144,7 +146,7 @@ namespace ServiceHub.Migrations
                     b.ToTable("ServiceRequests");
                 });
 
-            modelBuilder.Entity("TransportRequest", b =>
+            modelBuilder.Entity("ServiceHub.Models.TransportRequest", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -196,6 +198,13 @@ namespace ServiceHub.Migrations
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
+                    b.Property<string>("VehicleModel")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("VehicleType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ApproverId");
@@ -218,7 +227,7 @@ namespace ServiceHub.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("TransportRequest", b =>
+            modelBuilder.Entity("ServiceHub.Models.TransportRequest", b =>
                 {
                     b.HasOne("ServiceHub.Models.Account.AuthUser", "Approver")
                         .WithMany()

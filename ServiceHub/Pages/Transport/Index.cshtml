@@ -51,7 +51,16 @@
                                 <td>@req.TripType</td>
                                 <td>@req.StartPoint → @req.EndPoint</td>
                                 <td>@req.PassengerCount</td>
-                                <td>@req.VehicleType</td>
+                                <td>
+                                    @if (req.Car != null)
+                                    {
+                                        @($"{req.Car.Brand} {req.Car.Model} ({req.Car.LicensePlate})")
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">—</span>
+                                    }
+                                </td>
                                 <td>
                                     @switch (req.Status)
                                     {
@@ -75,9 +84,9 @@
                                 <td>
                                     @if (req.Status == "На согласовании")
                                     {
-                                        <form method="post" asp-page-handler="Cancel" asp-route-id="@req.Id" class="d-inline">
-                                            <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Отменить заявку?')">
-                                                Отменить
+                                        <form method="post" asp-page-handler="Delete" asp-route-id="@req.Id" class="d-inline">
+                                            <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Удалить заявку?')">
+                                                Удалить
                                             </button>
                                         </form>
                                     }

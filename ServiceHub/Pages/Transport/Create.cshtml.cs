@@ -2,9 +2,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using ServiceHub.Data;
 using ServiceHub.Models;
-using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 
 namespace ServiceHub.Pages.Transport
@@ -20,7 +20,7 @@ namespace ServiceHub.Pages.Transport
         }
 
         [BindProperty]
-        public TransportRequest Input { get; set; } = new();
+        public TransportRequest TransportRequest { get; set; } = new();
 
         public List<SelectListItem> TripTypeOptions { get; } = new()
         {
@@ -28,50 +28,70 @@ namespace ServiceHub.Pages.Transport
             new SelectListItem("Служебная поездка", "Служебная поездка")
         };
 
-        public List<SelectListItem> VehicleTypeOptions { get; } = new()
-        {
-            new SelectListItem("Легковой", "Легковой"),
-            new SelectListItem("Минивэн", "Минивэн"),
-            new SelectListItem("Автобус", "Автобус"),
-            new SelectListItem("Грузовой", "Грузовой")
-        };      
+        public List<SelectListItem> CarOptions { get; set; } = new();
 
-        public void OnGet()
+        public async Task OnGetAsync()
         {
-            // Устанавливаем значение по умолчанию для даты (следующий час)
-            if (Input.TripDateTime == default)
+            // Загружаем доступные автомобили
+            CarOptions = await _context.Cars
+                .Where(c => c.IsAvailable)
+                .Select(c => new SelectListItem
+                {
+                    Value = c.Id.ToString(),
+                    Text = $"{c.Brand} {c.Model} ({c.VehicleType}) - {c.PassengerCapacity} мест"
+                })
+                .ToListAsync();
+
+            CarOptions.Insert(0, new SelectListItem("-- Выберите автомобиль --", ""));
+
+            // Значение по умолчанию для даты
+            if (TransportRequest.TripDateTime == default)
             {
-                Input.TripDateTime = DateTime.Now.AddHours(1);
+                TransportRequest.TripDateTime = DateTime.Now.AddHours(1);
             }
         }
 
         public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)
+            {
+                await OnGetAsync();
                 return Page();
+            }
 
-            // Получаем текущего пользователя
+            var car = await _context.Cars.FindAsync(TransportRequest.CarId);
+            if (car == null)
+            {
+                ModelState.AddModelError("TransportRequest.CarId", "Выбранный автомобиль не существует");
+                await OnGetAsync();
+                return Page();
+            }
+
+            if (!car.PassengerCapacity.HasValue)
+            {
+                ModelState.AddModelError("TransportRequest.CarId", "У выбранного автомобиля не указана вместимость");
+                await OnGetAsync();
+                return Page();
+            }
+            if (TransportRequest.PassengerCount > car.PassengerCapacity.Value)
+            {
+                ModelState.AddModelError("TransportRequest.PassengerCount",
+                    $"Выбранный автомобиль вмещает не более {car.PassengerCapacity.Value} пассажиров");
+                await OnGetAsync();
+                return Page();
+            }
+
             var userEmail = User.FindFirst(ClaimTypes.Email)?.Value ?? User.Identity?.Name;
-            var user = _context.Users.FirstOrDefault(u => u.Email == userEmail);
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == userEmail);
             if (user == null)
                 return NotFound("Пользователь не найден.");
 
-            var request = new TransportRequest
-            {
-                UserId = user.Id,
-                TripType = Input.TripType,
-                TripDateTime = Input.TripDateTime,
-                StartPoint = Input.StartPoint,
-                EndPoint = Input.EndPoint,
-                PassengerCount = Input.PassengerCount,
-                Purpose = Input.Purpose,
-                VehicleType = Input.VehicleType,
-                VehicleModel = Input.VehicleModel,
-                Status = "На согласовании",  // Сразу отправляем на согласование
-                CreatedAt = DateTime.UtcNow
-            };
+            TransportRequest.UserId = user.Id;
+            TransportRequest.Status = "На согласовании";
+            TransportRequest.CreatedAt = DateTime.UtcNow;
+            // Удалены строки с присвоением VehicleType и VehicleModel
 
-            _context.TransportRequests.Add(request);
+            _context.TransportRequests.Add(TransportRequest);
             await _context.SaveChangesAsync();
 
             TempData["SuccessMessage"] = "Заявка успешно создана и отправлена на согласование.";

@@ -1,0 +1,69 @@
+﻿@page
+@model ServiceHub.Pages.Admin.Cars.CreateModel
+@{
+    ViewData["Title"] = "Добавление автомобиля";
+}
+
+<div class="container mt-4">
+    <div class="card border-0 shadow">
+        <div class="card-body p-4">
+            <h2 class="mb-4">Добавление автомобиля</h2>
+            <form method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Car.Brand" class="form-label"></label>
+                        <input asp-for="Car.Brand" class="form-control" />
+                        <span asp-validation-for="Car.Brand" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Car.Model" class="form-label"></label>
+                        <input asp-for="Car.Model" class="form-control" />
+                        <span asp-validation-for="Car.Model" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Car.LicensePlate" class="form-label"></label>
+                        <input asp-for="Car.LicensePlate" class="form-control" />
+                        <span asp-validation-for="Car.LicensePlate" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Car.VehicleType" class="form-label"></label>
+                        <select asp-for="Car.VehicleType" class="form-select">
+                            <option value="">-- Выберите тип --</option>
+                            <option value="Легковой">Легковой</option>
+                            <option value="Минивэн">Минивэн</option>
+                            <option value="Автобус">Автобус</option>
+                            <option value="Грузовой">Грузовой</option>
+                        </select>
+                        <span asp-validation-for="Car.VehicleType" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Car.PassengerCapacity" class="form-label"></label>
+                        <input asp-for="Car.PassengerCapacity" class="form-control" type="number" />
+                        <span asp-validation-for="Car.PassengerCapacity" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="form-check mt-4">
+                            <input asp-for="Car.IsAvailable" class="form-check-input" />
+                            <label asp-for="Car.IsAvailable" class="form-check-label"></label>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Сохранить</button>
+                <a asp-page="Index" class="btn btn-secondary">Отмена</a>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
