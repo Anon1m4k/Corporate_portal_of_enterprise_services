@@ -11,6 +11,7 @@ namespace ServiceHub.Data
         }
 
         public DbSet<AuthUser> Users { get; set; }
-        public DbSet<ServiceRequest> ServiceRequests { get; set; }       
+        public DbSet<ServiceRequest> ServiceRequests { get; set; }
+        public DbSet<TransportRequest> TransportRequests { get; set; }
     }
 }

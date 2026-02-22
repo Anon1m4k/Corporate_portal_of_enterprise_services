@@ -24,10 +24,10 @@
             <div class="col-md-6">
                 <select class="form-select form-select-sm" id="filterStatus">
                     <option value="">Все статусы</option>
-                    <option value="Ожидание">Ожидание</option>
-                    <option value="В работе">В работе</option>
-                    <option value="Завершено">Завершено</option>
-                    <option value="Отменено">Отменено</option>
+                    <option value="На согласовании">На согласовании</option>
+                    <option value="Подтверждена">Подтверждена</option>
+                    <option value="Выполнена">Выполнена</option>
+                    <option value="Отклонена">Отклонена</option>
                 </select>
             </div>
         </div>
@@ -71,19 +71,19 @@
                             <td>@request.Title</td>
                             <td>@request.CreatedAt.ToString("dd.MM.yyyy HH:mm")</td>
                             <td>
-                                @if (request.Status == "Ожидание")
-                                {
-                                    <span class="badge bg-secondary">@request.Status</span>
-                                }
-                                else if (request.Status == "В работе")
+                                @if (request.Status == "На согласовании")
                                 {
                                     <span class="badge bg-warning">@request.Status</span>
                                 }
-                                else if (request.Status == "Завершено")
+                                else if (request.Status == "Подтверждена")
                                 {
                                     <span class="badge bg-success">@request.Status</span>
                                 }
-                                else if (request.Status == "Отменено")
+                                else if (request.Status == "Выполнена")
+                                {
+                                    <span class="badge bg-info">@request.Status</span>
+                                }
+                                else if (request.Status == "Отклонена")
                                 {
                                     <span class="badge bg-danger">@request.Status</span>
                                 }
