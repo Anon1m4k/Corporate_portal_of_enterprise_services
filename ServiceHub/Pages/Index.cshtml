@@ -1,5 +1,4 @@
-﻿﻿
-@page
+﻿@page
 @model IndexModel
 @{
     ViewData["Title"] = "ServiceHub - Портал внутренних услуг";
@@ -11,57 +10,62 @@
         <h2 class="h4 text-muted">Единый портал для заказа внутренних услуг предприятия</h2>
     </div>
     <div class="row g-4">
+        <!-- Рабочий модуль: Транспорт -->
         <div class="col-md-4">
             <div class="card h-100 shadow-sm">
                 <div class="card-body text-center">
                     <div class="mb-3" style="font-size: 3rem;">🚗</div>
                     <h5 class="card-title">Заказ транспорта</h5>
                     <p class="card-text text-muted">Служебные поездки и трансферы</p>
-                    <a href="/transport" class="btn btn-primary">Перейти</a>
+                    <a asp-page="/Transport/Index" class="btn btn-primary">Перейти</a>
                 </div>
             </div>
         </div>
 
-        <div class="col-md-4">
-            <div class="card h-100 shadow-sm">
-                <div class="card-body text-center">
-                    <div class="mb-3" style="font-size: 3rem;">🛠️</div>
-                    <h5 class="card-title">Служба поддержки</h5>
-                    <p class="card-text text-muted">Техническая помощь и IT-вопросы</p>
-                    <a href="/support" class="btn btn-primary">Перейти</a>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-4">
-            <div class="card h-100 shadow-sm">
-                <div class="card-body text-center">
-                    <div class="mb-3" style="font-size: 3rem;">🍽️</div>
-                    <h5 class="card-title">Заказ питания</h5>
-                    <p class="card-text text-muted">Предзаказ обедов из столовой</p>
-                    <a href="/food" class="btn btn-primary">Перейти</a>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-4">
-            <div class="card h-100 shadow-sm">
-                <div class="card-body text-center">
-                    <div class="mb-3" style="font-size: 3rem;">🏢</div>
-                    <h5 class="card-title">Бронирование помещений</h5>
-                    <p class="card-text text-muted">Переговорные и залы для встреч</p>
-                    <a href="/rooms" class="btn btn-primary">Перейти</a>
-                </div>
-            </div>
-        </div>
-
+        <!-- Рабочий модуль: Личный кабинет -->
         <div class="col-md-4">
             <div class="card h-100 shadow-sm">
                 <div class="card-body text-center">
                     <div class="mb-3" style="font-size: 3rem;">👤</div>
                     <h5 class="card-title">Личный кабинет</h5>
                     <p class="card-text text-muted">Профиль и история заявок</p>
-                    <a href="/Account/Dashboard" class="btn btn-primary">Перейти</a>
+                    <a asp-page="/Account/Dashboard" class="btn btn-primary">Перейти</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- В разработке: Поддержка -->
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <div class="mb-3" style="font-size: 3rem;">🛠️</div>
+                    <h5 class="card-title">Служба поддержки</h5>
+                    <p class="card-text text-muted">Техническая помощь и IT-вопросы</p>
+                    <a asp-page="/UnderConstruction" class="btn btn-secondary">В разработке</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- В разработке: Питание -->
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <div class="mb-3" style="font-size: 3rem;">🍽️</div>
+                    <h5 class="card-title">Заказ питания</h5>
+                    <p class="card-text text-muted">Предзаказ обедов из столовой</p>
+                    <a asp-page="/UnderConstruction" class="btn btn-secondary">В разработке</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- В разработке: Помещения -->
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <div class="mb-3" style="font-size: 3rem;">🏢</div>
+                    <h5 class="card-title">Бронирование помещений</h5>
+                    <p class="card-text text-muted">Переговорные и залы для встреч</p>
+                    <a asp-page="/UnderConstruction" class="btn btn-secondary">В разработке</a>
                 </div>
             </div>
         </div>
@@ -74,10 +78,10 @@
             <div class="card bg-light">
                 <div class="card-body text-center">
                     <h5 class="card-title">Нужна помощь?</h5>
-                    <p class="card-text">                     
-                        <a href="/support" class="btn btn-link"><strong>Служба поддержки</strong></a> |
+                    <p class="card-text">
+                        <a asp-page="/UnderConstruction" class="btn btn-link"><strong>Служба поддержки</strong></a> |
                         Телефон: <strong>+7 (XXX) XXX-XX-XX</strong>
-                    </p>                   
+                    </p>
                 </div>
             </div>
         </div>

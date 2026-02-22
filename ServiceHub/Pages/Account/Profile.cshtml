@@ -5,6 +5,13 @@
     Layout = "_ProfileLayout";
 }
 
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["SuccessMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
 <div class="card border-0 shadow">
     <div class="card-body p-4">
         <h5 class="card-title">Профиль пользователя @Model.CurrentUser.Email</h5>
@@ -49,8 +56,7 @@
                     <span asp-validation-for="CurrentUser.Role" class="text-danger"></span>
                 </div>
 
-                <button type="submit" class="btn btn-primary">Сохранить изменения</button>
-                <a asp-page="/Admin/Users" class="btn btn-secondary">Вернуться к списку</a>
+                <button type="submit" class="btn btn-primary">Сохранить изменения</button>               
             </form>
         }
         else

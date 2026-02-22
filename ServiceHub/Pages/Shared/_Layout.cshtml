@@ -35,16 +35,7 @@
                         {
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-page="/Transport/Index">Транспорт</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-page="/Support">Поддержка</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-page="/Food">Питание</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-page="/Rooms">Помещения</a>
-                            </li>
+                            </li>                   
                             @if (isAdmin)
                             {
                                 <li class="nav-item">
@@ -56,10 +47,7 @@
                                 <li class="nav-item">
                                     <a class="nav-link text-dark" asp-area="" asp-page="/Admin/Users">Пользователи</a>
                                 </li>
-                            }
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-page="/Account/Dashboard">Личный кабинет</a>
-                            </li>
+                            }                  
                         }
                     </ul>
                     <ul class="navbar-nav">
@@ -75,7 +63,7 @@
                         else
                         {
                             <li class="nav-item">
-                                <span class="nav-link text-dark">@userName</span>
+                                <a class="nav-link text-dark" asp-area="" asp-page="/Account/Dashboard">@userName</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-page="/Account/Logout">Выйти</a>
@@ -94,7 +82,7 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            <small class="text-muted">© 2025 ServiceHub. Все права защищены.</small>
+            <small class="text-muted">© 2026 ServiceHub. Все права защищены.</small>
         </div>
     </footer>
 

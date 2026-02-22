@@ -53,6 +53,8 @@ namespace ServiceHub.Pages.Transport
 
         public async Task<IActionResult> OnPostAsync()
         {
+            TransportRequest.TripType = "Служебная поездка";
+
             if (!ModelState.IsValid)
             {
                 await OnGetAsync();
@@ -94,7 +96,7 @@ namespace ServiceHub.Pages.Transport
             _context.TransportRequests.Add(TransportRequest);
             await _context.SaveChangesAsync();
 
-            TempData["SuccessMessage"] = "Заявка успешно создана и отправлена на согласование.";
+            TempData["TransportSuccess"] = "Заявка успешно создана и отправлена на согласование.";
             return RedirectToPage("/Transport/Index");
         }
     }

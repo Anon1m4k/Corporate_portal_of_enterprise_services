@@ -6,11 +6,23 @@
 
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h2>Мои заявки на транспорт</h2>
-    <a asp-page="/Transport/Create" class="btn btn-primary">
-        <i class="fas fa-plus"></i> Новая заявка
-    </a>
-</div>
 
+    <div>
+        <a asp-page="/Transport/Schedule" class="btn btn-info me-2">
+            <i class="fas fa-calendar-alt"></i> Расписание трансфера
+        </a>
+        <a asp-page="/Transport/Create" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Новая заявка
+        </a>
+    </div>
+</div>
+@if (TempData["TransportSuccess"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["TransportSuccess"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
 <div class="card shadow">
     <div class="card-header">
         <div class="row">
@@ -34,7 +46,6 @@
                         <tr>
                             <th>ID</th>
                             <th>Дата и время</th>
-                            <th>Тип</th>
                             <th>Маршрут</th>
                             <th>Пассажиров</th>
                             <th>Авто</th>
@@ -48,7 +59,6 @@
                             <tr>
                                 <td>#@req.Id</td>
                                 <td>@req.TripDateTime.ToString("dd.MM.yyyy HH:mm")</td>
-                                <td>@req.TripType</td>
                                 <td>@req.StartPoint → @req.EndPoint</td>
                                 <td>@req.PassengerCount</td>
                                 <td>

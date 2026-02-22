@@ -7,17 +7,11 @@
 <div class="container mt-4">
     <div class="card border-0 shadow">
         <div class="card-body p-4">
-            <h2 class="mb-4">Заказ транспорта</h2>
+            <h2 class="mb-4">Служебная поездка</h2>
             <form method="post">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label asp-for="TransportRequest.TripType" class="form-label"></label>
-                        <select asp-for="TransportRequest.TripType" class="form-select" asp-items="Model.TripTypeOptions"></select>
-                        <span asp-validation-for="TransportRequest.TripType" class="text-danger"></span>
-                    </div>
-                </div>
+                <input type="hidden" asp-for="TransportRequest.TripType" value="Служебная поездка" />
 
                 <div class="row">
                     <div class="col-md-6 mb-3">

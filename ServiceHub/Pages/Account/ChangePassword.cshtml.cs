@@ -71,8 +71,8 @@ namespace ServiceHub.Pages.Account
             user.Password = NewPassword;
             await _context.SaveChangesAsync();
 
-            TempData["SuccessMessage"] = "Пароль успешно изменён";
-            return RedirectToPage(); // остаёмся на этой же странице
+            TempData["PasswordChangeSuccess"] = "Пароль успешно изменён";
+            return RedirectToPage();
         }
     }
 }

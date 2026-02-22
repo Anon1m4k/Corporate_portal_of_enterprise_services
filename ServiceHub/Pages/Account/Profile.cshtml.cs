@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using ServiceHub.Data;
 using ServiceHub.Models.Account;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication;
 
 namespace ServiceHub.Pages.Account
 {
@@ -29,14 +30,12 @@ namespace ServiceHub.Pages.Account
 
             if (id.HasValue && id > 0)
             {
-                // Просмотр чужого профиля разрешён только администратору
                 if (!IsAdmin) return Forbid();
                 user = await _context.Users.FindAsync(id.Value);
                 if (user == null) return NotFound();
             }
             else
             {
-                // Свой профиль
                 var userEmail = User.FindFirst(ClaimTypes.Email)?.Value ?? User.Identity?.Name;
                 if (string.IsNullOrEmpty(userEmail)) return RedirectToPage("/Account/Login");
                 user = await _context.Users.FirstOrDefaultAsync(u => u.Email == userEmail);
@@ -70,14 +69,36 @@ namespace ServiceHub.Pages.Account
             user.Role = CurrentUser.Role; // администратор может менять роль
 
             await _context.SaveChangesAsync();
-            TempData["SuccessMessage"] = "Профиль обновлён";
 
-            // Если редактировали чужой профиль, возвращаемся к списку пользователей
-            var currentUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+            // Если редактировали свой профиль – обновляем клэймы
+            var currentUserId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            if (user.Id == currentUserId)
+            {
+                await RefreshUserClaims(user);
+            }
+
+            TempData["SuccessMessage"] = "Профиль обновлён";
             if (user.Id != currentUserId)
                 return RedirectToPage("/Admin/Users");
 
             return RedirectToPage();
+        }
+
+        private async Task RefreshUserClaims(AuthUser user)
+        {
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(ClaimTypes.Name, $"{user.FirstName} {user.LastName}"),
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(ClaimTypes.Role, user.Role),
+                new Claim("Department", user.Department)
+            };
+
+            var claimsIdentity = new ClaimsIdentity(claims, "Cookies");
+            var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
+
+            await HttpContext.SignInAsync("Cookies", claimsPrincipal);
         }
     }
 }
