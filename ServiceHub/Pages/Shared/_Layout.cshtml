@@ -5,9 +5,9 @@
     var isAuthenticated = user?.Identity?.IsAuthenticated ?? false;
     var userName = user?.Identity?.Name ?? "";
     var isAdmin = user?.IsInRole("Admin") ?? false;
-}﻿
+}
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ru" class="h-100">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -17,56 +17,94 @@
     <link rel="stylesheet" href="~/ServiceHub.styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
-<body>
+<body class="d-flex flex-column h-100">
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container">
-                <a class="navbar-brand" asp-area="" asp-page="/Index">ServiceHub</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
+                <a class="navbar-brand" asp-area="" asp-page="/Index">
+                    <i class="fas fa-cubes me-2"></i>ServiceHub
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Index">Главная</a>
+                            <a class="nav-link @((ViewContext.RouteData.Values["page"]?.ToString() == "/Index") ? "active" : "")" asp-area="" asp-page="/Index">
+                                <i class="fas fa-home me-1"></i>Главная
+                            </a>
                         </li>
                         @if (isAuthenticated)
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-page="/Transport/Index">Транспорт</a>
-                            </li>                   
+                                <a class="nav-link @((ViewContext.RouteData.Values["page"]?.ToString()?.StartsWith("/Transport") ?? false) ? "active" : "")" asp-area="" asp-page="/Transport/Index">
+                                    <i class="fas fa-car me-1"></i>Транспорт
+                                </a>
+                            </li>
                             @if (isAdmin)
                             {
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-page="/Admin/Cars/Index">Автомобили</a>
+                                    <a class="nav-link @((ViewContext.RouteData.Values["page"]?.ToString()?.StartsWith("/Admin/Cars") ?? false) ? "active" : "")" asp-area="" asp-page="/Admin/Cars/Index">
+                                        <i class="fas fa-truck me-1"></i>Автомобили
+                                    </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-page="/Admin/ServiceRequests">Управление заявками</a>
+                                    <a class="nav-link @((ViewContext.RouteData.Values["page"]?.ToString()?.StartsWith("/Admin/ServiceRequests") ?? false) ? "active" : "")" asp-area="" asp-page="/Admin/ServiceRequests">
+                                        <i class="fas fa-clipboard-list me-1"></i>Заявки
+                                    </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-page="/Admin/Users">Пользователи</a>
+                                    <a class="nav-link @((ViewContext.RouteData.Values["page"]?.ToString()?.StartsWith("/Admin/Users") ?? false) ? "active" : "")" asp-area="" asp-page="/Admin/Users">
+                                        <i class="fas fa-users me-1"></i>Пользователи
+                                    </a>
                                 </li>
-                            }                  
+                            }
                         }
                     </ul>
                     <ul class="navbar-nav">
                         @if (!isAuthenticated)
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-page="/Account/Login">Войти</a>
+                                <a class="nav-link @((ViewContext.RouteData.Values["page"]?.ToString() == "/Account/Login") ? "active" : "")" asp-area="" asp-page="/Account/Login">
+                                    <i class="fas fa-sign-in-alt me-1"></i>Войти
+                                </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-page="/Account/Register">Регистрация</a>
+                                <a class="nav-link @((ViewContext.RouteData.Values["page"]?.ToString() == "/Account/Register") ? "active" : "")" asp-area="" asp-page="/Account/Register">
+                                    <i class="fas fa-user-plus me-1"></i>Регистрация
+                                </a>
                             </li>
                         }
                         else
                         {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-page="/Account/Dashboard">@userName</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-page="/Account/Logout">Выйти</a>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="fas fa-user-circle me-1"></i>@userName
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                                    <li>
+                                        <a class="dropdown-item" asp-page="/Account/Dashboard">
+                                            <i class="fas fa-tachometer-alt me-2"></i>Личный кабинет
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" asp-page="/Account/Profile">
+                                            <i class="fas fa-id-card me-2"></i>Профиль
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" asp-page="/Account/History">
+                                            <i class="fas fa-history me-2"></i>История заявок
+                                        </a>
+                                    </li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li>
+                                        <a class="dropdown-item text-danger" asp-page="/Account/Logout">
+                                            <i class="fas fa-sign-out-alt me-2"></i>Выйти
+                                        </a>
+                                    </li>
+                                </ul>
                             </li>
                         }
                     </ul>
@@ -74,15 +112,16 @@
             </div>
         </nav>
     </header>
+
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            <small class="text-muted">© 2026 ServiceHub. Все права защищены.</small>
+    <footer>
+        <div class="container text-muted">
+            <small>© 2026 ServiceHub.</small>
         </div>
     </footer>
 

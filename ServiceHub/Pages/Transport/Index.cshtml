@@ -16,17 +16,34 @@
     </div>
 </div>
 
+<!-- Форма для отчёта (POST) -->
+<div class="card shadow mb-4">
+    <div class="card-header bg-white">
+        <h5 class="mb-0">Сформировать отчёт</h5>
+    </div>
+    <div class="card-body">
+        <form method="post" asp-page-handler="Export" class="row g-3">
+            <div class="col-md-4">
+                <label class="form-label">Начальная дата</label>
+                <input type="date" name="startDate" class="form-control" required />
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Конечная дата</label>
+                <input type="date" name="endDate" class="form-control" required />
+            </div>
+            <div class="col-md-4 d-flex align-items-end">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-file-alt me-1"></i> Сформировать отчёт
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
 @if (TempData["TransportSuccess"] != null)
 {
     <div class="alert alert-success alert-dismissible fade show" role="alert">
         @TempData["TransportSuccess"]
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-}
-@if (TempData["SuccessMessage"] != null)
-{
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-        @TempData["SuccessMessage"]
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 }
@@ -37,6 +54,7 @@
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 }
+
 <div class="card shadow">
     <div class="card-header">
         <div class="row">
@@ -108,11 +126,31 @@
                                 <td>
                                     @if (req.Status == "На согласовании")
                                     {
-                                        <form method="post" asp-page-handler="Delete" asp-route-id="@req.Id" class="d-inline">
-                                            <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Удалить заявку?')">
-                                                Удалить
-                                            </button>
-                                        </form>
+                                        <button type="button" class="btn btn-square btn-outline-danger"
+                                                data-bs-toggle="modal" data-bs-target="#deleteModal-@req.Id" title="Удалить">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+
+                                        <!-- Модальное окно удаления -->
+                                        <div class="modal fade" id="deleteModal-@req.Id" tabindex="-1" aria-labelledby="deleteModalLabel-@req.Id" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="deleteModalLabel-@req.Id">Подтверждение удаления</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        Вы уверены, что хотите удалить заявку на поездку <strong>@req.TripDateTime.ToString("dd.MM.yyyy HH:mm")</strong>?
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                                                        <form method="post" asp-page-handler="Delete" asp-route-id="@req.Id">
+                                                            <button type="submit" class="btn btn-danger">Удалить</button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     }
                                 </td>
                             </tr>

@@ -4,15 +4,11 @@
     ViewData["Title"] = "Маршруты трансфера";
 }
 
-
-
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h2>Маршруты для автомобиля @Model.CarName</h2>
-
-        <a asp-page="/Admin/Cars/Index" class="btn btn-secondary">
-            <i class="fas fa-arrow-left"></i> Назад к автомобилям
-        </a>
-
+    <a asp-page="/Admin/Cars/Index" class="btn btn-secondary">
+        <i class="fas fa-arrow-left"></i> Назад к автомобилям
+    </a>
     @if (Model.CanAddRoute)
     {
         <a asp-page="Create" asp-route-carId="@Model.CarId" class="btn btn-primary">
@@ -75,16 +71,19 @@
                                     </form>
                                 </td>
                                 <td>
-                                    <button type="button" class="btn btn-sm btn-outline-info" title="Подробнее"
+                                    <!-- Кнопка подробнее (квадратная) -->
+                                    <button type="button" class="btn btn-square btn-outline-info" title="Подробнее"
                                             data-bs-toggle="modal" data-bs-target="#detailsModal-@route.Id">
                                         <i class="fas fa-info-circle"></i>
                                     </button>
-                                    <button type="button" class="btn btn-sm btn-outline-danger"
-                                            data-bs-toggle="modal" data-bs-target="#deleteModal-@route.Id">
+
+                                    <!-- Кнопка удалить (квадратная) -->
+                                    <button type="button" class="btn btn-square btn-outline-danger"
+                                            data-bs-toggle="modal" data-bs-target="#deleteModal-@route.Id" title="Удалить">
                                         <i class="fas fa-trash"></i>
                                     </button>
 
-                                    <!-- Модальное окно просмотра деталей -->
+                                    <!-- Модальное окно подробностей (стандартный Bootstrap) -->
                                     <div class="modal fade" id="detailsModal-@route.Id" tabindex="-1" aria-labelledby="detailsModalLabel-@route.Id" aria-hidden="true">
                                         <div class="modal-dialog modal-lg">
                                             <div class="modal-content">
@@ -137,7 +136,7 @@
                                         </div>
                                     </div>
 
-                                    <!-- Модальное окно подтверждения удаления -->
+                                    <!-- Модальное окно подтверждения удаления (стандартный Bootstrap, как на странице /Admin/Cars) -->
                                     <div class="modal fade" id="deleteModal-@route.Id" tabindex="-1" aria-labelledby="deleteModalLabel-@route.Id" aria-hidden="true">
                                         <div class="modal-dialog">
                                             <div class="modal-content">
@@ -147,6 +146,7 @@
                                                 </div>
                                                 <div class="modal-body">
                                                     Вы уверены, что хотите удалить маршрут <strong>@route.Name</strong>?
+                                                    <br>Все связанные остановки также будут удалены.
                                                 </div>
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
@@ -170,3 +170,7 @@
         }
     </div>
 </div>
+
+@section Scripts {
+    <!-- Здесь могут быть скрипты, если нужны -->
+}

@@ -8,13 +8,13 @@
 @if (TempData["SuccessMessage"] != null)
 {
     <div class="alert alert-success alert-dismissible fade show" role="alert">
-        @TempData["SuccessMessage"]
+        <i class="fas fa-check-circle me-2"></i>@TempData["SuccessMessage"]
         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
     </div>
 }
 <div class="card border-0 shadow">
     <div class="card-body p-4">
-        <h5 class="card-title">Профиль пользователя @Model.CurrentUser.Email</h5>
+        <h5 class="card-title"><i class="fas fa-user-circle me-2"></i>Профиль пользователя @Model.CurrentUser.Email</h5>
 
         @if (Model.IsAdmin)
         {
@@ -24,31 +24,31 @@
 
                 <div class="row">
                     <div class="col-md-6 mb-3">
-                        <label asp-for="CurrentUser.FirstName" class="form-label">Имя</label>
+                        <label asp-for="CurrentUser.FirstName" class="form-label"><i class="fas fa-user me-2"></i>Имя</label>
                         <input asp-for="CurrentUser.FirstName" class="form-control" />
                         <span asp-validation-for="CurrentUser.FirstName" class="text-danger"></span>
                     </div>
                     <div class="col-md-6 mb-3">
-                        <label asp-for="CurrentUser.LastName" class="form-label">Фамилия</label>
+                        <label asp-for="CurrentUser.LastName" class="form-label"><i class="fas fa-user me-2"></i>Фамилия</label>
                         <input asp-for="CurrentUser.LastName" class="form-control" />
                         <span asp-validation-for="CurrentUser.LastName" class="text-danger"></span>
                     </div>
                 </div>
 
                 <div class="mb-3">
-                    <label asp-for="CurrentUser.Email" class="form-label">Email</label>
+                    <label asp-for="CurrentUser.Email" class="form-label"><i class="fas fa-envelope me-2"></i>Email</label>
                     <input asp-for="CurrentUser.Email" class="form-control" />
                     <span asp-validation-for="CurrentUser.Email" class="text-danger"></span>
                 </div>
 
                 <div class="mb-3">
-                    <label asp-for="CurrentUser.Department" class="form-label">Отдел</label>
+                    <label asp-for="CurrentUser.Department" class="form-label"><i class="fas fa-building me-2"></i>Отдел</label>
                     <input asp-for="CurrentUser.Department" class="form-control" />
                     <span asp-validation-for="CurrentUser.Department" class="text-danger"></span>
                 </div>
 
                 <div class="mb-3">
-                    <label asp-for="CurrentUser.Role" class="form-label">Роль</label>
+                    <label asp-for="CurrentUser.Role" class="form-label"><i class="fas fa-shield-alt me-2"></i>Роль</label>
                     <select asp-for="CurrentUser.Role" class="form-select">
                         <option value="User">Пользователь</option>
                         <option value="Admin">Администратор</option>
@@ -56,28 +56,28 @@
                     <span asp-validation-for="CurrentUser.Role" class="text-danger"></span>
                 </div>
 
-                <button type="submit" class="btn btn-primary">Сохранить изменения</button>               
+                <button type="submit" class="btn btn-primary"><i class="fas fa-save me-2"></i>Сохранить изменения</button>
             </form>
         }
         else
         {
             <!-- Только просмотр для обычного пользователя -->
             <dl class="row mt-3">
-                <dt class="col-sm-3">Имя</dt>
+                <dt class="col-sm-3"><i class="fas fa-user me-2"></i>Имя</dt>
                 <dd class="col-sm-9">@Model.CurrentUser.FirstName</dd>
 
-                <dt class="col-sm-3">Фамилия</dt>
+                <dt class="col-sm-3"><i class="fas fa-user me-2"></i>Фамилия</dt>
                 <dd class="col-sm-9">@Model.CurrentUser.LastName</dd>
 
-                <dt class="col-sm-3">Email</dt>
+                <dt class="col-sm-3"><i class="fas fa-envelope me-2"></i>Email</dt>
                 <dd class="col-sm-9">@Model.CurrentUser.Email</dd>
 
-                <dt class="col-sm-3">Отдел</dt>
+                <dt class="col-sm-3"><i class="fas fa-building me-2"></i>Отдел</dt>
                 <dd class="col-sm-9">@Model.CurrentUser.Department</dd>
 
-                <dt class="col-sm-3">Роль</dt>
+                <dt class="col-sm-3"><i class="fas fa-shield-alt me-2"></i>Роль</dt>
                 <dd class="col-sm-9">@Model.CurrentUser.Role</dd>
-            </dl>            
+            </dl>
         }
     </div>
 </div>

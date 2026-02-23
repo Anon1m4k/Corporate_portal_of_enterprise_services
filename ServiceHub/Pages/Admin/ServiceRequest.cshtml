@@ -4,52 +4,56 @@
     ViewData["Title"] = Model.ServiceRequest.Id == 0 ? "Новая заявка" : "Редактирование заявки";
 }
 
-<div class="container mt-4">
-    <div class="card border-0 shadow">
+<div class="container mt-4 fade-in">
+    <div class="card border-0 shadow-lg rounded-4">
+        <div class="card-header bg-transparent border-0 pt-4 px-4">
+            <h2 class="section-title mb-0">@ViewData["Title"]</h2>
+        </div>
         <div class="card-body p-4">
-            <h2 class="mb-4">@ViewData["Title"]</h2>
             <form method="post">
                 <input type="hidden" asp-for="ServiceRequest.Id" />
                 <input type="hidden" asp-for="ServiceRequest.UserId" />
 
-                <div class="form-group mb-3">
-                    <label asp-for="ServiceRequest.ServiceType">Тип услуги</label>
-                    <select asp-for="ServiceRequest.ServiceType" class="form-select">
-                        <option value="">Выберите тип услуги</option>
-                        <option value="Транспорт">Транспорт</option>
-                        <option value="Поддержка">Поддержка</option>
-                        <option value="Питание">Питание</option>
-                        <option value="Помещения">Помещения</option>
-                    </select>
-                    <span asp-validation-for="ServiceRequest.ServiceType" class="text-danger"></span>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="ServiceRequest.ServiceType" class="form-label fw-medium">Тип услуги</label>
+                        <select asp-for="ServiceRequest.ServiceType" class="form-select rounded-3">
+                            <option value="">Выберите тип услуги</option>
+                            <option value="Транспорт">🚗 Транспорт</option>
+                            <option value="Поддержка">🛠️ Поддержка</option>
+                            <option value="Питание">🍽️ Питание</option>
+                            <option value="Помещения">🏢 Помещения</option>
+                        </select>
+                        <span asp-validation-for="ServiceRequest.ServiceType" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="ServiceRequest.Status" class="form-label fw-medium">Статус</label>
+                        <select asp-for="ServiceRequest.Status" class="form-select rounded-3">
+                            <option value="Ожидание">Ожидание</option>
+                            <option value="В работе">В работе</option>
+                            <option value="Завершено">Завершено</option>
+                            <option value="Отменено">Отменено</option>
+                        </select>
+                        <span asp-validation-for="ServiceRequest.Status" class="text-danger"></span>
+                    </div>
                 </div>
 
-                <div class="form-group mb-3">
-                    <label asp-for="ServiceRequest.Title">Заголовок</label>
-                    <input asp-for="ServiceRequest.Title" type="text" class="form-control" />
+                <div class="mb-3">
+                    <label asp-for="ServiceRequest.Title" class="form-label fw-medium">Заголовок</label>
+                    <input asp-for="ServiceRequest.Title" type="text" class="form-control rounded-3" />
                     <span asp-validation-for="ServiceRequest.Title" class="text-danger"></span>
                 </div>
 
-                <div class="form-group mb-3">
-                    <label asp-for="ServiceRequest.Description">Описание</label>
-                    <textarea asp-for="ServiceRequest.Description" class="form-control" rows="3"></textarea>
+                <div class="mb-3">
+                    <label asp-for="ServiceRequest.Description" class="form-label fw-medium">Описание</label>
+                    <textarea asp-for="ServiceRequest.Description" class="form-control rounded-3" rows="4"></textarea>
                     <span asp-validation-for="ServiceRequest.Description" class="text-danger"></span>
                 </div>
 
-                <div class="form-group mb-3">
-                    <label asp-for="ServiceRequest.Status">Статус</label>
-                    <select asp-for="ServiceRequest.Status" class="form-select">
-                        <option value="Ожидание">Ожидание</option>
-                        <option value="В работе">В работе</option>
-                        <option value="Завершено">Завершено</option>
-                        <option value="Отменено">Отменено</option>
-                    </select>
-                    <span asp-validation-for="ServiceRequest.Status" class="text-danger"></span>
-                </div>
-
-                <div class="form-group mb-3">
-                    <label asp-for="ServiceRequest.UserId">Пользователь</label>
-                    <select asp-for="ServiceRequest.UserId" class="form-select">
+                <div class="mb-4">
+                    <label asp-for="ServiceRequest.UserId" class="form-label fw-medium">Пользователь</label>
+                    <select asp-for="ServiceRequest.UserId" class="form-select rounded-3">
                         <option value="">Выберите пользователя</option>
                         @foreach (var user in Model.Users)
                         {
@@ -59,11 +63,19 @@
                     <span asp-validation-for="ServiceRequest.UserId" class="text-danger"></span>
                 </div>
 
-                <button type="submit" class="btn btn-primary mt-3">
-                    <i class="fas fa-save me-2"></i>Сохранить
-                </button>
-                <a href="/Admin/ServiceRequests" class="btn btn-secondary mt-3">Отмена</a>
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-primary rounded-pill px-4">
+                        <i class="fas fa-save me-2"></i>Сохранить
+                    </button>
+                    <a asp-page="/Admin/ServiceRequests" class="btn btn-outline-secondary rounded-pill px-4">
+                        <i class="fas fa-times me-2"></i>Отмена
+                    </a>
+                </div>
             </form>
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
