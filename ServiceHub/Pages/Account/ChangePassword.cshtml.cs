@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using ServiceHub.Data;
-using ServiceHub.Models;
+using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 
 namespace ServiceHub.Pages.Account
@@ -19,12 +19,23 @@ namespace ServiceHub.Pages.Account
         }
 
         [BindProperty]
+        [Required(ErrorMessage = "Введите текущий пароль")]
+        [DataType(DataType.Password)]
+        [Display(Name = "Текущий пароль")]
         public string CurrentPassword { get; set; } = string.Empty;
 
         [BindProperty]
+        [Required(ErrorMessage = "Введите новый пароль")]
+        [StringLength(25, MinimumLength = 8, ErrorMessage = "Пароль должен быть от 8 до 25 символов")]
+        [DataType(DataType.Password)]
+        [Display(Name = "Новый пароль")]
         public string NewPassword { get; set; } = string.Empty;
 
         [BindProperty]
+        [Required(ErrorMessage = "Подтвердите новый пароль")]
+        [DataType(DataType.Password)]
+        [Compare("NewPassword", ErrorMessage = "Пароли не совпадают")]
+        [Display(Name = "Подтверждение пароля")]
         public string ConfirmPassword { get; set; } = string.Empty;
 
         public void OnGet()
@@ -34,29 +45,22 @@ namespace ServiceHub.Pages.Account
         public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)
-            {
                 return Page();
-            }
 
-            if (NewPassword != ConfirmPassword)
-            {
-                ModelState.AddModelError("ConfirmPassword", "Пароли не совпадают");
-                return Page();
-            }
-
+            // Дополнительная проверка длины (хотя StringLength уже сделает)
             if (NewPassword.Length < 8)
             {
                 ModelState.AddModelError("NewPassword", "Пароль должен содержать не менее 8 символов");
                 return Page();
             }
 
-            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
-            var user = await _context.Users.FindAsync(userId);
+            var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(userIdClaim) || !int.TryParse(userIdClaim, out int userId))
+                return RedirectToPage("/Account/Login");
 
+            var user = await _context.Users.FindAsync(userId);
             if (user == null)
-            {
                 return NotFound();
-            }
 
             if (user.Password != CurrentPassword)
             {
@@ -67,8 +71,8 @@ namespace ServiceHub.Pages.Account
             user.Password = NewPassword;
             await _context.SaveChangesAsync();
 
-            TempData["SuccessMessage"] = "Пароль успешно изменен";
-            return Page();
+            TempData["PasswordChangeSuccess"] = "Пароль успешно изменён";
+            return RedirectToPage();
         }
     }
 }

@@ -11,37 +11,57 @@
 
 <div class="row">
     <div class="col-md-3 mb-4">
-        <div class="card text-white bg-primary">
+        <div class="card text-white bg-primary shadow-sm">
             <div class="card-body">
-                <h5 class="card-title">Активные заявки</h5>
-                <h2 class="card-text">@Model.ActiveRequests</h2>
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="card-title mb-0">Активные заявки</h6>
+                        <h2 class="card-text mt-2 mb-0">@Model.ActiveRequests</h2>
+                    </div>
+                    <i class="fas fa-tasks fa-2x opacity-50"></i>
+                </div>
             </div>
         </div>
     </div>
 
     <div class="col-md-3 mb-4">
-        <div class="card text-white bg-success">
+        <div class="card text-white bg-success shadow-sm">
             <div class="card-body">
-                <h5 class="card-title">Выполнено</h5>
-                <h2 class="card-text">@Model.CompletedRequests</h2>
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="card-title mb-0">Выполнено</h6>
+                        <h2 class="card-text mt-2 mb-0">@Model.CompletedRequests</h2>
+                    </div>
+                    <i class="fas fa-check-circle fa-2x opacity-50"></i>
+                </div>
             </div>
         </div>
     </div>
 
     <div class="col-md-3 mb-4">
-        <div class="card text-white bg-warning">
+        <div class="card text-white bg-warning shadow-sm">
             <div class="card-body">
-                <h5 class="card-title">На согласовании</h5>
-                <h2 class="card-text">@Model.PendingRequests</h2>
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="card-title mb-0">На согласовании</h6>
+                        <h2 class="card-text mt-2 mb-0">@Model.PendingRequests</h2>
+                    </div>
+                    <i class="fas fa-clock fa-2x opacity-50"></i>
+                </div>
             </div>
         </div>
     </div>
 
     <div class="col-md-3 mb-4">
-        <div class="card text-white bg-info">
+        <div class="card text-white bg-info shadow-sm">
             <div class="card-body">
-                <h5 class="card-title">Всего заявок</h5>
-                <h2 class="card-text">@Model.TotalRequests</h2>
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="card-title mb-0">Всего заявок</h6>
+                        <h2 class="card-text mt-2 mb-0">@Model.TotalRequests</h2>
+                    </div>
+                    <i class="fas fa-clipboard-list fa-2x opacity-50"></i>
+                </div>
             </div>
         </div>
     </div>
@@ -49,54 +69,59 @@
 
 <div class="row mt-4">
     <div class="col-12">
-        <div class="card">
-            <div class="card-header">
+        <div class="card shadow-sm">
+            <div class="card-header bg-white">
                 <h5 class="card-title mb-0">Последние заявки</h5>
             </div>
-
             <div class="card-body">
                 @if (Model.RecentRequests.Any())
                 {
                     <div class="list-group list-group-flush">
                         @foreach (var request in Model.RecentRequests)
                         {
-                            <div class="list-group-item">
-                                <small class="text-muted">@request.CreatedAt.ToString("dd.MM.yyyy HH:mm")</small>
-                                <p class="mb-1">
-                                    @if (request.ServiceType == "Транспорт")
-                                    {
-                                        <span class="badge bg-info">🚗</span>
-                                    }
-                                    else if (request.ServiceType == "Поддержка")
-                                    {
-                                        <span class="badge bg-warning">🛠️</span>
-                                    }
-                                    else if (request.ServiceType == "Питание")
-                                    {
-                                        <span class="badge bg-success">🍽️</span>
-                                    }
-                                    else if (request.ServiceType == "Помещения")
-                                    {
-                                        <span class="badge bg-primary">🏢</span>
-                                    }
-                                    <strong>@request.Title</strong> -
-                                    @if (request.Status == "На согласовании")
-                                    {
-                                        <span class="badge bg-warning">@request.Status</span>
-                                    }
-                                    else if (request.Status == "Подтверждена")
-                                    {
-                                        <span class="badge bg-success">@request.Status</span>
-                                    }
-                                    else if (request.Status == "Выполнена")
-                                    {
-                                        <span class="badge bg-info">@request.Status</span>
-                                    }
-                                    else if (request.Status == "Отклонена")
-                                    {
-                                        <span class="badge bg-danger">@request.Status</span>
-                                    }
-                                </p>
+                            <div class="list-group-item px-0">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <small class="text-muted">@request.CreatedAt.ToString("dd.MM.yyyy HH:mm")</small>
+                                        <p class="mb-1">
+                                            @if (request.ServiceType == "Транспорт")
+                                            {
+                                                <span class="badge bg-info me-1"><i class="fas fa-car"></i></span>
+                                            }
+                                            else if (request.ServiceType == "Поддержка")
+                                            {
+                                                <span class="badge bg-warning me-1"><i class="fas fa-tools"></i></span>
+                                            }
+                                            else if (request.ServiceType == "Питание")
+                                            {
+                                                <span class="badge bg-success me-1"><i class="fas fa-utensils"></i></span>
+                                            }
+                                            else if (request.ServiceType == "Помещения")
+                                            {
+                                                <span class="badge bg-primary me-1"><i class="fas fa-building"></i></span>
+                                            }
+                                            <strong>@request.Title</strong>
+                                        </p>
+                                    </div>
+                                    <div>
+                                        @if (request.Status == "На согласовании")
+                                        {
+                                            <span class="badge bg-warning">@request.Status</span>
+                                        }
+                                        else if (request.Status == "Подтверждена")
+                                        {
+                                            <span class="badge bg-success">@request.Status</span>
+                                        }
+                                        else if (request.Status == "Выполнена")
+                                        {
+                                            <span class="badge bg-info">@request.Status</span>
+                                        }
+                                        else if (request.Status == "Отклонена")
+                                        {
+                                            <span class="badge bg-danger">@request.Status</span>
+                                        }
+                                    </div>
+                                </div>
                             </div>
                         }
                     </div>

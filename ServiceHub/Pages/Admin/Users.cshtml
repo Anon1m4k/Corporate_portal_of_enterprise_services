@@ -4,6 +4,21 @@
     ViewData["Title"] = "Управление пользователями";
 }
 
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["SuccessMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        @TempData["ErrorMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
 <div class="container mt-5">
     <h2 class="mb-4">Управление пользователями</h2>
 
@@ -19,10 +34,42 @@
                             <strong>Отдел:</strong> @user.Department<br>
                             <strong>Роль:</strong> @user.Role
                         </p>
-                        <a asp-page="/Account/Profile" asp-route-id="@user.Id"
-                           class="btn btn-primary w-100">
-                            <i class="fas fa-edit me-2"></i>Редактировать
-                        </a>
+                        <div class="d-flex gap-2">
+                            <a asp-page="/Account/Profile" asp-route-id="@user.Id"
+                               class="btn btn-primary flex-grow-1">
+                                <i class="fas fa-edit me-2"></i>Редактировать
+                            </a>
+                            <a asp-page="/Admin/ChangeUserPassword" asp-route-id="@user.Id"
+                               class="btn btn-outline-warning" title="Сменить пароль">
+                                <i class="fas fa-key"></i>
+                            </a>
+                            <button type="button" class="btn btn-outline-danger"
+                                    data-bs-toggle="modal" data-bs-target="#deleteModal-@user.Id">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Модальное окно подтверждения удаления -->
+            <div class="modal fade" id="deleteModal-@user.Id" tabindex="-1" aria-labelledby="deleteModalLabel-@user.Id" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="deleteModalLabel-@user.Id">Подтверждение удаления</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            Вы уверены, что хотите удалить пользователя <strong>@user.FirstName @user.LastName</strong>?
+                            <br>Все связанные заявки также будут удалены.
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                            <form method="post" asp-page-handler="Delete" asp-route-id="@user.Id">
+                                <button type="submit" class="btn btn-danger">Удалить</button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
