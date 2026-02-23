@@ -8,10 +8,6 @@ public class TransportRequest
     public int UserId { get; set; }
     public AuthUser? User { get; set; }
 
-    [Required(ErrorMessage = "Выберите тип поездки")]
-    [Display(Name = "Тип поездки")]
-    public string TripType { get; set; } = string.Empty;
-
     [Required(ErrorMessage = "Укажите дату и время")]
     [Display(Name = "Дата и время")]
     public DateTime TripDateTime { get; set; }

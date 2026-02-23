@@ -22,19 +22,12 @@ namespace ServiceHub.Pages.Transport
         [BindProperty]
         public TransportRequest TransportRequest { get; set; } = new();
 
-        public List<SelectListItem> TripTypeOptions { get; } = new()
-        {
-            new SelectListItem("Трансфер", "Трансфер"),
-            new SelectListItem("Служебная поездка", "Служебная поездка")
-        };
-
         public List<SelectListItem> CarOptions { get; set; } = new();
 
         public async Task OnGetAsync()
         {
-            // Загружаем доступные автомобили
             CarOptions = await _context.Cars
-                .Where(c => c.IsAvailable)
+                .Where(c => c.IsAvailable && !c.TransferRoutes.Any(r => r.IsActive))
                 .Select(c => new SelectListItem
                 {
                     Value = c.Id.ToString(),
@@ -44,7 +37,6 @@ namespace ServiceHub.Pages.Transport
 
             CarOptions.Insert(0, new SelectListItem("-- Выберите автомобиль --", ""));
 
-            // Значение по умолчанию для даты
             if (TransportRequest.TripDateTime == default)
             {
                 TransportRequest.TripDateTime = DateTime.Now.AddHours(1);
@@ -53,7 +45,6 @@ namespace ServiceHub.Pages.Transport
 
         public async Task<IActionResult> OnPostAsync()
         {
-            TransportRequest.TripType = "Служебная поездка";
 
             if (!ModelState.IsValid)
             {

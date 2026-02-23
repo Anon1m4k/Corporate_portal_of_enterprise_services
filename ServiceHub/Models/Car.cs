@@ -30,5 +30,7 @@ namespace ServiceHub.Models
 
         [Display(Name = "Доступен для заказов")]
         public bool IsAvailable { get; set; } = true;
+
+        public ICollection<TransferRoute> TransferRoutes { get; set; } = new List<TransferRoute>();
     }
 }

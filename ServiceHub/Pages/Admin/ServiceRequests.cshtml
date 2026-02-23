@@ -12,15 +12,6 @@
     <div class="card-header">
         <div class="row">
             <div class="col-md-3">
-                <select class="form-select" id="typeFilter" onchange="filterChanged()">
-                    <option value="">Все типы</option>
-                    <option value="Транспорт" selected="@(Model.CurrentType == "Транспорт")">Транспорт</option>
-                    <option value="Поддержка" selected="@(Model.CurrentType == "Поддержка")">Поддержка</option>
-                    <option value="Питание" selected="@(Model.CurrentType == "Питание")">Питание</option>
-                    <option value="Помещения" selected="@(Model.CurrentType == "Помещения")">Помещения</option>
-                </select>
-            </div>
-            <div class="col-md-3">
                 <select class="form-select" id="statusFilter" onchange="filterChanged()">
                     <option value="">Все статусы</option>
                     @foreach (var status in Model.AllStatuses)
@@ -29,7 +20,7 @@
                     }
                 </select>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-9">
             </div>
         </div>
     </div>
@@ -108,7 +99,6 @@
                                                 <input type="hidden" name="id" value="@item.Id" />
                                                 <input type="hidden" name="type" value="@item.ServiceType" />
                                                 <input type="hidden" name="currentStatus" value="@Model.CurrentStatus" />
-                                                <input type="hidden" name="currentType" value="@Model.CurrentType" />
                                                 <select name="newStatus" class="form-select form-select-sm" style="width: 130px;">
                                                     @foreach (var s in Model.AllStatuses)
                                                     {
@@ -117,9 +107,6 @@
                                                 </select>
                                                 <button type="submit" class="btn btn-sm btn-outline-primary" title="Изменить статус">✓</button>
                                             </form>
-                                        }
-                                        else
-                                        {
                                         }
                                     </div>
                                 </td>
@@ -139,15 +126,8 @@
 @section Scripts {
     <script>
         function filterChanged() {
-            const type = document.getElementById('typeFilter').value;
             const status = document.getElementById('statusFilter').value;
             const url = new URL(window.location.href);
-
-            if (type) {
-                url.searchParams.set('type', type);
-            } else {
-                url.searchParams.delete('type');
-            }
 
             if (status) {
                 url.searchParams.set('status', status);

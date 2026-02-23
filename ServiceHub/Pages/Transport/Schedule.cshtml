@@ -5,12 +5,65 @@
 }
 
 <div class="container mt-4">
-    <div class="card border-0 shadow">
-        <div class="card-body p-4 text-center">
-            <div class="display-1 text-muted mb-4">🚌</div>
-            <h2 class="mb-3">Расписание трансфера</h2>
-            <p class="lead text-muted">Раздел находится в разработке. Скоро здесь появится расписание регулярных трансферов.</p>
-            <a asp-page="/Transport/Index" class="btn btn-primary mt-3">Вернуться к заявкам</a>
-        </div>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Расписание трансфера</h2>
+        <a asp-page="/Transport/Index" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Назад к заявкам
+        </a>
     </div>
+
+    @if (!Model.Routes.Any())
+    {
+        <div class="alert alert-info">
+            На данный момент нет активных маршрутов трансфера.
+        </div>
+    }
+    else
+    {
+        @foreach (var route in Model.Routes)
+        {
+            <div class="card shadow mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">@route.Name</h5>
+                </div>
+                <div class="card-body">
+                    @if (!string.IsNullOrEmpty(route.Description))
+                    {
+                        <p class="text-muted">@route.Description</p>
+                    }
+                    <p>
+                        <strong>Автомобиль:</strong>
+                        @if (route.Car != null)
+                        {
+                            @($"{route.Car.Brand} {route.Car.Model} ({route.Car.LicensePlate})")
+                        }
+                        else
+                        {
+                            <span>Не указан</span>
+                        }
+                    </p>
+
+                    <table class="table table-sm table-bordered">
+                        <thead class="table-light">
+                            <tr>
+                                <th>№</th>
+                                <th>Остановка</th>
+                                <th>Время прибытия</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var stop in route.Stops.OrderBy(s => s.Order))
+                            {
+                                <tr>
+                                    <td>@stop.Order</td>
+                                    <td>@stop.Address</td>
+                                    <td>@stop.ArrivalTime.ToString(@"hh\:mm")</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        }
+    }
 </div>

@@ -73,7 +73,7 @@ namespace ServiceHub.Pages.Admin
                 {
                     Id = tr.Id,
                     ServiceType = "Транспорт",
-                    Title = $"{tr.TripType} {tr.TripDateTime:dd.MM HH:mm}",
+                    Title = $"Служебная поездка {tr.TripDateTime:dd.MM HH:mm}",
                     Description = description,
                     Status = tr.Status,
                     CreatedAt = tr.CreatedAt,

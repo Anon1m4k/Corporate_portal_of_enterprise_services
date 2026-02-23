@@ -14,5 +14,7 @@ namespace ServiceHub.Data
         public DbSet<ServiceRequest> ServiceRequests { get; set; }
         public DbSet<TransportRequest> TransportRequests { get; set; }
         public DbSet<Car> Cars { get; set; }
+        public DbSet<TransferRoute> TransferRoutes { get; set; }
+        public DbSet<TransferStop> TransferStops { get; set; }
     }
 }
