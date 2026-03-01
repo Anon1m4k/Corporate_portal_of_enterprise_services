@@ -7,26 +7,26 @@
 <div class="container mt-4 fade-in">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="section-title">Автомобили</h2>
-        <a asp-page="Create" class="btn btn-primary rounded-pill">
+        <a asp-page="Create" class="btn btn-primary rounded-pill px-4">
             <i class="fas fa-plus me-2"></i>Добавить автомобиль
         </a>
     </div>
 
     @if (TempData["SuccessMessage"] != null)
     {
-        <div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
+        <div class="alert alert-success alert-dismissible fade show border-0 shadow-sm" role="alert">
             <i class="fas fa-check-circle me-2"></i>@TempData["SuccessMessage"]
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     }
 
-    <div class="card border-0 shadow-lg rounded-4">
+    <div class="card border-0 shadow-xl rounded-4">
         <div class="card-body p-0">
             @if (Model.Cars.Any())
             {
                 <div class="table-responsive">
                     <table class="table table-hover align-middle mb-0">
-                        <thead class="bg-light">
+                        <thead>
                             <tr>
                                 <th class="ps-4">ID</th>
                                 <th>Марка</th>
@@ -35,7 +35,7 @@
                                 <th>Тип</th>
                                 <th>Вместимость</th>
                                 <th>Доступен</th>
-                                <th class="text-end pe-4">Действия</th>
+                                <th>Действия</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -45,54 +45,56 @@
                                     <td class="ps-4 fw-medium">@car.Id</td>
                                     <td>@car.Brand</td>
                                     <td>@car.Model</td>
-                                    <td><span class="badge bg-light text-dark">@car.LicensePlate</span></td>
+                                    <td><span class="badge bg-light text-dark border">@car.LicensePlate</span></td>
                                     <td>@car.VehicleType</td>
-                                    <td>@(car.PassengerCapacity?.ToString() ?? "—")</td>
+                                    <td><span class="badge bg-info bg-opacity-10 text-primary">@(car.PassengerCapacity?.ToString() ?? "—")</span></td>
                                     <td>
                                         <form method="post" asp-page-handler="ToggleAvailability" class="d-inline">
                                             <input type="hidden" name="id" value="@car.Id" />
-                                            <div class="form-check form-switch">
+                                            <div class="form-check form-switch custom-switch">
                                                 <input class="form-check-input" type="checkbox" role="switch"
                                                        id="available-@car.Id"
                                                        name="isAvailable"
                                                        value="true"
                                                        @(car.IsAvailable ? "checked" : "")
                                                        onchange="this.form.submit()">
-                                                <label class="form-check-label" for="available-@car.Id">
-                                                    @(car.IsAvailable ? "Да" : "Нет")
+                                                <label class="form-check-label small text-muted" for="available-@car.Id">
+                                                    @(car.IsAvailable ? "Доступен" : "Занят")
                                                 </label>
                                             </div>
                                         </form>
                                     </td>
-                                    <td>
-                                        @if (car.VehicleType == "Минивэн" || car.VehicleType == "Автобус")
-                                        {
-                                            <a asp-page="/Admin/TransferRoutes/Index" asp-route-carId="@car.Id"
-                                               class="btn btn-square btn-outline-info" title="Маршруты">
-                                                <i class="fas fa-route"></i>
-                                            </a>
-                                        }
-                                        <button type="button" class="btn btn-square btn-outline-danger"
-                                                data-bs-toggle="modal" data-bs-target="#deleteModal-@car.Id" title="Удалить">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
+                                    <td class="text-end pe-4">
+                                        <div class="d-flex justify-content-end gap-2">
+                                            @if (car.VehicleType == "Минивэн" || car.VehicleType == "Автобус")
+                                            {
+                                                <a asp-page="/Admin/TransferRoutes/Index" asp-route-carId="@car.Id"
+                                                   class="btn btn-square btn-outline-primary" title="Маршруты">
+                                                    <i class="fas fa-route"></i>
+                                                </a>
+                                            }
+                                            <button type="button" class="btn btn-square btn-outline-danger"
+                                                    data-bs-toggle="modal" data-bs-target="#deleteModal-@car.Id" title="Удалить">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
 
                                         <!-- Модальное окно подтверждения удаления -->
-                                        <div class="modal fade" id="deleteModal-@car.Id" tabindex="-1" aria-labelledby="deleteModalLabel-@car.Id" aria-hidden="true">
-                                            <div class="modal-dialog">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title" id="deleteModalLabel-@car.Id">Подтверждение удаления</h5>
-                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        <div class="modal fade" id="deleteModal-@car.Id" tabindex="-1" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered">
+                                                <div class="modal-content border-0 shadow-lg rounded-4">
+                                                    <div class="modal-header border-0">
+                                                        <h5 class="modal-title fw-bold">Удаление автомобиля</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                                     </div>
-                                                    <div class="modal-body">
-                                                        Вы уверены, что хотите удалить автомобиль <strong>@car.Brand @car.Model</strong>?
-                                                        <br>Все связанные заявки также будут удалены.
+                                                    <div class="modal-body text-start">
+                                                        Вы уверены, что хотите удалить автомобиль <span class="text-primary fw-bold">@car.Brand @car.Model</span>?
+                                                        <p class="text-danger small mt-2"><i class="fas fa-exclamation-triangle me-1"></i>Все связанные заявки также будут удалены.</p>
                                                     </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                                                    <div class="modal-footer border-0">
+                                                        <button type="button" class="btn btn-outline-secondary rounded-pill" data-bs-dismiss="modal">Отмена</button>
                                                         <form method="post" asp-page-handler="Delete" asp-route-id="@car.Id">
-                                                            <button type="submit" class="btn btn-danger">Удалить</button>
+                                                            <button type="submit" class="btn btn-danger rounded-pill px-4">Удалить</button>
                                                         </form>
                                                     </div>
                                                 </div>
@@ -108,8 +110,10 @@
             else
             {
                 <div class="text-center py-5">
-                    <i class="fas fa-car fa-4x text-muted mb-3"></i>
-                    <p class="text-muted">Автомобилей пока нет.</p>
+                    <div class="icon-box mx-auto mb-3 opacity-50">
+                        <i class="fas fa-car-side"></i>
+                    </div>
+                    <p class="text-muted">Автомобилей пока нет в базе данных.</p>
                     <a asp-page="Create" class="btn btn-primary rounded-pill mt-2">
                         <i class="fas fa-plus me-2"></i>Добавить первый автомобиль
                     </a>
@@ -118,13 +122,3 @@
         </div>
     </div>
 </div>
-
-@section Scripts {
-    <script>
-        setTimeout(() => {
-            document.querySelectorAll('.alert').forEach(alert => {
-                bootstrap.Alert.getOrCreateInstance(alert).close();
-            });
-        }, 5000);
-    </script>
-}

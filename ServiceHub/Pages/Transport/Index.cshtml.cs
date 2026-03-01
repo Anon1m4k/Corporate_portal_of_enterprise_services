@@ -64,24 +64,47 @@ namespace ServiceHub.Pages.Transport
 
             var request = await _context.TransportRequests
                 .FirstOrDefaultAsync(r => r.Id == id && r.UserId == user.Id);
-
             if (request == null) return NotFound();
 
             if (request.Status == "На согласовании")
             {
                 _context.TransportRequests.Remove(request);
                 await _context.SaveChangesAsync();
-                TempData["SuccessMessage"] = "Заявка удалена.";
+                TempData["TransportSuccess"] = "Заявка удалена.";
             }
             else
             {
                 TempData["ErrorMessage"] = "Нельзя удалить заявку в текущем статусе.";
             }
 
-            return RedirectToPage();
+            return RedirectToPage(new { status = CurrentStatus });
         }
 
-        // Обработчик POST для экспорта отчёта
+        public async Task<IActionResult> OnPostCompleteAsync(int id)
+        {
+            var userEmail = User.FindFirst(ClaimTypes.Email)?.Value ?? User.Identity?.Name;
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == userEmail);
+            if (user == null) return NotFound();
+
+            var request = await _context.TransportRequests
+                .FirstOrDefaultAsync(r => r.Id == id && r.UserId == user.Id);
+            if (request == null) return NotFound();
+
+            if (request.Status == "Подтверждена")
+            {
+                request.Status = "Выполнена";
+                request.UpdatedAt = DateTime.UtcNow;
+                await _context.SaveChangesAsync();
+                TempData["TransportSuccess"] = "Заявка отмечена как выполненная.";
+            }
+            else
+            {
+                TempData["ErrorMessage"] = "Завершить можно только подтверждённые заявки.";
+            }
+
+            return RedirectToPage(new { status = CurrentStatus });
+        }
+
         public async Task<IActionResult> OnPostExportAsync(DateTime startDate, DateTime endDate)
         {
             var userEmail = User.FindFirst(ClaimTypes.Email)?.Value ?? User.Identity?.Name;
