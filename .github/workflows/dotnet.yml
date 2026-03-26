@@ -22,12 +22,15 @@ jobs:
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: ${{ env.DOTNET_VERSION }}
-        
+    
     - name: Restore dependencies
+      working-directory: ./ServiceHub
       run: dotnet restore
       
     - name: Build
+      working-directory: ./ServiceHub
       run: dotnet build --configuration ${{ env.CONFIGURATION }} --no-restore
       
     - name: Test
+      working-directory: ./ServiceHub
       run: dotnet test --configuration ${{ env.CONFIGURATION }} --no-build --verbosity normal
