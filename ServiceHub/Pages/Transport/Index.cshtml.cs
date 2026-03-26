@@ -151,14 +151,25 @@ namespace ServiceHub.Pages.Transport
                 foreach (var r in requests)
                 {
                     string carInfo = r.Car != null ? $"{r.Car.Brand} {r.Car.Model} ({r.Car.LicensePlate})" : "—";
-                    string statusClass = r.Status switch
+                    string statusClass;
+                    switch (r.Status)
                     {
-                        "На согласовании" => "bg-warning",
-                        "Подтверждена" => "bg-success",
-                        "Выполнена" => "bg-info",
-                        "Отклонена" => "bg-danger",
-                        _ => "bg-secondary"
-                    };
+                        case "На согласовании":
+                            statusClass = "bg-warning";
+                            break;
+                        case "Подтверждена":
+                            statusClass = "bg-success";
+                            break;
+                        case "Выполнена":
+                            statusClass = "bg-info";
+                            break;
+                        case "Отклонена":
+                            statusClass = "bg-danger";
+                            break;
+                        default:
+                            statusClass = "bg-secondary";
+                            break;
+                    }
 
                     html.AppendLine("<tr>");
                     html.AppendLine($"<td>#{r.Id}</td>");
