@@ -151,25 +151,14 @@ namespace ServiceHub.Pages.Transport
                 foreach (var r in requests)
                 {
                     string carInfo = r.Car != null ? $"{r.Car.Brand} {r.Car.Model} ({r.Car.LicensePlate})" : "—";
-                    string statusClass;
-                    switch (r.Status)
+                    var statusClasses = new Dictionary<string, string>
                     {
-                        case "На согласовании":
-                            statusClass = "bg-warning";
-                            break;
-                        case "Подтверждена":
-                            statusClass = "bg-success";
-                            break;
-                        case "Выполнена":
-                            statusClass = "bg-info";
-                            break;
-                        case "Отклонена":
-                            statusClass = "bg-danger";
-                            break;
-                        default:
-                            statusClass = "bg-secondary";
-                            break;
-                    }
+                        ["На согласовании"] = "bg-warning",
+                        ["Подтверждена"] = "bg-success",
+                        ["Выполнена"] = "bg-info",
+                        ["Отклонена"] = "bg-danger"
+                    };
+                    string statusClass = statusClasses.GetValueOrDefault(r.Status, "bg-secondary");
 
                     html.AppendLine("<tr>");
                     html.AppendLine($"<td>#{r.Id}</td>");
