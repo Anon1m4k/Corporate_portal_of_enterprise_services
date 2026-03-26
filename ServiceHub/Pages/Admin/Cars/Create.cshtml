@@ -16,12 +16,12 @@
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label asp-for="Car.Brand" class="form-label fw-medium"></label>
-                        <input asp-for="Car.Brand" class="form-control rounded-3" placeholder="Марка" />
+                        <input asp-for="Car.Brand" class="form-control" placeholder="Марка" />
                         <span asp-validation-for="Car.Brand" class="text-danger"></span>
                     </div>
                     <div class="col-md-6 mb-3">
                         <label asp-for="Car.Model" class="form-label fw-medium"></label>
-                        <input asp-for="Car.Model" class="form-control rounded-3" placeholder="Модель" />
+                        <input asp-for="Car.Model" class="form-control" placeholder="Модель" />
                         <span asp-validation-for="Car.Model" class="text-danger"></span>
                     </div>
                 </div>
@@ -29,12 +29,12 @@
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label asp-for="Car.LicensePlate" class="form-label fw-medium"></label>
-                        <input asp-for="Car.LicensePlate" class="form-control rounded-3" placeholder="А123ВС777" />
+                        <input asp-for="Car.LicensePlate" class="form-control" placeholder="А123ВС777" />
                         <span asp-validation-for="Car.LicensePlate" class="text-danger"></span>
                     </div>
                     <div class="col-md-6 mb-3">
                         <label asp-for="Car.VehicleType" class="form-label fw-medium"></label>
-                        <select asp-for="Car.VehicleType" class="form-select rounded-3">
+                        <select asp-for="Car.VehicleType" class="form-select">
                             <option value="">-- Выберите тип --</option>
                             <option value="Легковой">Легковой</option>
                             <option value="Минивэн">Минивэн</option>
@@ -48,7 +48,7 @@
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label asp-for="Car.PassengerCapacity" class="form-label fw-medium"></label>
-                        <input asp-for="Car.PassengerCapacity" class="form-control rounded-3" type="number" min="1" max="30" />
+                        <input asp-for="Car.PassengerCapacity" class="form-control" type="number" min="1" max="30" />
                         <span asp-validation-for="Car.PassengerCapacity" class="text-danger"></span>
                     </div>
                     <div class="col-md-6 mb-3">

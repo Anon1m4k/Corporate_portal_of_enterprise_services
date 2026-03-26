@@ -6,8 +6,10 @@
 
 <div class="container mt-4">
     <div class="card border-0 shadow">
-        <div class="card-body p-4">
-            <h2 class="mb-4">Добавление маршрута для @Model.CarName</h2>
+        <div class="card-header">
+            <h2 class="mb-0">Добавление маршрута для @Model.CarName</h2>
+        </div>
+        <div class="card-body">
             <form method="post" id="routeForm">
                 <input type="hidden" asp-for="CarId" />
 
@@ -35,7 +37,7 @@
                 </div>
 
                 <button type="submit" class="btn btn-primary mt-3">Сохранить</button>
-                <a asp-page="Index" asp-route-carId="@Model.CarId" class="btn btn-secondary mt-3">Отмена</a>
+                <a asp-page="Index" asp-route-carId="@Model.CarId" class="btn btn-outline-secondary mt-3">Отмена</a>
             </form>
         </div>
     </div>
@@ -70,7 +72,6 @@
             }
         }
 
-        // Генерируем поля для одной остановки при загрузке страницы
         window.onload = generateStops;
     </script>
 }

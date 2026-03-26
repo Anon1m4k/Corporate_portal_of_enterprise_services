@@ -4,86 +4,87 @@
     ViewData["Title"] = "ServiceHub - Портал внутренних услуг";
 }
 
-<div class="container mt-5">
-    <div class="text-center mb-5 fade-in">
-        <h1 class="display-4 text-primary mb-3">Добро пожаловать в ServiceHub</h1>
-        <h2 class="h4 text-muted">Единый портал для заказа внутренних услуг предприятия</h2>
+<div class="container mt-5 fade-in">
+    <div class="text-center mb-5">
+        <div class="icon-box mx-auto mb-4">
+            <i class="fas fa-cubes"></i>
+        </div>
+        <h1 class="display-4 section-title mb-3">Добро пожаловать в ServiceHub</h1>
+        <p class="lead text-muted">Единый портал для заказа внутренних услуг предприятия</p>
     </div>
-    <div class="row g-4">
-        <!-- Рабочий модуль: Транспорт -->
-        <div class="col-md-4 fade-in" style="animation-delay: 0.1s;">
-            <div class="card h-100 shadow-sm">
-                <div class="card-body text-center">
-                    <div class="mb-3" style="font-size: 3rem;">🚗</div>
-                    <h5 class="card-title">Заказ транспорта</h5>
-                    <p class="card-text text-muted">Служебные поездки и трансферы</p>
-                    <a asp-page="/Transport/Index" class="btn btn-primary"><i class="fas fa-arrow-right me-2"></i>Перейти</a>
-                </div>
-            </div>
-        </div>
 
-        <!-- Рабочий модуль: Личный кабинет -->
-        <div class="col-md-4 fade-in" style="animation-delay: 0.2s;">
-            <div class="card h-100 shadow-sm">
-                <div class="card-body text-center">
-                    <div class="mb-3" style="font-size: 3rem;">👤</div>
-                    <h5 class="card-title">Личный кабинет</h5>
-                    <p class="card-text text-muted">Профиль и история заявок</p>
-                    <a asp-page="/Account/Dashboard" class="btn btn-primary"><i class="fas fa-arrow-right me-2"></i>Перейти</a>
+    <div class="row g-4 justify-content-center">
+        <!-- Карточки для авторизованных пользователей и администратора (без изменений) -->
+        @if (User.Identity?.IsAuthenticated == true)
+        {
+            <div class="col-md-4 fade-in-up" style="animation-delay: 0.1s;">
+                <div class="card h-100 text-center border-0 shadow-xl rounded-4">
+                    <div class="icon-box mx-auto mt-4">
+                        <i class="fas fa-truck"></i>
+                    </div>
+                    <div class="card-body p-4">
+                        <h5 class="fw-bold mt-3">Транспортные заявки</h5>
+                        <p class="text-muted">Оформление служебных поездок, отслеживание статуса, история</p>
+                        <a asp-page="/Transport/Index" class="btn btn-primary mt-3 rounded-pill px-4">Перейти</a>
+                    </div>
                 </div>
             </div>
-        </div>
+        }
 
-        <!-- В разработке: Поддержка -->
-        <div class="col-md-4 fade-in" style="animation-delay: 0.3s;">
-            <div class="card h-100 shadow-sm">
-                <div class="card-body text-center">
-                    <div class="mb-3" style="font-size: 3rem;">🛠️</div>
-                    <h5 class="card-title">Служба поддержки</h5>
-                    <p class="card-text text-muted">Техническая помощь и IT-вопросы</p>
-                    <a asp-page="/UnderConstruction" class="btn btn-secondary"><i class="fas fa-tools me-2"></i>В разработке</a>
+        @if (User.IsInRole("Admin"))
+        {
+            <div class="col-md-4 fade-in-up" style="animation-delay: 0.2s;">
+                <div class="card h-100 text-center border-0 shadow-xl rounded-4">
+                    <div class="icon-box mx-auto mt-4">
+                        <i class="fas fa-warehouse"></i>
+                    </div>
+                    <div class="card-body p-4">
+                        <h5 class="fw-bold mt-3">Управление автопарком</h5>
+                        <p class="text-muted">Добавление, редактирование автомобилей, контроль состояния</p>
+                        <a asp-page="/Admin/Cars/Index" class="btn btn-primary mt-3 rounded-pill px-4">Управлять</a>
+                    </div>
                 </div>
             </div>
-        </div>
+        }
 
-        <!-- В разработке: Питание -->
-        <div class="col-md-4 fade-in" style="animation-delay: 0.4s;">
-            <div class="card h-100 shadow-sm">
-                <div class="card-body text-center">
-                    <div class="mb-3" style="font-size: 3rem;">🍽️</div>
-                    <h5 class="card-title">Заказ питания</h5>
-                    <p class="card-text text-muted">Предзаказ обедов из столовой</p>
-                    <a asp-page="/UnderConstruction" class="btn btn-secondary"><i class="fas fa-utensils me-2"></i>В разработке</a>
+        @if (User.Identity?.IsAuthenticated == true)
+        {
+            <div class="col-md-4 fade-in-up" style="animation-delay: 0.3s;">
+                <div class="card h-100 text-center border-0 shadow-xl rounded-4">
+                    <div class="icon-box mx-auto mt-4">
+                        <i class="fas fa-map-signs"></i>
+                    </div>
+                    <div class="card-body p-4">
+                        <h5 class="fw-bold mt-3">Планирование маршрутов</h5>
+                        <p class="text-muted">Просмотр регулярных трансферов, остановок и расписания</p>
+                        <a asp-page="/Transport/Schedule" class="btn btn-primary mt-3 rounded-pill px-4">Смотреть</a>
+                    </div>
                 </div>
             </div>
-        </div>
+        }
 
-        <!-- В разработке: Помещения -->
-        <div class="col-md-4 fade-in" style="animation-delay: 0.5s;">
-            <div class="card h-100 shadow-sm">
-                <div class="card-body text-center">
-                    <div class="mb-3" style="font-size: 3rem;">🏢</div>
-                    <h5 class="card-title">Бронирование помещений</h5>
-                    <p class="card-text text-muted">Переговорные и залы для встреч</p>
-                    <a asp-page="/UnderConstruction" class="btn btn-secondary"><i class="fas fa-door-open me-2"></i>В разработке</a>
+        <!-- Карточка для неавторизованных пользователей -->
+        @if (!User.Identity?.IsAuthenticated == true)
+        {
+            <div class="col-md-8 mx-auto fade-in-up" style="animation-delay: 0.2s;">
+                <div class="card text-center border-0 shadow-xl rounded-4 bg-white">
+                    <div class="card-body p-5">
+                        <div class="icon-box mx-auto mb-4">
+                            <i class="fas fa-sign-in-alt"></i>
+                        </div>
+                        <h3 class="fw-bold mb-3">Добро пожаловать!</h3>
+                        <p class="text-muted mb-4">Для доступа к сервисам необходимо войти в систему или зарегистрироваться</p>
+                        <div class="d-flex justify-content-center gap-3">
+                            <a asp-page="/Account/Login" class="btn btn-primary btn-lg rounded-pill px-5">
+                                <i class="fas fa-sign-in-alt me-2"></i>Войти
+                            </a>
+                            <a asp-page="/Account/Register" class="btn btn-outline-primary btn-lg rounded-pill px-5">
+                                <i class="fas fa-user-plus me-2"></i>Регистрация
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
-</div>
-
-<div class="container mt-5 fade-in" style="animation-delay: 0.6s;">
-    <div class="row">
-        <div class="col-12">
-            <div class="card bg-light">
-                <div class="card-body text-center">
-                    <h5 class="card-title">Нужна помощь?</h5>
-                    <p class="card-text">
-                        <a asp-page="/UnderConstruction" class="btn btn-link"><strong><i class="fas fa-headset me-2"></i>Служба поддержки</strong></a> |
-                        Телефон: <strong>+7 (XXX) XXX-XX-XX</strong>
-                    </p>
-                </div>
-            </div>
-        </div>
-    </div>
+        }
+    </div>    
 </div>

@@ -17,7 +17,7 @@
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label asp-for="ServiceRequest.ServiceType" class="form-label fw-medium">Тип услуги</label>
-                        <select asp-for="ServiceRequest.ServiceType" class="form-select rounded-3">
+                        <select asp-for="ServiceRequest.ServiceType" class="form-select">
                             <option value="">Выберите тип услуги</option>
                             <option value="Транспорт">🚗 Транспорт</option>
                             <option value="Поддержка">🛠️ Поддержка</option>
@@ -29,7 +29,7 @@
 
                     <div class="col-md-6 mb-3">
                         <label asp-for="ServiceRequest.Status" class="form-label fw-medium">Статус</label>
-                        <select asp-for="ServiceRequest.Status" class="form-select rounded-3">
+                        <select asp-for="ServiceRequest.Status" class="form-select">
                             <option value="Ожидание">Ожидание</option>
                             <option value="В работе">В работе</option>
                             <option value="Завершено">Завершено</option>
@@ -41,19 +41,19 @@
 
                 <div class="mb-3">
                     <label asp-for="ServiceRequest.Title" class="form-label fw-medium">Заголовок</label>
-                    <input asp-for="ServiceRequest.Title" type="text" class="form-control rounded-3" />
+                    <input asp-for="ServiceRequest.Title" type="text" class="form-control" />
                     <span asp-validation-for="ServiceRequest.Title" class="text-danger"></span>
                 </div>
 
                 <div class="mb-3">
                     <label asp-for="ServiceRequest.Description" class="form-label fw-medium">Описание</label>
-                    <textarea asp-for="ServiceRequest.Description" class="form-control rounded-3" rows="4"></textarea>
+                    <textarea asp-for="ServiceRequest.Description" class="form-control" rows="4"></textarea>
                     <span asp-validation-for="ServiceRequest.Description" class="text-danger"></span>
                 </div>
 
                 <div class="mb-4">
                     <label asp-for="ServiceRequest.UserId" class="form-label fw-medium">Пользователь</label>
-                    <select asp-for="ServiceRequest.UserId" class="form-select rounded-3">
+                    <select asp-for="ServiceRequest.UserId" class="form-select">
                         <option value="">Выберите пользователя</option>
                         @foreach (var user in Model.Users)
                         {

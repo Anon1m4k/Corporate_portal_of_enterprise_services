@@ -8,18 +8,27 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddHttpContextAccessor();
 
-// Add Entity Framework
+// Подключение SQLite
+var connectionString = "Data Source=servicehub.db";
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlite(connectionString));
 
-builder.Services.AddAuthentication("Cookies")
-    .AddCookie("Cookies", options =>
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
     {
         options.LoginPath = "/Account/Login";
         options.AccessDeniedPath = "/Account/AccessDenied";
     });
 
 var app = builder.Build();
+
+// Автоматическое применение миграций и инициализация данных
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    dbContext.Database.Migrate();          // создаёт базу, если её нет, и применяет миграции
+    DbInitializer.Initialize(dbContext);   // заполняет базу тестовыми данными
+}
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
