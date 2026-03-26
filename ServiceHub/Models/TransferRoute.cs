@@ -14,13 +14,13 @@ namespace ServiceHub.Models
         [Display(Name = "Описание")]
         public string? Description { get; set; }
 
-        [Required]
+        [Range(1, int.MaxValue, ErrorMessage = "Укажите автомобиль")]
         public int CarId { get; set; }
         [ForeignKey("CarId")]
         public Car? Car { get; set; }
 
         public bool IsActive { get; set; } = true;
 
-        public ICollection<TransferStop> Stops { get; set; } = new List<TransferStop>();
+        public ICollection<TransferStop> Stops { get; set; } = new List<TransferStop>();  
     }
 }

@@ -5,6 +5,8 @@ VisualStudioVersion = 17.14.36301.6
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceHub", "ServiceHub.csproj", "{D0FD4EFF-A65E-4BE6-96B9-AD40099EB44F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceHub.Tests", "..\ServiceHub.Tests\ServiceHub.Tests.csproj", "{4BFB13A0-0864-4C18-8CAF-A957AC15EF88}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{D0FD4EFF-A65E-4BE6-96B9-AD40099EB44F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D0FD4EFF-A65E-4BE6-96B9-AD40099EB44F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D0FD4EFF-A65E-4BE6-96B9-AD40099EB44F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4BFB13A0-0864-4C18-8CAF-A957AC15EF88}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4BFB13A0-0864-4C18-8CAF-A957AC15EF88}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4BFB13A0-0864-4C18-8CAF-A957AC15EF88}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4BFB13A0-0864-4C18-8CAF-A957AC15EF88}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
