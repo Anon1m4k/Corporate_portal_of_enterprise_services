@@ -1,32 +1,42 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ServiceHub.Models
 {
-    public class TransferStop
+    public class TransferStop : IValidatableObject
     {
         public int Id { get; set; }
 
-        [Required]
+        [Range(1, int.MaxValue, ErrorMessage = "Укажите маршрут")]
         public int TransferRouteId { get; set; }
         [ForeignKey("TransferRouteId")]
         public TransferRoute? TransferRoute { get; set; }
 
         [Required]
-        [Range(1, 100)]
+        [Range(1, 100, ErrorMessage = "Порядковый номер должен быть от 1 до 100")]
         [Display(Name = "Порядковый номер")]
         public int Order { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Укажите адрес или название")]
         [Display(Name = "Адрес или название")]
         public string Address { get; set; } = string.Empty;
 
-        [Required]
         [DataType(DataType.Time)]
         [Display(Name = "Время прибытия")]
         public TimeSpan ArrivalTime { get; set; }
 
-        // Можно добавить комментарий
         public string? Notes { get; set; }
+
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            if (ArrivalTime == TimeSpan.Zero)
+            {
+                yield return new ValidationResult(
+                    "Укажите время прибытия",
+                    new[] { nameof(ArrivalTime) }
+                );
+            }
+        }
     }
 }

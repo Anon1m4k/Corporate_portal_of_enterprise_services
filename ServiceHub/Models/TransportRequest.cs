@@ -1,14 +1,14 @@
 ﻿using ServiceHub.Models;
 using ServiceHub.Models.Account;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-public class TransportRequest
+public class TransportRequest : IValidatableObject
 {
     public int Id { get; set; }
     public int UserId { get; set; }
     public AuthUser? User { get; set; }
 
-    [Required(ErrorMessage = "Укажите дату и время")]
     [Display(Name = "Дата и время")]
     public DateTime TripDateTime { get; set; }
 
@@ -29,7 +29,6 @@ public class TransportRequest
     [Display(Name = "Цель поездки")]
     public string Purpose { get; set; } = string.Empty;
 
-
     [Display(Name = "Автомобиль")]
     public int? CarId { get; set; }
     public Car? Car { get; set; }
@@ -44,4 +43,15 @@ public class TransportRequest
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime? UpdatedAt { get; set; }
     public DateTime? ApprovedAt { get; set; }
+
+    public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+    {
+        if (TripDateTime == default)
+        {
+            yield return new ValidationResult(
+                "Укажите дату и время",
+                new[] { nameof(TripDateTime) }
+            );
+        }
+    }
 }
