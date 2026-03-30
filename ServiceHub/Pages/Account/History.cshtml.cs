@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
@@ -23,31 +23,50 @@ namespace ServiceHub.Pages.Account
 
         public void OnGet()
         {
-            var userEmail = User.FindFirst(ClaimTypes.Email)?.Value;
-
-            if (string.IsNullOrEmpty(userEmail))
-            {
-                userEmail = User.Identity?.Name;
-            }
-
-            if (string.IsNullOrEmpty(userEmail))
-            {
-                return;
-            }
+            var userEmail = User.FindFirst(ClaimTypes.Email)?.Value ?? User.Identity?.Name;
+            if (string.IsNullOrEmpty(userEmail)) return;
 
             var user = _context.Users.FirstOrDefault(u => u.Email == userEmail);
-            if (user == null)
-            {
-                return;
-            }
+            if (user == null) return;
 
             var userId = user.Id;
 
-            ServiceRequests = _context.ServiceRequests
-                .Include(sr => sr.User)
+            var serviceRequests = _context.ServiceRequests
                 .Where(sr => sr.UserId == userId)
                 .OrderByDescending(sr => sr.CreatedAt)
                 .ToList();
+
+            var transportRequests = _context.TransportRequests
+                .Where(tr => tr.UserId == userId)
+                .OrderByDescending(tr => tr.CreatedAt)
+                .ToList();
+
+            var allRequests = new List<ServiceRequest>();
+            allRequests.AddRange(serviceRequests);
+
+            foreach (var tr in transportRequests)
+            {
+                var description = $"{tr.StartPoint} → {tr.EndPoint}, {tr.PassengerCount} чел., {tr.VehicleType}";
+                if (!string.IsNullOrEmpty(tr.VehicleModel))
+                {
+                    description += $" ({tr.VehicleModel})";
+                }
+                description += $". Цель: {tr.Purpose}";
+
+                allRequests.Add(new ServiceRequest
+                {
+                    Id = tr.Id,
+                    ServiceType = "Транспорт",
+                    Title = $"{tr.TripType} {tr.TripDateTime:dd.MM HH:mm}",
+                    Description = description,
+                    Status = tr.Status,
+                    CreatedAt = tr.CreatedAt,
+                    User = tr.User,
+                    UserId = tr.UserId
+                });
+            }
+
+            ServiceRequests = allRequests.OrderByDescending(r => r.CreatedAt).ToList();
         }
     }
 }

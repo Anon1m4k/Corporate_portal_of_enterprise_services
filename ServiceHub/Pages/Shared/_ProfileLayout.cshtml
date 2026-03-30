@@ -13,28 +13,16 @@ Layout = "_Layout";
 
                 <ul class="nav flex-column">
                     <li class="nav-item">
-                        <a class="nav-link @(ViewContext.RouteData.Values["Page"]?.ToString() == "/Profile/Index" ? "active" : "")"
-                           asp-page="/Account/Dashboard">
-                            📊 Главная
-                        </a>
+                        <a class="nav-link" asp-page="/Account/Dashboard">📊 Главная</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link @(ViewContext.RouteData.Values["Page"]?.ToString() == "/Profile/Edit" ? "active" : "")"
-                           asp-page="/Account/Profile">
-                            👤 Профиль
-                        </a>
+                        <a class="nav-link" asp-page="/Account/Profile">👤 Профиль</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link @(ViewContext.RouteData.Values["Page"]?.ToString() == "/Profile/History" ? "active" : "")"
-                           asp-page="/Account/History">
-                            📋 История заявок
-                        </a>
+                        <a class="nav-link" asp-page="/Account/History">📋 История заявок</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link @(ViewContext.RouteData.Values["Page"]?.ToString() == "/Profile/ChangePassword" ? "active" : "")"
-                           asp-page="/Account/ChangePassword">
-                            🔒 Смена пароля
-                        </a>
+                        <a class="nav-link" asp-page="/Account/ChangePassword">🔒 Смена пароля</a>
                     </li>
                 </ul>
             </div>
