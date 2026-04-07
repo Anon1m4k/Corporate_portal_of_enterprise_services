@@ -1,8 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using ServiceHub.Models;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
+﻿using ServiceHub.Models.Transport;
 
 namespace ServiceHub.Tests.Unit.Model
 {

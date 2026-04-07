@@ -1,5 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using ServiceHub.Models;
+﻿using ServiceHub.Models.Transport;
 
 namespace ServiceHub.Tests.Unit.Model
 {
