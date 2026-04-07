@@ -11,8 +11,8 @@ using ServiceHub.Data;
 namespace ServiceHub.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260301171942_InitialSqlite")]
-    partial class InitialSqlite
+    [Migration("20260407085608_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -61,38 +61,88 @@ namespace ServiceHub.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("ServiceHub.Models.Car", b =>
+            modelBuilder.Entity("ServiceHub.Models.Rooms.Room", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Brand")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<bool>("IsAvailable")
+                    b.Property<int>("Capacity")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("LicensePlate")
-                        .IsRequired()
-                        .HasMaxLength(9)
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Model")
+                    b.Property<string>("Equipment")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("PassengerCapacity")
+                    b.Property<bool>("IsActive")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("VehicleType")
+                    b.Property<string>("Location")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Cars");
+                    b.ToTable("Rooms");
+                });
+
+            modelBuilder.Entity("ServiceHub.Models.Rooms.RoomRequest", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime?>("ApprovedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("ApproverId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("EndTime")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("ParticipantsCount")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("RoomId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("StartTime")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Topic")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApproverId");
+
+                    b.HasIndex("RoomId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("RoomRequests");
                 });
 
             modelBuilder.Entity("ServiceHub.Models.ServiceRequest", b =>
@@ -136,7 +186,41 @@ namespace ServiceHub.Migrations
                     b.ToTable("ServiceRequests");
                 });
 
-            modelBuilder.Entity("ServiceHub.Models.TransferRoute", b =>
+            modelBuilder.Entity("ServiceHub.Models.Transport.Car", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Brand")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsAvailable")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("LicensePlate")
+                        .IsRequired()
+                        .HasMaxLength(9)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Model")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("PassengerCapacity")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("VehicleType")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Cars");
+                });
+
+            modelBuilder.Entity("ServiceHub.Models.Transport.TransferRoute", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -162,7 +246,7 @@ namespace ServiceHub.Migrations
                     b.ToTable("TransferRoutes");
                 });
 
-            modelBuilder.Entity("ServiceHub.Models.TransferStop", b =>
+            modelBuilder.Entity("ServiceHub.Models.Transport.TransferStop", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -191,7 +275,7 @@ namespace ServiceHub.Migrations
                     b.ToTable("TransferStops");
                 });
 
-            modelBuilder.Entity("TransportRequest", b =>
+            modelBuilder.Entity("ServiceHub.Models.Transport.TransportRequest", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -248,6 +332,31 @@ namespace ServiceHub.Migrations
                     b.ToTable("TransportRequests");
                 });
 
+            modelBuilder.Entity("ServiceHub.Models.Rooms.RoomRequest", b =>
+                {
+                    b.HasOne("ServiceHub.Models.Account.AuthUser", "Approver")
+                        .WithMany()
+                        .HasForeignKey("ApproverId");
+
+                    b.HasOne("ServiceHub.Models.Rooms.Room", "Room")
+                        .WithMany("RoomRequests")
+                        .HasForeignKey("RoomId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ServiceHub.Models.Account.AuthUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Approver");
+
+                    b.Navigation("Room");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("ServiceHub.Models.ServiceRequest", b =>
                 {
                     b.HasOne("ServiceHub.Models.Account.AuthUser", "User")
@@ -259,9 +368,9 @@ namespace ServiceHub.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("ServiceHub.Models.TransferRoute", b =>
+            modelBuilder.Entity("ServiceHub.Models.Transport.TransferRoute", b =>
                 {
-                    b.HasOne("ServiceHub.Models.Car", "Car")
+                    b.HasOne("ServiceHub.Models.Transport.Car", "Car")
                         .WithMany("TransferRoutes")
                         .HasForeignKey("CarId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -270,9 +379,9 @@ namespace ServiceHub.Migrations
                     b.Navigation("Car");
                 });
 
-            modelBuilder.Entity("ServiceHub.Models.TransferStop", b =>
+            modelBuilder.Entity("ServiceHub.Models.Transport.TransferStop", b =>
                 {
-                    b.HasOne("ServiceHub.Models.TransferRoute", "TransferRoute")
+                    b.HasOne("ServiceHub.Models.Transport.TransferRoute", "TransferRoute")
                         .WithMany("Stops")
                         .HasForeignKey("TransferRouteId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -281,13 +390,13 @@ namespace ServiceHub.Migrations
                     b.Navigation("TransferRoute");
                 });
 
-            modelBuilder.Entity("TransportRequest", b =>
+            modelBuilder.Entity("ServiceHub.Models.Transport.TransportRequest", b =>
                 {
                     b.HasOne("ServiceHub.Models.Account.AuthUser", "Approver")
                         .WithMany()
                         .HasForeignKey("ApproverId");
 
-                    b.HasOne("ServiceHub.Models.Car", "Car")
+                    b.HasOne("ServiceHub.Models.Transport.Car", "Car")
                         .WithMany()
                         .HasForeignKey("CarId");
 
@@ -304,12 +413,17 @@ namespace ServiceHub.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("ServiceHub.Models.Car", b =>
+            modelBuilder.Entity("ServiceHub.Models.Rooms.Room", b =>
+                {
+                    b.Navigation("RoomRequests");
+                });
+
+            modelBuilder.Entity("ServiceHub.Models.Transport.Car", b =>
                 {
                     b.Navigation("TransferRoutes");
                 });
 
-            modelBuilder.Entity("ServiceHub.Models.TransferRoute", b =>
+            modelBuilder.Entity("ServiceHub.Models.Transport.TransferRoute", b =>
                 {
                     b.Navigation("Stops");
                 });

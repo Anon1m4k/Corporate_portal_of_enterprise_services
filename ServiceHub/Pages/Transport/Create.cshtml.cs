@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ServiceHub.Data;
-using ServiceHub.Models;
+using ServiceHub.Models.Transport;
 using System.Security.Claims;
 
 namespace ServiceHub.Pages.Transport

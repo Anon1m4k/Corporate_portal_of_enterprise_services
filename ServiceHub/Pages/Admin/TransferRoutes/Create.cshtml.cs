@@ -1,9 +1,8 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
 using ServiceHub.Data;
-using ServiceHub.Models;
+using ServiceHub.Models.Transport;
 using System.ComponentModel.DataAnnotations;
 
 namespace ServiceHub.Pages.Admin.TransferRoutes

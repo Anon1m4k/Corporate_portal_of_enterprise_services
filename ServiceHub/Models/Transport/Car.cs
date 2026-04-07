@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ServiceHub.Models
+namespace ServiceHub.Models.Transport
 {
     public class Car
     {

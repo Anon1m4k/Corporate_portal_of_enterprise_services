@@ -1,5 +1,5 @@
-﻿using ServiceHub.Models;
-using ServiceHub.Models.Account;
+﻿using ServiceHub.Models.Account;
+using ServiceHub.Models.Transport;
 
 namespace ServiceHub.Data
 {
