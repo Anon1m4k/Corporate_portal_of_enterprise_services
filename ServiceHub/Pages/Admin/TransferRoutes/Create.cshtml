@@ -1,0 +1,77 @@
+﻿@page
+@model ServiceHub.Pages.Admin.TransferRoutes.CreateModel
+@{
+    ViewData["Title"] = "Добавление маршрута";
+}
+
+<div class="container mt-4">
+    <div class="card border-0 shadow">
+        <div class="card-header">
+            <h2 class="mb-0">Добавление маршрута для @Model.CarName</h2>
+        </div>
+        <div class="card-body">
+            <form method="post" id="routeForm">
+                <input type="hidden" asp-for="CarId" />
+
+                <div asp-validation-summary="All" class="text-danger"></div>
+
+                <div class="mb-3">
+                    <label asp-for="RouteName" class="form-label"></label>
+                    <input asp-for="RouteName" class="form-control" />
+                    <span asp-validation-for="RouteName" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Description" class="form-label"></label>
+                    <textarea asp-for="Description" class="form-control" rows="2"></textarea>
+                </div>
+
+                <div class="mb-3">
+                    <label for="stopCount" class="form-label">Количество остановок</label>
+                    <input type="number" id="stopCount" name="stopCount" class="form-control" min="1" max="20" value="1" />
+                    <button type="button" class="btn btn-outline-secondary mt-2" onclick="generateStops()">Сгенерировать поля</button>
+                </div>
+
+                <div id="stopsContainer">
+                    <!-- Сюда будут добавляться поля -->
+                </div>
+
+                <button type="submit" class="btn btn-primary mt-3">Сохранить</button>
+                <a asp-page="Index" asp-route-carId="@Model.CarId" class="btn btn-outline-secondary mt-3">Отмена</a>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        function generateStops() {
+            const count = parseInt(document.getElementById('stopCount').value) || 1;
+            const container = document.getElementById('stopsContainer');
+            container.innerHTML = '';
+
+            for (let i = 0; i < count; i++) {
+                const stopDiv = document.createElement('div');
+                stopDiv.className = 'card mb-3 p-3 border';
+                stopDiv.innerHTML = `
+                    <h6 class="mb-3">Остановка ${i + 1}</h6>
+                    <div class="row">
+                        <div class="col-md-6 mb-2">
+                            <label class="form-label">Адрес или название</label>
+                            <input type="text" name="Stops[${i}].Address" class="form-control" required />
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            <label class="form-label">Время прибытия (HH:MM)</label>
+                            <input type="time" name="Stops[${i}].ArrivalTime" class="form-control" required />
+                        </div>
+                    </div>
+                    <input type="hidden" name="Stops[${i}].Order" value="${i + 1}" />
+                `;
+                container.appendChild(stopDiv);
+            }
+        }
+
+        window.onload = generateStops;
+    </script>
+}

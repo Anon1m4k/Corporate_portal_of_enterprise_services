@@ -7,7 +7,7 @@ namespace ServiceHub.Models.Account
         public int Id { get; set; }
 
         [Required]
-        [EmailAddress]
+        [EmailAddress(ErrorMessage = "Некорректный формат Email")]
         public string Email { get; set; } = string.Empty;
 
         [Required]

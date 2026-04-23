@@ -1,80 +1,111 @@
-﻿@using Microsoft.AspNetCore.Http
+﻿﻿@using Microsoft.AspNetCore.Http
 @inject IHttpContextAccessor HttpContextAccessor
 @{
     var user = HttpContextAccessor.HttpContext?.User;
     var isAuthenticated = user?.Identity?.IsAuthenticated ?? false;
     var userName = user?.Identity?.Name ?? "";
     var isAdmin = user?.IsInRole("Admin") ?? false;
-}﻿
+}
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ru" class="h-100">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - ServiceHub</title>
+    <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <!-- Google Font Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Site CSS -->
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/ServiceHub.styles.css" asp-append-version="true" />
 </head>
-<body>
+<body class="d-flex flex-column h-100">
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-lg navbar-light">
             <div class="container">
-                <a class="navbar-brand" asp-area="" asp-page="/Index">ServiceHub</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
+                <a class="navbar-brand" asp-area="" asp-page="/Index">
+                    <i class="fas fa-cubes me-2"></i>ServiceHub
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Index">Главная</a>
+                            <a class="nav-link @((ViewContext.RouteData.Values["page"]?.ToString() == "/Index") ? "active" : "")" asp-area="" asp-page="/Index">
+                                <i class="fas fa-home me-1"></i>Главная
+                            </a>
                         </li>
                         @if (isAuthenticated)
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-page="/Transport/Index">Транспорт</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-page="/Support">Поддержка</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-page="/Food">Питание</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-page="/Rooms">Помещения</a>
+                                <a class="nav-link @((ViewContext.RouteData.Values["page"]?.ToString()?.StartsWith("/Transport") ?? false) ? "active" : "")" asp-area="" asp-page="/Transport/Index">
+                                    <i class="fas fa-car me-1"></i>Транспорт
+                                </a>
                             </li>
                             @if (isAdmin)
                             {
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-page="/Admin/ServiceRequests">Управление заявками</a>
+                                    <a class="nav-link @((ViewContext.RouteData.Values["page"]?.ToString()?.StartsWith("/Admin/Cars") ?? false) ? "active" : "")" asp-area="" asp-page="/Admin/Cars/Index">
+                                        <i class="fas fa-truck me-1"></i>Автомобили
+                                    </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-page="/Admin/Users">Пользователи</a>
+                                    <a class="nav-link @((ViewContext.RouteData.Values["page"]?.ToString()?.StartsWith("/Admin/ServiceRequests") ?? false) ? "active" : "")" asp-area="" asp-page="/Admin/ServiceRequests">
+                                        <i class="fas fa-clipboard-list me-1"></i>Заявки
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link @((ViewContext.RouteData.Values["page"]?.ToString()?.StartsWith("/Admin/Users") ?? false) ? "active" : "")" asp-area="" asp-page="/Admin/Users">
+                                        <i class="fas fa-users me-1"></i>Пользователи
+                                    </a>
                                 </li>
                             }
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-page="/Account/Dashboard">Личный кабинет</a>
-                            </li>
                         }
                     </ul>
                     <ul class="navbar-nav">
                         @if (!isAuthenticated)
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-page="/Account/Login">Войти</a>
+                                <a class="nav-link @((ViewContext.RouteData.Values["page"]?.ToString() == "/Account/Login") ? "active" : "")" asp-area="" asp-page="/Account/Login">
+                                    <i class="fas fa-sign-in-alt me-1"></i>Войти
+                                </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-page="/Account/Register">Регистрация</a>
+                                <a class="nav-link @((ViewContext.RouteData.Values["page"]?.ToString() == "/Account/Register") ? "active" : "")" asp-area="" asp-page="/Account/Register">
+                                    <i class="fas fa-user-plus me-1"></i>Регистрация
+                                </a>
                             </li>
                         }
                         else
                         {
-                            <li class="nav-item">
-                                <span class="nav-link text-dark">@userName</span>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-page="/Account/Logout">Выйти</a>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="z-index: 9999;">
+                                    <i class="fas fa-user-circle me-1"></i>@userName
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-end shadow-xl border-0 rounded-4 p-2" aria-labelledby="userDropdown" style="z-index: 9999;">
+                                    <a class="dropdown-item rounded-3 py-2 px-3" asp-page="/Account/Dashboard">
+                                        <i class="fas fa-tachometer-alt me-2 text-primary"></i>Личный кабинет
+                                    </a>
+                                    <a class="dropdown-item rounded-3 py-2 px-3" asp-page="/Account/Profile">
+                                        <i class="fas fa-id-card me-2 text-info"></i>Профиль
+                                    </a>
+                                    <a class="dropdown-item rounded-3 py-2 px-3" asp-page="/Account/History">
+                                        <i class="fas fa-history me-2 text-warning"></i>История заявок
+                                    </a>
+                                    <a class="dropdown-item rounded-3 py-2 px-3" asp-page="/Account/ChangePassword">
+                                        <i class="fas fa-lock me-2 text-secondary"></i>Смена пароля
+                                    </a>
+                                    <hr class="dropdown-divider my-1">
+                                    <a class="dropdown-item text-danger rounded-3 py-2 px-3" asp-page="/Account/Logout">
+                                        <i class="fas fa-sign-out-alt me-2"></i>Выйти из системы
+                                    </a>
+                                </div>
                             </li>
                         }
                     </ul>
@@ -82,22 +113,22 @@
             </div>
         </nav>
     </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            <small class="text-muted">© 2025 ServiceHub. Все права защищены.</small>
+    <main role="main" class="flex-shrink-0">
+        <div class="container mt-4">
+            @RenderBody()
+        </div>
+    </main>
+
+    <footer class="footer mt-auto py-3">
+        <div class="container text-center text-muted">
+            <small>© 2026 ServiceHub. Все права защищены.</small>
         </div>
     </footer>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
-
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

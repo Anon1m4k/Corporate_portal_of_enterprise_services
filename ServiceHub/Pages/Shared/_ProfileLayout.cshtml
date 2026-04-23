@@ -2,33 +2,44 @@
 Layout = "_Layout";
 }
 
-<div class="container-fluid">
+<div class="container-fluid mt-4 fade-in">
     <div class="row">
-        <nav class="col-md-3 col-lg-2 d-md-block bg-light sidebar">
-            <div class="position-sticky pt-3">
+        <!-- Sidebar -->
+        <div class="col-md-3 col-lg-2 mb-4">
+            <div class="sidebar p-3 rounded-4 shadow-sm">
                 <div class="text-center mb-4">
-                    <h5>Личный кабинет</h5>
-                    <small class="text-muted">@User.Identity.Name</small>
+                    <i class="fas fa-user-circle fa-3x text-primary mb-2"></i>
+                    <h5 class="fw-bold">@User.Identity?.Name</h5>
+                    <small class="text-muted">Личный кабинет</small>
                 </div>
-
-                <ul class="nav flex-column">
+                <hr />
+                <ul class="nav flex-column nav-pills">
                     <li class="nav-item">
-                        <a class="nav-link" asp-page="/Account/Dashboard">📊 Главная</a>
+                        <a class="nav-link @(ViewContext.RouteData.Values["page"].ToString() == "/Account/Dashboard" ? "active" : "")" asp-page="/Account/Dashboard">
+                            <i class="fas fa-chart-pie me-2"></i>Главная
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" asp-page="/Account/Profile">👤 Профиль</a>
+                        <a class="nav-link @(ViewContext.RouteData.Values["page"].ToString() == "/Account/Profile" ? "active" : "")" asp-page="/Account/Profile">
+                            <i class="fas fa-id-card me-2"></i>Профиль
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" asp-page="/Account/History">📋 История заявок</a>
+                        <a class="nav-link @(ViewContext.RouteData.Values["page"].ToString() == "/Account/History" ? "active" : "")" asp-page="/Account/History">
+                            <i class="fas fa-history me-2"></i>История заявок
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" asp-page="/Account/ChangePassword">🔒 Смена пароля</a>
+                        <a class="nav-link @(ViewContext.RouteData.Values["page"].ToString() == "/Account/ChangePassword" ? "active" : "")" asp-page="/Account/ChangePassword">
+                            <i class="fas fa-lock me-2"></i>Смена пароля
+                        </a>
                     </li>
                 </ul>
             </div>
-        </nav>
+        </div>
 
-        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+        <!-- Main content -->
+        <main class="col-md-9 col-lg-10">
             @RenderBody()
         </main>
     </div>
@@ -36,22 +47,28 @@ Layout = "_Layout";
 
 <style>
     .sidebar {
-        min-height: calc(100vh - 140px);
-        box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
+        background-color: white;
+        transition: all 0.3s;
     }
 
         .sidebar .nav-link {
-            color: #333;
-            padding: 0.75rem 1rem;
+            border-radius: 10px;
+            color: #495057;
+            transition: all 0.2s;
         }
 
-            .sidebar .nav-link.active {
-                color: #0d6efd;
-                background-color: #e7f1ff;
+            .sidebar .nav-link:hover {
+                background-color: rgba(30, 58, 138, 0.1);
+                color: var(--deep-blue);
             }
 
-            .sidebar .nav-link:hover {
-                background-color: #f8f9fa;
+            .sidebar .nav-link.active {
+                background-color: var(--deep-blue);
+                color: white !important;
+            }
+
+            .sidebar .nav-link i {
+                width: 1.5rem;
             }
 </style>
 

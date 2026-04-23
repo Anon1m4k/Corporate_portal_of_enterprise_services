@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using ServiceHub.Data;
-using ServiceHub.Models;
 using System.Security.Claims;
 
 namespace ServiceHub.Pages.Account
@@ -19,13 +18,7 @@ namespace ServiceHub.Pages.Account
         }
 
         [BindProperty]
-        public string CurrentPassword { get; set; } = string.Empty;
-
-        [BindProperty]
-        public string NewPassword { get; set; } = string.Empty;
-
-        [BindProperty]
-        public string ConfirmPassword { get; set; } = string.Empty;
+        public Models.Account.ChangePasswordModel Input { get; set; }
 
         public void OnGet()
         {
@@ -34,41 +27,27 @@ namespace ServiceHub.Pages.Account
         public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)
-            {
                 return Page();
-            }
 
-            if (NewPassword != ConfirmPassword)
-            {
-                ModelState.AddModelError("ConfirmPassword", "Пароли не совпадают");
-                return Page();
-            }
+            var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(userIdClaim) || !int.TryParse(userIdClaim, out int userId))
+                return RedirectToPage("/Account/Login");
 
-            if (NewPassword.Length < 8)
-            {
-                ModelState.AddModelError("NewPassword", "Пароль должен содержать не менее 8 символов");
-                return Page();
-            }
-
-            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
             var user = await _context.Users.FindAsync(userId);
-
             if (user == null)
-            {
                 return NotFound();
-            }
 
-            if (user.Password != CurrentPassword)
+            if (user.Password != Input.CurrentPassword)
             {
-                ModelState.AddModelError("CurrentPassword", "Текущий пароль неверен");
+                ModelState.AddModelError("Input.CurrentPassword", "Текущий пароль неверен");
                 return Page();
             }
 
-            user.Password = NewPassword;
+            user.Password = Input.NewPassword;
             await _context.SaveChangesAsync();
 
-            TempData["SuccessMessage"] = "Пароль успешно изменен";
-            return Page();
+            TempData["PasswordChangeSuccess"] = "Пароль успешно изменён";
+            return RedirectToPage();
         }
     }
 }

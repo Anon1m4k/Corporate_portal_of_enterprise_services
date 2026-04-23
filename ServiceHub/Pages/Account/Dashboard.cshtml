@@ -5,106 +5,141 @@
     Layout = "_ProfileLayout";
 }
 
-<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-    <h1 class="h2">Главная</h1>
-</div>
-
-<div class="row">
-    <div class="col-md-3 mb-4">
-        <div class="card text-white bg-primary">
-            <div class="card-body">
-                <h5 class="card-title">Активные заявки</h5>
-                <h2 class="card-text">@Model.ActiveRequests</h2>
-            </div>
-        </div>
+<div class="fade-in">
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-4 border-bottom">
+        <h1 class="h2 section-title">Обзор активности</h1>
     </div>
 
-    <div class="col-md-3 mb-4">
-        <div class="card text-white bg-success">
-            <div class="card-body">
-                <h5 class="card-title">Выполнено</h5>
-                <h2 class="card-text">@Model.CompletedRequests</h2>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-3 mb-4">
-        <div class="card text-white bg-warning">
-            <div class="card-body">
-                <h5 class="card-title">На согласовании</h5>
-                <h2 class="card-text">@Model.PendingRequests</h2>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-3 mb-4">
-        <div class="card text-white bg-info">
-            <div class="card-body">
-                <h5 class="card-title">Всего заявок</h5>
-                <h2 class="card-text">@Model.TotalRequests</h2>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="row mt-4">
-    <div class="col-12">
-        <div class="card">
-            <div class="card-header">
-                <h5 class="card-title mb-0">Последние заявки</h5>
-            </div>
-
-            <div class="card-body">
-                @if (Model.RecentRequests.Any())
-                {
-                    <div class="list-group list-group-flush">
-                        @foreach (var request in Model.RecentRequests)
-                        {
-                            <div class="list-group-item">
-                                <small class="text-muted">@request.CreatedAt.ToString("dd.MM.yyyy HH:mm")</small>
-                                <p class="mb-1">
-                                    @if (request.ServiceType == "Транспорт")
-                                    {
-                                        <span class="badge bg-info">🚗</span>
-                                    }
-                                    else if (request.ServiceType == "Поддержка")
-                                    {
-                                        <span class="badge bg-warning">🛠️</span>
-                                    }
-                                    else if (request.ServiceType == "Питание")
-                                    {
-                                        <span class="badge bg-success">🍽️</span>
-                                    }
-                                    else if (request.ServiceType == "Помещения")
-                                    {
-                                        <span class="badge bg-primary">🏢</span>
-                                    }
-                                    <strong>@request.Title</strong> -
-                                    @if (request.Status == "На согласовании")
-                                    {
-                                        <span class="badge bg-warning">@request.Status</span>
-                                    }
-                                    else if (request.Status == "Подтверждена")
-                                    {
-                                        <span class="badge bg-success">@request.Status</span>
-                                    }
-                                    else if (request.Status == "Выполнена")
-                                    {
-                                        <span class="badge bg-info">@request.Status</span>
-                                    }
-                                    else if (request.Status == "Отклонена")
-                                    {
-                                        <span class="badge bg-danger">@request.Status</span>
-                                    }
-                                </p>
-                            </div>
-                        }
+    <!-- Информационные карточки (Статистика) -->
+    <div class="row g-4 mb-5">
+        <div class="col-xl-3 col-md-6">
+            <div class="card stat-card stat-card-primary h-100 text-white shadow-lg border-0">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="card-title mb-2 opacity-75">В работе</h6>
+                            <h2 class="card-text mb-0 display-6 fw-bold">@Model.ActiveRequests</h2>
+                        </div>
                     </div>
-                }
-                else
-                {
-                    <p class="text-muted">У вас пока нет заявок</p>
-                }
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+            <div class="card stat-card stat-card-success h-100 text-white shadow-lg border-0">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="card-title mb-2 opacity-75">Завершено</h6>
+                            <h2 class="card-text mb-0 display-6 fw-bold">@Model.CompletedRequests</h2>
+                        </div>                      
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+            <div class="card stat-card stat-card-warning h-100 text-white shadow-lg border-0">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="card-title mb-2 opacity-75">Ожидание</h6>
+                            <h2 class="card-text mb-0 display-6 fw-bold">@Model.PendingRequests</h2>
+                        </div>                      
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+            <div class="card stat-card stat-card-info h-100 text-white shadow-lg border-0">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="card-title mb-2 opacity-75">Всего создано</h6>
+                            <h2 class="card-text mb-0 display-6 fw-bold">@Model.TotalRequests</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Последние события -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card border-0 shadow-xl rounded-4 overflow-hidden fade-in-up" style="animation-delay: 0.2s;">
+                <div class="card-header bg-white border-0 py-4 px-4 d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0 fw-bold"><i class="fas fa-bolt text-warning me-2"></i>Последняя активность</h5>
+                    <a asp-page="/Account/History" class="btn btn-sm btn-outline-primary rounded-pill px-3">Вся история</a>
+                </div>
+                <div class="card-body p-0">
+                    @if (Model.RecentRequests.Any())
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle mb-0">
+                                <thead class="bg-light">
+                                    <tr>
+                                        <th class="ps-4 border-0">Тип услуги</th>
+                                        <th class="border-0">Описание</th>
+                                        <th class="border-0">Дата</th>
+                                        <th class="text-end pe-4 border-0">Статус</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var request in Model.RecentRequests)
+                                    {
+                                        <tr>
+                                            <td class="ps-4">
+                                                @if (request.ServiceType == "Транспорт")
+                                                {
+                                                    <span class="badge bg-info bg-opacity-10 text-info border-0 rounded-pill px-3"><i class="fas fa-car me-2"></i>@request.ServiceType</span>
+                                                }
+                                                else if (request.ServiceType == "Поддержка")
+                                                {
+                                                    <span class="badge bg-warning bg-opacity-10 text-warning border-0 rounded-pill px-3"><i class="fas fa-tools me-2"></i>@request.ServiceType</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge bg-primary bg-opacity-10 text-primary border-0 rounded-pill px-3"><i class="fas fa-cube me-2"></i>@request.ServiceType</span>
+                                                }
+                                            </td>
+                                            <td class="fw-medium">@request.Title</td>
+                                            <td class="text-muted small">@request.CreatedAt.ToString("dd.MM.yyyy HH:mm")</td>
+                                            <td class="text-end pe-4">
+                                                @switch (request.Status)
+                                                {
+                                                    case "На согласовании":
+                                                        <span class="text-warning small fw-bold"><i class="fas fa-clock me-1"></i> На согласовании</span>
+                                                        break;
+                                                    case "Подтверждена":
+                                                        <span class="text-primary small fw-bold"><i class="fas fa-check-circle me-1"></i> Подтверждена</span>
+                                                        break;
+                                                    case "Выполнена":
+                                                        <span class="text-success small fw-bold"><i class="fas fa-check-double me-1"></i> Выполнена</span>
+                                                        break;
+                                                    case "Отклонена":
+                                                        <span class="text-danger small fw-bold"><i class="fas fa-times-circle me-1"></i> Отклонена</span>
+                                                        break;
+                                                    default:
+                                                        <span class="text-secondary small fw-bold">@request.Status</span>
+                                                        break;
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-center py-5">
+                            <i class="fas fa-inbox fa-3x text-muted opacity-25 mb-3"></i>
+                            <p class="text-muted">Активных уведомлений пока нет</p>
+                        </div>
+                    }
+                </div>
             </div>
         </div>
     </div>

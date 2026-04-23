@@ -43,9 +43,11 @@ namespace ServiceHub.Pages.Account
             var isAdmin = User.IsInRole("Admin");
             var userId = user.Id;
 
-            // Базовые запросы
             var serviceQuery = _context.ServiceRequests.AsQueryable();
-            var transportQuery = _context.TransportRequests.AsQueryable();
+            var transportQuery = _context.TransportRequests
+                .Include(tr => tr.Car)
+                .Include(tr => tr.User)
+                .AsQueryable();
 
             if (!isAdmin)
             {
@@ -74,12 +76,13 @@ namespace ServiceHub.Pages.Account
             foreach (var tr in transportRequests)
             {
                 var userName = tr.User != null ? $"{tr.User.FirstName} {tr.User.LastName}" : "";
+                var carInfo = tr.Car != null ? $"{tr.Car.Brand} {tr.Car.Model}" : "не указан";
                 recent.Add(new ServiceRequest
                 {
                     Id = tr.Id,
                     ServiceType = "Транспорт",
-                    Title = $"{tr.TripType} {tr.TripDateTime:dd.MM HH:mm}",
-                    Description = $"{tr.StartPoint} → {tr.EndPoint}, {tr.PassengerCount} чел., {tr.VehicleType}",
+                    Title = $"Служебная поездка {tr.TripDateTime:dd.MM HH:mm}",
+                    Description = $"{tr.StartPoint} → {tr.EndPoint}, {tr.PassengerCount} чел., авто: {carInfo}",
                     Status = tr.Status,
                     CreatedAt = tr.CreatedAt,
                     User = tr.User

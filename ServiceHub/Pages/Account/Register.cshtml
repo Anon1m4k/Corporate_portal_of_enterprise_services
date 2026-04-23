@@ -4,59 +4,78 @@
     ViewData["Title"] = "Регистрация";
 }
 
-<div class="container mt-5">
+<div class="container mt-5 fade-in">
     <div class="row justify-content-center">
-        <div class="col-md-6 col-lg-4">
-            <div class="card shadow">
-                <div class="card-body p-4">
-                    <h2 class="card-title text-center mb-4">Регистрация в ServiceHub</h2>
+        <div class="col-md-8 col-lg-6">
+            <div class="card border-0 shadow-xl rounded-4">
+                <div class="card-body p-5">
+                    <div class="text-center mb-4">
+                        <div class="icon-box mx-auto mb-4">
+                            <i class="fas fa-user-plus"></i>
+                        </div>
+                        <h2 class="mt-3 fw-bold section-title">Создать аккаунт</h2>
+                        <p class="text-muted">Заполните форму для регистрации</p>
+                    </div>
 
                     <form method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Input.FirstName" class="form-label fw-medium">Имя</label>
+                                <input asp-for="Input.FirstName" class="form-control rounded-16" placeholder="Иван" />
+                                <span asp-validation-for="Input.FirstName" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Input.LastName" class="form-label fw-medium">Фамилия</label>
+                                <input asp-for="Input.LastName" class="form-control rounded-16" placeholder="Петров" />
+                                <span asp-validation-for="Input.LastName" class="text-danger"></span>
+                            </div>
+                        </div>
+
                         <div class="mb-3">
-                            <label asp-for="Input.Email" class="form-label">Email</label>
-                            <input asp-for="Input.Email" class="form-control" />
+                            <label asp-for="Input.Email" class="form-label fw-medium">Email</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-white rounded-start-16"><i class="fas fa-envelope text-primary"></i></span>
+                                <input asp-for="Input.Email" class="form-control rounded-end-16" placeholder="name@example.com" />
+                            </div>
                             <span asp-validation-for="Input.Email" class="text-danger"></span>
                         </div>
 
                         <div class="mb-3">
-                            <label asp-for="Input.Password" class="form-label">Пароль</label>
-                            <input asp-for="Input.Password" type="password" class="form-control" />
-                            <span asp-validation-for="Input.Password" class="text-danger"></span>
-                        </div>
-
-                        <div class="mb-3">
-                            <label asp-for="Input.ConfirmPassword" class="form-label">Подтверждение пароля</label>
-                            <input asp-for="Input.ConfirmPassword" type="password" class="form-control" />
-                            <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
-                        </div>
-
-                        <div class="mb-3">
-                            <label asp-for="Input.FirstName" class="form-label">Имя</label>
-                            <input asp-for="Input.FirstName" class="form-control" />
-                            <span asp-validation-for="Input.FirstName" class="text-danger"></span>
-                        </div>
-
-                        <div class="mb-3">
-                            <label asp-for="Input.LastName" class="form-label">Фамилия</label>
-                            <input asp-for="Input.LastName" class="form-control" />
-                            <span asp-validation-for="Input.LastName" class="text-danger"></span>
-                        </div>
-
-                        <div class="mb-3">
-                            <label asp-for="Input.Department" class="form-label">Отдел</label>
-                            <input asp-for="Input.Department" class="form-control" />
+                            <label asp-for="Input.Department" class="form-label fw-medium">Отдел</label>
+                            <input asp-for="Input.Department" class="form-control rounded-16" placeholder="Отдел разработки" />
                             <span asp-validation-for="Input.Department" class="text-danger"></span>
                         </div>
 
-                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
-                        <div class="d-grid">
-                            <button type="submit" class="btn btn-primary">Зарегистрироваться</button>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Input.Password" class="form-label fw-medium">Пароль</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-white rounded-start-16"><i class="fas fa-lock text-primary"></i></span>
+                                    <input asp-for="Input.Password" type="password" class="form-control rounded-end-16" />
+                                </div>
+                                <span asp-validation-for="Input.Password" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Input.ConfirmPassword" class="form-label fw-medium">Подтверждение</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-white rounded-start-16"><i class="fas fa-lock text-primary"></i></span>
+                                    <input asp-for="Input.ConfirmPassword" type="password" class="form-control rounded-end-16" />
+                                </div>
+                                <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+                            </div>
                         </div>
+
+                        <button type="submit" class="btn btn-primary w-100 py-3 mt-3 rounded-pill">
+                            <i class="fas fa-user-check me-2"></i>Зарегистрироваться
+                        </button>
                     </form>
 
-                    <div class="text-center mt-3">
-                        <a href="/Account/Login" class="text-decoration-none">Уже есть аккаунт? Войти</a>
+                    <div class="text-center mt-4">
+                        <a asp-page="/Account/Login" class="text-decoration-none">
+                            <i class="fas fa-sign-in-alt me-1"></i>Уже есть аккаунт? Войти
+                        </a>
                     </div>
                 </div>
             </div>
