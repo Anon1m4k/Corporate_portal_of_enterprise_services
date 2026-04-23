@@ -8,9 +8,11 @@ namespace ServiceHub.Models.Transport
 
         [Required(ErrorMessage = "Укажите марку автомобиля")]
         [Display(Name = "Марка")]
+        [StringLength(25, ErrorMessage = "Марка не должна превышать 25 символов")]
         public string Brand { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "Укажите модель автомобиля")]
+        [StringLength(50, ErrorMessage = "Модель не должна превышать 50 символов")]
         [Display(Name = "Модель")]
         public string Model { get; set; } = string.Empty;
 

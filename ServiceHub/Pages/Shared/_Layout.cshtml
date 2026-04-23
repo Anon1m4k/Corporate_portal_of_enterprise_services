@@ -1,4 +1,4 @@
-﻿﻿@using Microsoft.AspNetCore.Http
+﻿﻿﻿@using Microsoft.AspNetCore.Http
 @inject IHttpContextAccessor HttpContextAccessor
 @{
     var user = HttpContextAccessor.HttpContext?.User;
@@ -20,14 +20,14 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <!-- Site CSS -->
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <!-- site.css отключён -->
+    @* <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" /> *@
 </head>
 <body class="d-flex flex-column h-100">
     <header>
-        <nav class="navbar navbar-expand-lg navbar-light">
+        <nav class="navbar navbar-expand-lg navbar-light bg-white">
             <div class="container">
-                <a class="navbar-brand" asp-area="" asp-page="/Index">
+                <a class="navbar-brand fw-bold text-primary" asp-area="" asp-page="/Index">
                     <i class="fas fa-cubes me-2"></i>ServiceHub
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
@@ -85,10 +85,10 @@
                         else
                         {
                             <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="z-index: 9999;">
+                                <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     <i class="fas fa-user-circle me-1"></i>@userName
                                 </a>
-                                <div class="dropdown-menu dropdown-menu-end shadow-xl border-0 rounded-4 p-2" aria-labelledby="userDropdown" style="z-index: 9999;">
+                                <div class="dropdown-menu dropdown-menu-end shadow-lg rounded-3 p-2" aria-labelledby="userDropdown">
                                     <a class="dropdown-item rounded-3 py-2 px-3" asp-page="/Account/Dashboard">
                                         <i class="fas fa-tachometer-alt me-2 text-primary"></i>Личный кабинет
                                     </a>
@@ -120,8 +120,8 @@
         </div>
     </main>
 
-    <footer class="footer mt-auto py-3">
-        <div class="container text-center text-muted">
+    <footer class="footer mt-auto py-3 bg-dark text-white">
+        <div class="container text-center">
             <small>© 2026 ServiceHub. Все права защищены.</small>
         </div>
     </footer>

@@ -4,12 +4,19 @@
     ViewData["Title"] = "Добавление автомобиля";
 }
 
-<div class="container mt-4 fade-in">
-    <div class="card border-0 shadow-lg rounded-4">
-        <div class="card-header bg-transparent border-0 pt-4 px-4">
-            <h2 class="section-title mb-0">Добавление автомобиля</h2>
-        </div>
-        <div class="card-body p-4">
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card shadow-lg rounded-3 overflow-hidden">
+                <div class="card-header bg-primary text-white p-4">
+                    <div class="d-flex align-items-center">
+                        <div class="bg-white rounded-circle p-3 text-primary me-3 shadow-sm" style="width: 50px; height: 50px; display: inline-flex; align-items: center; justify-content: center;">
+                            <i class="fas fa-car fa-lg"></i>
+                        </div>
+                        <h2 class="mb-0 text-white fw-bold">Добавление автомобиля</h2>
+                    </div>
+                </div>
+                <div class="card-body p-5">
             <form method="post">
                 <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
@@ -48,7 +55,7 @@
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label asp-for="Car.PassengerCapacity" class="form-label fw-medium"></label>
-                        <input asp-for="Car.PassengerCapacity" class="form-control" type="number" min="1" max="30" />
+                                <input asp-for="Car.PassengerCapacity" class="form-control" type="number" value="1" min="1" max="30" />
                         <span asp-validation-for="Car.PassengerCapacity" class="text-danger"></span>
                     </div>
                     <div class="col-md-6 mb-3">
@@ -71,6 +78,9 @@
         </div>
     </div>
 </div>
+</div>
+</div>
+
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

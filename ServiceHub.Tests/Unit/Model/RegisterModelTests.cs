@@ -25,9 +25,9 @@ namespace ServiceHub.Tests.Unit.Model
         [TestMethod]
         public void RegisterModel_EmailLengthExceedsMax_ShouldFail()
         {
-            var model = new RegisterModel { Email = new string('a', 101) + "@test.com" };
+            var model = new RegisterModel { Email = new string('a', 51) + "@test.com" };
             var results = ModelValidator.ValidateModel(model);
-            Assert.IsTrue(results.Any(r => r.MemberNames.Contains("Email") && r.ErrorMessage.Contains("не должен превышать 100 символов")));
+            Assert.IsTrue(results.Any(r => r.MemberNames.Contains("Email") && r.ErrorMessage.Contains("не должен превышать 50 символов")));
         }
 
         [TestMethod]

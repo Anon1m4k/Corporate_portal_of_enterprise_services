@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using ServiceHub.Data;
 using ServiceHub.Models.Transport;
-using System.ComponentModel.DataAnnotations;
 
 namespace ServiceHub.Pages.Admin.TransferRoutes
 {
@@ -18,38 +17,15 @@ namespace ServiceHub.Pages.Admin.TransferRoutes
         }
 
         [BindProperty]
-        public int CarId { get; set; }
-
-        [BindProperty]
-        [Required(ErrorMessage = "Введите название маршрута")]
-        [Display(Name = "Название маршрута")]
-        public string RouteName { get; set; } = string.Empty;
-
-        [BindProperty]
-        [Display(Name = "Описание")]
-        public string? Description { get; set; }
-
-        [BindProperty]
-        public List<StopInput> Stops { get; set; } = new();
+        public TransferRoute TransferRoute { get; set; } = new TransferRoute();
 
         public string CarName { get; set; } = string.Empty;
-
-        public class StopInput
-        {
-            [Required(ErrorMessage = "Укажите адрес")]
-            public string Address { get; set; } = string.Empty;
-
-            [Required(ErrorMessage = "Укажите время")]
-            [DataType(DataType.Time)]
-            public TimeSpan ArrivalTime { get; set; }
-
-            public int Order { get; set; }
-        }
 
         public async Task<IActionResult> OnGetAsync(int carId)
         {
             var car = await _context.Cars.FindAsync(carId);
-            if (car == null) return NotFound();
+            if (car == null)
+                return NotFound();
 
             if (car.VehicleType != "Минивэн" && car.VehicleType != "Автобус")
             {
@@ -57,56 +33,71 @@ namespace ServiceHub.Pages.Admin.TransferRoutes
                 return RedirectToPage("/Admin/Cars/Index");
             }
 
-            CarId = carId;
+            TransferRoute = new TransferRoute
+            {
+                CarId = carId,
+                Stops = new List<TransferStop>
+                {
+                    new TransferStop { Order = 1 }
+                }
+            };
+
             CarName = $"{car.Brand} {car.Model}";
             return Page();
         }
 
         public async Task<IActionResult> OnPostAsync()
         {
-            // Валидация остановок
-            if (Stops == null || Stops.Count == 0)
+            if (ModelState.ContainsKey("TransferRoute.Car"))
+                ModelState.Remove("TransferRoute.Car");
+
+            // Преобразуем ICollection в List для индексации
+            var stopsList = TransferRoute.Stops?.ToList() ?? new List<TransferStop>();
+
+            for (int i = 0; i < stopsList.Count; i++)
             {
-                ModelState.AddModelError(string.Empty, "Добавьте хотя бы одну остановку");
+                var key = $"TransferRoute.Stops[{i}].TransferRouteId";
+                if (ModelState.ContainsKey(key))
+                    ModelState.Remove(key);
+            }
+
+            // Дополнительная проверка остановок
+            if (stopsList.Count == 0)
+            {
+                ModelState.AddModelError("TransferRoute.Stops", "Добавьте хотя бы одну остановку");
             }
             else
             {
-                for (int i = 0; i < Stops.Count; i++)
+                for (int i = 0; i < stopsList.Count; i++)
                 {
-                    if (string.IsNullOrWhiteSpace(Stops[i].Address))
+                    if (string.IsNullOrWhiteSpace(stopsList[i].Address))
                     {
-                        ModelState.AddModelError($"Stops[{i}].Address", "Адрес обязателен");
+                        ModelState.AddModelError($"TransferRoute.Stops[{i}].Address", "Адрес обязателен");
                     }
                 }
             }
 
             if (!ModelState.IsValid)
             {
-                var car = await _context.Cars.FindAsync(CarId);
+                // Восстанавливаем CarName для отображения
+                var car = await _context.Cars.FindAsync(TransferRoute.CarId);
                 CarName = car != null ? $"{car.Brand} {car.Model}" : "";
                 return Page();
             }
 
-            // Создаём маршрут
-            var route = new TransferRoute
+            // Устанавливаем Order на основе позиции в списке
+            for (int i = 0; i < stopsList.Count; i++)
             {
-                Name = RouteName,
-                Description = Description,
-                CarId = CarId,
-                IsActive = true,
-                Stops = Stops.Select(s => new TransferStop
-                {
-                    Order = s.Order,
-                    Address = s.Address,
-                    ArrivalTime = s.ArrivalTime
-                }).ToList()
-            };
+                stopsList[i].Order = i + 1;
+            }
 
-            _context.TransferRoutes.Add(route);
+            TransferRoute.Stops = stopsList;
+
+            _context.TransferRoutes.Add(TransferRoute);
             await _context.SaveChangesAsync();
 
             TempData["SuccessMessage"] = "Маршрут успешно добавлен.";
-            return RedirectToPage("Index", new { carId = CarId });
+            return RedirectToPage("Index", new { carId = TransferRoute.CarId });
         }
     }
 }

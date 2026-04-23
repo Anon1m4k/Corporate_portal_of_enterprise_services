@@ -5,40 +5,62 @@
 }
 
 <div class="container mt-4">
-    <div class="card border-0 shadow">
-        <div class="card-header">
-            <h2 class="mb-0">Добавление маршрута для @Model.CarName</h2>
-        </div>
-        <div class="card-body">
-            <form method="post" id="routeForm">
-                <input type="hidden" asp-for="CarId" />
-
-                <div asp-validation-summary="All" class="text-danger"></div>
-
-                <div class="mb-3">
-                    <label asp-for="RouteName" class="form-label"></label>
-                    <input asp-for="RouteName" class="form-control" />
-                    <span asp-validation-for="RouteName" class="text-danger"></span>
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card shadow-lg rounded-3 overflow-hidden">
+                <div class="card-header bg-primary text-white p-4">
+                    <div class="d-flex align-items-center">
+                        <div class="bg-white rounded-circle p-3 text-primary me-3 shadow-sm" style="width: 50px; height: 50px; display: inline-flex; align-items: center; justify-content: center;">
+                            <i class="fas fa-car fa-lg"></i>
+                        </div>
+                        <h2 class="mb-0 text-white fw-bold">Добавление маршрута для @Model.CarName</h2>
+                    </div>
                 </div>
+                <div class="card-body p-5">
+                    <form method="post" id="routeForm">
+                        <input type="hidden" asp-for="TransferRoute.CarId" />
+                        <div asp-validation-summary="All" class="text-danger"></div>
 
-                <div class="mb-3">
-                    <label asp-for="Description" class="form-label"></label>
-                    <textarea asp-for="Description" class="form-control" rows="2"></textarea>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="TransferRoute.Name" class="form-label fw-medium"></label>
+                                <input asp-for="TransferRoute.Name" class="form-control" maxlength="30" />
+                                <span asp-validation-for="TransferRoute.Name" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="TransferRoute.Description" class="form-label fw-medium"></label>
+                                <textarea asp-for="TransferRoute.Description" class="form-control" rows="2" maxlength="100"></textarea>
+                                <span asp-validation-for="TransferRoute.Description" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12 mb-3">
+                                <label for="stopCount" class="form-label fw-medium">Количество остановок</label>
+                                <input type="number" id="stopCount" name="stopCount" class="form-control" min="1" max="20" value="1" />
+                                <div class="d-block text-center mt-2">
+                                    <button type="button" class="btn btn-outline-primary rounded-pill px-4" onclick="generateStops()">
+                                        Сгенерировать поля
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="stopsContainer">
+                            <!-- Здесь будут динамически добавляться остановки -->
+                        </div>
+
+                        <div class="d-flex gap-2 mt-3">
+                            <button type="submit" class="btn btn-primary rounded-pill px-4">
+                                <i class="fas fa-save me-2"></i>Сохранить
+                            </button>
+                            <a asp-page="Index" asp-route-carId="@Model.TransferRoute.CarId" class="btn btn-outline-secondary rounded-pill px-4">
+                                <i class="fas fa-times me-2"></i>Отмена
+                            </a>
+                        </div>
+                    </form>
                 </div>
-
-                <div class="mb-3">
-                    <label for="stopCount" class="form-label">Количество остановок</label>
-                    <input type="number" id="stopCount" name="stopCount" class="form-control" min="1" max="20" value="1" />
-                    <button type="button" class="btn btn-outline-secondary mt-2" onclick="generateStops()">Сгенерировать поля</button>
-                </div>
-
-                <div id="stopsContainer">
-                    <!-- Сюда будут добавляться поля -->
-                </div>
-
-                <button type="submit" class="btn btn-primary mt-3">Сохранить</button>
-                <a asp-page="Index" asp-route-carId="@Model.CarId" class="btn btn-outline-secondary mt-3">Отмена</a>
-            </form>
+            </div>
         </div>
     </div>
 </div>
@@ -53,25 +75,56 @@
 
             for (let i = 0; i < count; i++) {
                 const stopDiv = document.createElement('div');
-                stopDiv.className = 'card mb-3 p-3 border';
+                stopDiv.className = 'card mb-3 p-3';
                 stopDiv.innerHTML = `
                     <h6 class="mb-3">Остановка ${i + 1}</h6>
                     <div class="row">
                         <div class="col-md-6 mb-2">
                             <label class="form-label">Адрес или название</label>
-                            <input type="text" name="Stops[${i}].Address" class="form-control" required />
+                            <input type="text" name="TransferRoute.Stops[${i}].Address" class="form-control" required maxlength="30" />
                         </div>
                         <div class="col-md-6 mb-2">
                             <label class="form-label">Время прибытия (HH:MM)</label>
-                            <input type="time" name="Stops[${i}].ArrivalTime" class="form-control" required />
+                            <input type="time" name="TransferRoute.Stops[${i}].ArrivalTime" class="form-control" required />
                         </div>
                     </div>
-                    <input type="hidden" name="Stops[${i}].Order" value="${i + 1}" />
+                    <input type="hidden" name="TransferRoute.Stops[${i}].Order" value="${i + 1}" />
                 `;
                 container.appendChild(stopDiv);
             }
         }
 
-        window.onload = generateStops;
+        // Загрузка существующих остановок при возврате формы с ошибками
+        function loadExistingStops() {
+            const stops = @Html.Raw(Json.Serialize(Model.TransferRoute.Stops));
+            if (stops && stops.length > 0) {
+                document.getElementById('stopCount').value = stops.length;
+                const container = document.getElementById('stopsContainer');
+                container.innerHTML = '';
+                stops.forEach((stop, i) => {
+                    const stopDiv = document.createElement('div');
+                    stopDiv.className = 'card mb-3 p-3';
+                    stopDiv.innerHTML = `
+                        <h6 class="mb-3">Остановка ${i + 1}</h6>
+                        <div class="row">
+                            <div class="col-md-6 mb-2">
+                                <label class="form-label">Адрес или название</label>
+                                <input type="text" name="TransferRoute.Stops[${i}].Address" class="form-control" value="${stop.address || ''}" required maxlength="50" />
+                            </div>
+                            <div class="col-md-6 mb-2">
+                                <label class="form-label">Время прибытия (HH:MM)</label>
+                                <input type="time" name="TransferRoute.Stops[${i}].ArrivalTime" class="form-control" value="${stop.arrivalTime || ''}" required />
+                            </div>
+                        </div>
+                        <input type="hidden" name="TransferRoute.Stops[${i}].Order" value="${stop.order || i + 1}" />
+                    `;
+                    container.appendChild(stopDiv);
+                });
+            } else {
+                generateStops();
+            }
+        }
+
+        window.onload = loadExistingStops;
     </script>
 }

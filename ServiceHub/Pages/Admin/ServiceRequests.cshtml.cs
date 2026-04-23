@@ -63,8 +63,8 @@ namespace ServiceHub.Pages.Admin
 
             foreach (var tr in transportRequests)
             {
-                var carInfo = tr.Car != null ? $"{tr.Car.Brand} {tr.Car.Model}" : "не указан";
-                var description = $"{tr.StartPoint} → {tr.EndPoint}, {tr.PassengerCount} чел., авто: {carInfo}. Цель: {tr.Purpose}";
+                var carInfo = tr.Car != null ? $"{tr.Car.Brand} {tr.Car.Model}" : "Не указан";
+                var description = $"{tr.StartPoint} → {tr.EndPoint}, {tr.PassengerCount} чел., Авто: {carInfo}. Цель: {tr.Purpose}";
 
                 serviceRequests.Add(new ServiceRequest
                 {

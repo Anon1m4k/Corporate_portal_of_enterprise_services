@@ -6,7 +6,7 @@ namespace ServiceHub.Models.Account
     {
         [Required(ErrorMessage = "Не указан Email")]
         [EmailAddress(ErrorMessage = "Некорректный формат Email")]
-        [StringLength(100, ErrorMessage = "Email не должен превышать 100 символов")]
+        [StringLength(50, ErrorMessage = "Email не должен превышать 50 символов")]
         public string Email { get; set; }
 
         [Required(ErrorMessage = "Не указан пароль")]
@@ -22,12 +22,15 @@ namespace ServiceHub.Models.Account
         public string ConfirmPassword { get; set; }
 
         [Required(ErrorMessage = "Не указано имя")]
+        [StringLength(50, ErrorMessage = "Имя не должно превышать 50 символов")]
         public string FirstName { get; set; }
 
         [Required(ErrorMessage = "Не указана фамилия")]
+        [StringLength(50, ErrorMessage = "Фамилия не должна превышать 50 символов")]
         public string LastName { get; set; }
 
         [Required(ErrorMessage = "Не указан отдел")]
+        [StringLength(50, ErrorMessage = "Отдел не должен превышать 50 символов")]
         public string Department { get; set; }
     }
 }

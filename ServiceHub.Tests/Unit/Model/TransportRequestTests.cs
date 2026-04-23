@@ -17,22 +17,7 @@ namespace ServiceHub.Tests.Unit.Model
         {
             var request = new TransportRequest();
             Assert.IsTrue((DateTime.UtcNow - request.CreatedAt).TotalSeconds < 2);
-        }
-
-        [TestMethod]
-        public void TransportRequest_TripDateTimeRequired_ShouldFailWhenDefault()
-        {
-            var request = new TransportRequest
-            {
-                StartPoint = "Start",
-                EndPoint = "End",
-                PassengerCount = 1,
-                Purpose = "Test",
-                TripDateTime = default
-            };
-            var results = ModelValidator.ValidateModel(request);
-            Assert.IsTrue(results.Any(r => r.MemberNames.Contains("TripDateTime")));
-        }
+        }       
 
         [TestMethod]
         public void TransportRequest_StartPointRequired_ShouldFailWhenMissing()

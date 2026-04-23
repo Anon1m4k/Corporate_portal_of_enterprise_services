@@ -4,20 +4,21 @@
     ViewData["Title"] = "Маршруты трансфера";
 }
 
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h2 class="section-title">Маршруты для автомобиля @Model.CarName</h2>
-    <div>
-        <a asp-page="/Admin/Cars/Index" class="btn btn-outline-secondary me-2">
-            <i class="fas fa-arrow-left"></i> Назад к автомобилям
+<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+    <h2 class="fw-bold text-primary mb-1">Маршруты для автомобиля @Model.CarName</h2>
+    <div class ="d-flex gap-2">
+        <a asp-page="/Admin/Cars/Index" class="btn btn-outline-secondary rounded-pill px-4">
+            <i class="fas fa-arrow-left me-2"></i> Назад к автомобилям
         </a>
         @if (Model.CanAddRoute)
         {
-            <a asp-page="Create" asp-route-carId="@Model.CarId" class="btn btn-primary">
-                <i class="fas fa-plus"></i> Добавить маршрут
+            <a asp-page="Create" asp-route-carId="@Model.CarId" class="btn btn-primary rounded-pill px-4">
+                <i class="fas fa-plus me-2"></i> Добавить маршрут
             </a>
         }
     </div>
 </div>
+
 
 @if (TempData["SuccessMessage"] != null)
 {
@@ -34,15 +35,15 @@
     </div>
 }
 
-<div class="card shadow">
-    <div class="card-body">
+<div class="card shadow-lg rounded-3">
+    <div class="card-body p-2">
         @if (Model.Routes.Any())
         {
             <div class="table-responsive">
-                <table class="table table-hover align-middle">
-                    <thead>
+                <table class="table table-hover align-middle text-center">
+                    <thead class="table-light">
                         <tr>
-                            <th>Название</th>
+                            <th class="ps-4">Название</th>
                             <th>Описание</th>
                             <th>Остановок</th>
                             <th>Статус</th>
@@ -60,7 +61,7 @@
                                     <form method="post" asp-page-handler="ToggleActive" style="display:inline;">
                                         <input type="hidden" name="id" value="@route.Id" />
                                         <div class="form-check form-switch">
-                                            <input class="form-check-input" type="checkbox" role="switch"
+                                            <input class="form-check-input" type="checkbox"
                                                    id="active-@route.Id"
                                                    name="isActive"
                                                    value="true"
@@ -73,29 +74,31 @@
                                     </form>
                                 </td>
                                 <td>
-                                    <button type="button" class="btn btn-square btn-outline-info" title="Подробнее"
+                                    <div class="d-flex justify-content-end gap-2">
+                                    <button type="button" class="btn btn-sm btn-primary" style="width: 42px; height: 42px; padding: 0; display: inline-flex; align-items: center; justify-content: center;" title="Подробнее"
                                             data-bs-toggle="modal" data-bs-target="#detailsModal-@route.Id">
                                         <i class="fas fa-info-circle"></i>
                                     </button>
-                                    <button type="button" class="btn btn-square btn-outline-danger"
+                                    <button type="button" class="btn btn-sm btn-danger" style="width: 42px; height: 42px; padding: 0; display: inline-flex; align-items: center; justify-content: center;"
                                             data-bs-toggle="modal" data-bs-target="#deleteModal-@route.Id" title="Удалить">
                                         <i class="fas fa-trash"></i>
                                     </button>
+                                    </div>
 
                                     <!-- Модальное окно подробностей -->
                                     <div class="modal fade" id="detailsModal-@route.Id" tabindex="-1" aria-hidden="true">
-                                        <div class="modal-dialog modal-lg">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title">@route.Name</h5>
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                        <div class="modal-dialog modal-dialog-centered">
+                                            <div class="modal-content shadow-lg rounded-3">
+                                                <div class="modal-header bg-primary text-white py-3">
+                                                    <h5 class="modal-title fw-bold"><i class="fas fa-info-circle me-2"></i>@route.Name</h5>
+                                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                                                 </div>
                                                 <div class="modal-body">
                                                     @if (!string.IsNullOrEmpty(route.Description))
                                                     {
-                                                        <p><strong>Описание:</strong> @route.Description</p>
+                                                        <p class="text-start"><strong>Описание:</strong> @route.Description</p>
                                                     }
-                                                    <p>
+                                                    <p class="text-start">
                                                         <strong>Автомобиль:</strong>
                                                         @if (route.Car != null)
                                                         {
@@ -106,10 +109,10 @@
                                                             <span>Не указан</span>
                                                         }
                                                     </p>
-                                                    <p><strong>Статус:</strong> @(route.IsActive ? "Активен" : "Неактивен")</p>
-                                                    <h6 class="mt-3">Остановки</h6>
-                                                    <table class="table table-sm table-bordered">
-                                                        <thead>
+                                                    <p class="text-start"><strong>Статус:</strong> @(route.IsActive ? "Активен" : "Неактивен")</p>
+                                                    <h6 class="text-start"><strong>Остановки:</strong></h6>
+                                                    <table class="table table-hover align-middle text-center">
+                                                        <thead class="table-light">
                                                             <tr>
                                                                 <th>№</th>
                                                                 <th>Адрес</th>
@@ -127,30 +130,28 @@
                                                             }
                                                         </tbody>
                                                     </table>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Закрыть</button>
-                                                </div>
+                                                </div>         
                                             </div>
                                         </div>
                                     </div>
 
+
                                     <!-- Модальное окно удаления -->
                                     <div class="modal fade" id="deleteModal-@route.Id" tabindex="-1" aria-hidden="true">
-                                        <div class="modal-dialog">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title">Подтверждение удаления</h5>
+                                        <div class="modal-dialog modal-dialog-centered">
+                                            <div class="modal-content border-0 shadow-lg rounded-3">
+                                                <div class="modal-header border-0 pb-0">
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                                 </div>
-                                                <div class="modal-body">
-                                                    Вы уверены, что хотите удалить маршрут <strong>@route.Name</strong>?
-                                                    <br>Все связанные остановки также будут удалены.
+                                                <div class="modal-body text-center p-4">
+                                                    <i class="fas fa-exclamation-circle fa-3x text-danger mb-3"></i>
+                                                    <h5 class="fw-bold mb-3">Удалить маршрут?</h5>
+                                                    <p class="text-muted">Вы действительно хотите удалить маршрут?</p>
                                                 </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Отмена</button>
+                                                <div class="modal-footer border-0 justify-content-center pb-4">
+                                                    <button type="button" class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">Нет, оставить</button>
                                                     <form method="post" asp-page-handler="Delete" asp-route-id="@route.Id">
-                                                        <button type="submit" class="btn btn-danger">Удалить</button>
+                                                        <button type="submit" class="btn btn-danger rounded-pill px-4">Да, удалить</button>
                                                     </form>
                                                 </div>
                                             </div>
@@ -165,7 +166,13 @@
         }
         else
         {
-            <p class="text-muted">Для этого автомобиля пока нет маршрутов.</p>
+            <div class="rounded-3 p-5 text-center">
+                <div class="d-inline-flex align-items-center justify-content-center bg-light rounded-circle p-3 mx-auto mb-3 opacity-25" style="width: 80px; height: 80px;">
+                    <i class="fas fa-calendar-times fa-2x text-muted"></i>
+                </div>
+                <h5 class="text-muted">Для этого автомобиля пока нет маршрутов.</h5>
+                <p class="mb-0">Добавьте новый маршрут.</p>
+            </div>           
         }
     </div>
 </div>

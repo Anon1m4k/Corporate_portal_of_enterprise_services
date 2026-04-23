@@ -3,21 +3,24 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ServiceHub.Models.Transport
 {
-    public class TransportRequest : IValidatableObject
+    public class TransportRequest
     {
         public int Id { get; set; }
         public int UserId { get; set; }
         public AuthUser? User { get; set; }
 
+        [Required(ErrorMessage = "Укажите дату и время поездки")]
         [Display(Name = "Дата и время")]
         public DateTime TripDateTime { get; set; }
 
         [Required(ErrorMessage = "Укажите пункт отправления")]
-        [Display(Name = "Откуда")]
+        [StringLength(30, ErrorMessage = "Точка отправления не должна превышать 30 символов")]
+        [Display(Name = "Точка отправления")]
         public string StartPoint { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "Укажите пункт назначения")]
-        [Display(Name = "Куда")]
+        [StringLength(30, ErrorMessage = "Пункт назначения не должн превышать 30 символов")]
+        [Display(Name = "Пункт назначения")]
         public string EndPoint { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "Укажите количество пассажиров")]
@@ -27,6 +30,7 @@ namespace ServiceHub.Models.Transport
 
         [Required(ErrorMessage = "Укажите цель поездки")]
         [Display(Name = "Цель поездки")]
+        [StringLength(100, ErrorMessage = "Цель поездки не должна превышать 100 символов")]
         public string Purpose { get; set; } = string.Empty;
 
         [Display(Name = "Автомобиль")]
@@ -43,16 +47,5 @@ namespace ServiceHub.Models.Transport
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime? UpdatedAt { get; set; }
         public DateTime? ApprovedAt { get; set; }
-
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        {
-            if (TripDateTime == default)
-            {
-                yield return new ValidationResult(
-                    "Укажите дату и время",
-                    new[] { nameof(TripDateTime) }
-                );
-            }
-        }
     }
 }

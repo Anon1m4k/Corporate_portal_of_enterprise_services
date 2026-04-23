@@ -82,7 +82,6 @@ namespace ServiceHub.Pages.Transport
             TransportRequest.UserId = user.Id;
             TransportRequest.Status = "На согласовании";
             TransportRequest.CreatedAt = DateTime.UtcNow;
-            // Удалены строки с присвоением VehicleType и VehicleModel
 
             _context.TransportRequests.Add(TransportRequest);
             await _context.SaveChangesAsync();

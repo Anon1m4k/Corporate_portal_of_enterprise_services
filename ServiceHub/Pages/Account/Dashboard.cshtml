@@ -5,20 +5,32 @@
     Layout = "_ProfileLayout";
 }
 
-<div class="fade-in">
-    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-4 border-bottom">
-        <h1 class="h2 section-title">Обзор активности</h1>
+<div>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h2 fw-bold text-primary">Обзор активности</h1>
     </div>
 
     <!-- Информационные карточки (Статистика) -->
-    <div class="row g-4 mb-5">
+    <div class="row g-4 mb-4">
         <div class="col-xl-3 col-md-6">
-            <div class="card stat-card stat-card-primary h-100 text-white shadow-lg border-0">
+            <div class="card bg-success text-white h-100 shadow-lg">
                 <div class="card-body p-4">
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
-                            <h6 class="card-title mb-2 opacity-75">В работе</h6>
+                            <h6 class="card-title mb-2">Подтверждено</h6>
                             <h2 class="card-text mb-0 display-6 fw-bold">@Model.ActiveRequests</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6">
+            <div class="card bg-warning text-dark h-100 shadow-lg">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="card-title mb-2">На согласовании</h6>
+                            <h2 class="card-text mb-0 display-6 fw-bold">@Model.PendingRequests</h2>
                         </div>
                     </div>
                 </div>
@@ -26,37 +38,23 @@
         </div>
 
         <div class="col-xl-3 col-md-6">
-            <div class="card stat-card stat-card-success h-100 text-white shadow-lg border-0">
+            <div class="card bg-primary text-white h-100 shadow-lg">
                 <div class="card-body p-4">
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
-                            <h6 class="card-title mb-2 opacity-75">Завершено</h6>
+                            <h6 class="card-title mb-2">Завершено</h6>
                             <h2 class="card-text mb-0 display-6 fw-bold">@Model.CompletedRequests</h2>
-                        </div>                      
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-
+        </div>      
         <div class="col-xl-3 col-md-6">
-            <div class="card stat-card stat-card-warning h-100 text-white shadow-lg border-0">
+            <div class="card bg-info text-dark h-100 shadow-lg">
                 <div class="card-body p-4">
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
-                            <h6 class="card-title mb-2 opacity-75">Ожидание</h6>
-                            <h2 class="card-text mb-0 display-6 fw-bold">@Model.PendingRequests</h2>
-                        </div>                      
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-xl-3 col-md-6">
-            <div class="card stat-card stat-card-info h-100 text-white shadow-lg border-0">
-                <div class="card-body p-4">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <h6 class="card-title mb-2 opacity-75">Всего создано</h6>
+                            <h6 class="card-title mb-2">Всего заявок</h6>
                             <h2 class="card-text mb-0 display-6 fw-bold">@Model.TotalRequests</h2>
                         </div>
                     </div>
@@ -68,22 +66,22 @@
     <!-- Последние события -->
     <div class="row">
         <div class="col-12">
-            <div class="card border-0 shadow-xl rounded-4 overflow-hidden fade-in-up" style="animation-delay: 0.2s;">
-                <div class="card-header bg-white border-0 py-4 px-4 d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0 fw-bold"><i class="fas fa-bolt text-warning me-2"></i>Последняя активность</h5>
-                    <a asp-page="/Account/History" class="btn btn-sm btn-outline-primary rounded-pill px-3">Вся история</a>
+            <div class="card shadow-lg rounded-3 overflow-hidden">
+                <div class="card-header bg-white py-4 px-4 d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0 fw-bold">Последняя активность</h5>
+                    <a asp-page="/Account/History" class="btn btn-primary rounded-pill px-4 text-nowrap"><i class="fas fa-history me-2"></i>Вся история</a>
                 </div>
                 <div class="card-body p-0">
                     @if (Model.RecentRequests.Any())
                     {
                         <div class="table-responsive">
-                            <table class="table table-hover align-middle mb-0">
-                                <thead class="bg-light">
+                            <table class="table table-hover align-middle text-center">
+                                <thead class="table-light">
                                     <tr>
-                                        <th class="ps-4 border-0">Тип услуги</th>
-                                        <th class="border-0">Описание</th>
-                                        <th class="border-0">Дата</th>
-                                        <th class="text-end pe-4 border-0">Статус</th>
+                                        <th class="ps-4">Тип услуги</th>
+                                        <th>Описание</th>
+                                        <th>Дата</th>
+                                        <th>Статус</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -93,33 +91,44 @@
                                             <td class="ps-4">
                                                 @if (request.ServiceType == "Транспорт")
                                                 {
-                                                    <span class="badge bg-info bg-opacity-10 text-info border-0 rounded-pill px-3"><i class="fas fa-car me-2"></i>@request.ServiceType</span>
+                                                    <span class="badge bg-info text-black">🚗 @request.ServiceType</span>
                                                 }
                                                 else if (request.ServiceType == "Поддержка")
                                                 {
-                                                    <span class="badge bg-warning bg-opacity-10 text-warning border-0 rounded-pill px-3"><i class="fas fa-tools me-2"></i>@request.ServiceType</span>
+                                                    <span class="badge bg-warning">🛠️ @request.ServiceType</span>
+                                                }
+                                                else if (request.ServiceType == "Питание")
+                                                {
+                                                    <span class="badge bg-success">🍽️ @request.ServiceType</span>
+                                                }
+                                                else if (request.ServiceType == "Помещения")
+                                                {
+                                                    <span class="badge bg-primary">🏢 @request.ServiceType</span>
                                                 }
                                                 else
                                                 {
-                                                    <span class="badge bg-primary bg-opacity-10 text-primary border-0 rounded-pill px-3"><i class="fas fa-cube me-2"></i>@request.ServiceType</span>
-                                                }
+                                                    <span class="badge bg-primary"><i class="fas fa-cube me-2"></i>@request.ServiceType</span>
+                                                }                                                
                                             </td>
-                                            <td class="fw-medium">@request.Title</td>
-                                            <td class="text-muted small">@request.CreatedAt.ToString("dd.MM.yyyy HH:mm")</td>
-                                            <td class="text-end pe-4">
+                                            <td>@request.Title</td>
+                                            <td>
+                                                <div>@request.CreatedAt.ToString("dd.MM.yyyy")</div>
+                                                <div class="small text-primary">@request.CreatedAt.ToString("HH:mm")</div>
+                                            </td>
+                                            <td class="text-center">
                                                 @switch (request.Status)
                                                 {
                                                     case "На согласовании":
-                                                        <span class="text-warning small fw-bold"><i class="fas fa-clock me-1"></i> На согласовании</span>
+                                                        <span class="badge bg-warning text-dark"> На согласовании</span>
                                                         break;
                                                     case "Подтверждена":
-                                                        <span class="text-primary small fw-bold"><i class="fas fa-check-circle me-1"></i> Подтверждена</span>
+                                                        <span class="badge bg-success"> Подтверждена</span>
                                                         break;
                                                     case "Выполнена":
-                                                        <span class="text-success small fw-bold"><i class="fas fa-check-double me-1"></i> Выполнена</span>
+                                                        <span class="badge bg-info text-dark"> Выполнена</span>
                                                         break;
                                                     case "Отклонена":
-                                                        <span class="text-danger small fw-bold"><i class="fas fa-times-circle me-1"></i> Отклонена</span>
+                                                        <span class="badge bg-danger"> Отклонена</span>
                                                         break;
                                                     default:
                                                         <span class="text-secondary small fw-bold">@request.Status</span>
