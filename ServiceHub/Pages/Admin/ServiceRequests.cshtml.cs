@@ -9,7 +9,7 @@ using System.Text;
 
 namespace ServiceHub.Pages.Admin
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin,Chief")]
     public class ServiceRequestsModel : PageModel
     {
         private readonly ApplicationDbContext _context;

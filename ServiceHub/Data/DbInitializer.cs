@@ -46,6 +46,17 @@ namespace ServiceHub.Data
                     Role = "User",
                     IsActive = true,
                     CreatedAt = DateTime.UtcNow
+                },
+                new AuthUser
+                {
+                    Email = "nachalnik@servicehub.local",
+                    Password = "User123!",
+                    FirstName = "Сергей",
+                    LastName = "Кузнецов",
+                    Department = "Транспортный отдел",
+                    Role = "Chief",
+                    IsActive = true,
+                    CreatedAt = DateTime.UtcNow
                 }
             };
             context.Users.AddRange(users);

@@ -31,8 +31,9 @@
                             </div>
                         </div>
                         <h5 class="fw-bold mb-1 text-dark">@user.FirstName @user.LastName</h5>
-                        <div class="badge bg-primary bg-opacity-10 text-primary rounded-pill px-3 mb-3">@user.Role</div>
-
+                        <div class="badge bg-primary bg-opacity-10 text-primary rounded-pill px-3 mb-3">
+                            @GetRoleDisplay(user.Role)
+                        </div>
                         <div class="bg-light rounded-3 p-3 text-start mb-4">
                             <div class="mb-2 small">
                                 <i class="fas fa-envelope text-muted me-2"></i> @user.Email
