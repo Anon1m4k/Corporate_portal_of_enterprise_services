@@ -51,6 +51,7 @@
                     <label asp-for="CurrentUser.Role" class="form-label fw-bold">Роль</label>
                     <select asp-for="CurrentUser.Role" class="form-select rounded-16">
                         <option value="User">Пользователь</option>
+                        <option value="Chief">Начальник</option>
                         <option value="Admin">Администратор</option>
                     </select>
                     <span asp-validation-for="CurrentUser.Role" class="text-danger"></span>
@@ -74,7 +75,7 @@
                 <dd class="col-sm-9">@Model.CurrentUser.Department</dd>
 
                 <dt class="col-sm-3 fw-medium"><i class="fas fa-shield-alt me-2"></i>Роль</dt>
-                <dd class="col-sm-9">@Model.CurrentUser.Role</dd>
+                <dd class="col-sm-9">@GetRoleDisplay(Model.CurrentUser.Role)</dd>
             </dl>
         }
     </div>
