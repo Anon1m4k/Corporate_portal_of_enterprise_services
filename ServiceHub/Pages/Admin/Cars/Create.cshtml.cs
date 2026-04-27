@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using ServiceHub.Data;
-using ServiceHub.Models;
+using ServiceHub.Models.Transport;
 
 namespace ServiceHub.Pages.Admin.Cars
 {

@@ -58,7 +58,7 @@ namespace ServiceHub.Tests.Unit.Model
             var user = new AuthUser
             {
                 Email = "test@example.com",
-                Password = "password",
+                Password = "Admin123!",
                 FirstName = "Иван",
                 LastName = "Иванов",
                 Department = "IT",

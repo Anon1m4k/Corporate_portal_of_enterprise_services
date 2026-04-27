@@ -1,8 +1,7 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace ServiceHub.Models
+namespace ServiceHub.Models.Transport
 {
     public class TransferStop : IValidatableObject
     {
@@ -14,16 +13,18 @@ namespace ServiceHub.Models
         public TransferRoute? TransferRoute { get; set; }
 
         [Required]
-        [Range(1, 100, ErrorMessage = "Порядковый номер должен быть от 1 до 100")]
-        [Display(Name = "Порядковый номер")]
+        [Range(1, 20, ErrorMessage = "Колличество остановок должно быть от 1 до 20")]
+        [Display(Name = "Колличество остановок")]
         public int Order { get; set; }
 
         [Required(ErrorMessage = "Укажите адрес или название")]
+        [StringLength(30, ErrorMessage = "Адрес или название не должны превышать 30 символов")]
         [Display(Name = "Адрес или название")]
         public string Address { get; set; } = string.Empty;
 
         [DataType(DataType.Time)]
         [Display(Name = "Время прибытия")]
+        [Required(ErrorMessage = "Укажите время прибытия")]
         public TimeSpan ArrivalTime { get; set; }
 
         public string? Notes { get; set; }

@@ -4,13 +4,13 @@
     ViewData["Title"] = "Новая заявка на транспорт";
 }
 
-<div class="container mt-4 fade-in">
+<div class="container mt-4">
     <div class="row justify-content-center">
         <div class="col-lg-10">
-            <div class="card border-0 shadow-xl rounded-4 overflow-hidden">
-                <div class="card-header border-0 bg-primary text-white p-4">
+            <div class="card shadow-lg rounded-3 overflow-hidden">
+                <div class="card-header bg-primary text-white p-4">
                     <div class="d-flex align-items-center">
-                        <div class="bg-white rounded-circle p-3 text-primary me-3 shadow-sm">
+                        <div class="bg-white rounded-circle p-3 text-primary me-3 shadow-sm" style="width: 50px; height: 50px; display: inline-flex; align-items: center; justify-content: center;">
                             <i class="fas fa-paper-plane fa-lg"></i>
                         </div>
                         <h2 class="mb-0 text-white fw-bold">Оформление заявки на транспорт</h2>
@@ -18,57 +18,53 @@
                 </div>
                 <div class="card-body p-5">
                     <form method="post">
-                        <div asp-validation-summary="ModelOnly" class="text-danger mb-4 p-3 bg-light rounded-16"></div>
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-4 p-3 bg-light rounded-3"></div>
 
                         <div class="row g-4">
                             <div class="col-md-6">
-                                <label asp-for="TransportRequest.TripDateTime" class="form-label fw-bold"><i class="fas fa-calendar-alt text-primary me-2"></i>Дата и время поездки</label>
-                                <input asp-for="TransportRequest.TripDateTime" class="form-control rounded-16 shadow-sm" type="datetime-local" />
+                                <label asp-for="TransportRequest.TripDateTime" class="form-label fw-medium"></i>Дата и время поездки</label>
+                                <input asp-for="TransportRequest.TripDateTime" class="form-control shadow-sm" type="datetime-local" />
                                 <span asp-validation-for="TransportRequest.TripDateTime" class="text-danger small"></span>
                             </div>
                             <div class="col-md-6">
-                                <label asp-for="TransportRequest.PassengerCount" class="form-label fw-bold"><i class="fas fa-users text-primary me-2"></i>Количество пассажиров</label>
-                                <div class="input-group">
-                                    <span class="input-group-text bg-white rounded-start-16 border-end-0"><i class="fas fa-user-friends"></i></span>
-                                    <input asp-for="TransportRequest.PassengerCount" class="form-control rounded-end-16 border-start-0 shadow-sm" type="number" min="1" />
-                                </div>
+                                <label asp-for="TransportRequest.PassengerCount" class="form-label fw-medium"></i>Количество пассажиров</label>
+                                <input asp-for="TransportRequest.PassengerCount" class="form-control shadow-sm" type="number" value="1" min="1" max="30"/>
                                 <span asp-validation-for="TransportRequest.PassengerCount" class="text-danger small"></span>
                             </div>
 
                             <div class="col-md-6">
-                                <label asp-for="TransportRequest.StartPoint" class="form-label fw-bold"><i class="fas fa-map-marker-alt text-danger me-2"></i>Точка отправления</label>
-                                <input asp-for="TransportRequest.StartPoint" class="form-control rounded-16 shadow-sm" placeholder="Напр: Офис Центр" />
+                                <label asp-for="TransportRequest.StartPoint" class="form-label fw-medium"></i>Точка отправления</label>
+                                <input asp-for="TransportRequest.StartPoint" class="form-control shadow-sm" placeholder="Например: Центральный офис"/>
                                 <span asp-validation-for="TransportRequest.StartPoint" class="text-danger small"></span>
                             </div>
                             <div class="col-md-6">
-                                <label asp-for="TransportRequest.EndPoint" class="form-label fw-bold"><i class="fas fa-flag-checkered text-success me-2"></i>Пункт назначения</label>
-                                <input asp-for="TransportRequest.EndPoint" class="form-control rounded-16 shadow-sm" placeholder="Напр: Склад" />
+                                <label asp-for="TransportRequest.EndPoint" class="form-label fw-medium"></i>Пункт назначения</label>
+                                <input asp-for="TransportRequest.EndPoint" class="form-control shadow-sm" placeholder="Например: Склад"/>
                                 <span asp-validation-for="TransportRequest.EndPoint" class="text-danger small"></span>
                             </div>
 
                             <div class="col-12">
-                                <label asp-for="TransportRequest.Purpose" class="form-label fw-bold"><i class="fas fa-pencil-alt text-primary me-2"></i>Цель поездки</label>
-                                <textarea asp-for="TransportRequest.Purpose" class="form-control rounded-16 shadow-sm" rows="3" placeholder="Укажите причину заказа транспорта..."></textarea>
+                                <label asp-for="TransportRequest.Purpose" class="form-label fw-medium"></i>Цель поездки</label>
+                                <textarea asp-for="TransportRequest.Purpose" class="form-control shadow-sm" rows="3" placeholder="Укажите причину заказа транспорта..."></textarea>
                                 <span asp-validation-for="TransportRequest.Purpose" class="text-danger small"></span>
                             </div>
 
                             <div class="col-md-12">
-                                <label asp-for="TransportRequest.CarId" class="form-label fw-bold"><i class="fas fa-car text-primary me-2"></i>Предпочтительный автомобиль (если требуется)</label>
-                                <select asp-for="TransportRequest.CarId" class="form-select rounded-16 shadow-sm" asp-items="Model.CarOptions">
-                                    <option value="">-- Автоматический подбор --</option>
+                                <label asp-for="TransportRequest.CarId" class="form-label fw-medium"></i>Автомобиль</label>
+                                <select asp-for="TransportRequest.CarId" class="form-select shadow-sm" asp-items="Model.CarOptions">
                                 </select>
                                 <span asp-validation-for="TransportRequest.CarId" class="text-danger small"></span>
                             </div>
                         </div>
 
                         <div class="d-flex gap-3 mt-5">
-                            <button type="submit" class="btn btn-primary rounded-pill px-5 py-3 shadow-lg">
+                            <button type="submit" class="btn btn-primary rounded-pill px-4 shadow-sm text-nowrap">
                                 <i class="fas fa-paper-plane me-2"></i>Отправить заявку
                             </button>
-                            <a asp-page="/Transport/Index" class="btn btn-outline-secondary rounded-pill px-5 py-3">
+                            <a asp-page="/Transport/Index" class="btn btn-outline-secondary rounded-pill px-4 text-nowrap">
                                 <i class="fas fa-times me-2"></i>Отмена
                             </a>
-                        </div>
+                        </div>                       
                     </form>
                 </div>
             </div>

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ServiceHub.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialSqlite : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -27,6 +27,23 @@ namespace ServiceHub.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Cars", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Rooms",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Name = table.Column<string>(type: "TEXT", nullable: false),
+                    Location = table.Column<string>(type: "TEXT", nullable: false),
+                    Capacity = table.Column<int>(type: "INTEGER", nullable: false),
+                    Equipment = table.Column<string>(type: "TEXT", nullable: false),
+                    IsActive = table.Column<bool>(type: "INTEGER", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Rooms", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -67,6 +84,47 @@ namespace ServiceHub.Migrations
                         name: "FK_TransferRoutes_Cars_CarId",
                         column: x => x.CarId,
                         principalTable: "Cars",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "RoomRequests",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    UserId = table.Column<int>(type: "INTEGER", nullable: false),
+                    RoomId = table.Column<int>(type: "INTEGER", nullable: false),
+                    StartTime = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    EndTime = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    ParticipantsCount = table.Column<int>(type: "INTEGER", nullable: false),
+                    Topic = table.Column<string>(type: "TEXT", nullable: false),
+                    Description = table.Column<string>(type: "TEXT", nullable: true),
+                    Status = table.Column<string>(type: "TEXT", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    ApprovedAt = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    ApproverId = table.Column<int>(type: "INTEGER", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RoomRequests", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_RoomRequests_Rooms_RoomId",
+                        column: x => x.RoomId,
+                        principalTable: "Rooms",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_RoomRequests_Users_ApproverId",
+                        column: x => x.ApproverId,
+                        principalTable: "Users",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_RoomRequests_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -161,6 +219,21 @@ namespace ServiceHub.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_RoomRequests_ApproverId",
+                table: "RoomRequests",
+                column: "ApproverId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RoomRequests_RoomId",
+                table: "RoomRequests",
+                column: "RoomId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RoomRequests_UserId",
+                table: "RoomRequests",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ServiceRequests_UserId",
                 table: "ServiceRequests",
                 column: "UserId");
@@ -195,6 +268,9 @@ namespace ServiceHub.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "RoomRequests");
+
+            migrationBuilder.DropTable(
                 name: "ServiceRequests");
 
             migrationBuilder.DropTable(
@@ -202,6 +278,9 @@ namespace ServiceHub.Migrations
 
             migrationBuilder.DropTable(
                 name: "TransportRequests");
+
+            migrationBuilder.DropTable(
+                name: "Rooms");
 
             migrationBuilder.DropTable(
                 name: "TransferRoutes");

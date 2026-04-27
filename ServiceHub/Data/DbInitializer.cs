@@ -1,5 +1,5 @@
-﻿using ServiceHub.Models;
-using ServiceHub.Models.Account;
+﻿using ServiceHub.Models.Account;
+using ServiceHub.Models.Transport;
 
 namespace ServiceHub.Data
 {
@@ -44,6 +44,17 @@ namespace ServiceHub.Data
                     LastName = "Петров",
                     Department = "Складское хозяйство",
                     Role = "User",
+                    IsActive = true,
+                    CreatedAt = DateTime.UtcNow
+                },
+                new AuthUser
+                {
+                    Email = "nachalnik@servicehub.local",
+                    Password = "User123!",
+                    FirstName = "Сергей",
+                    LastName = "Кузнецов",
+                    Department = "Транспортный отдел",
+                    Role = "Chief",
                     IsActive = true,
                     CreatedAt = DateTime.UtcNow
                 }

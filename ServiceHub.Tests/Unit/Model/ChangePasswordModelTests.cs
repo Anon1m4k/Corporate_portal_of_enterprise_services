@@ -60,7 +60,7 @@ namespace ServiceHub.Tests.Unit.Model
         {
             var input = new ChangePasswordModel
             {
-                CurrentPassword = "oldPass",
+                CurrentPassword = "Admin123!",
                 NewPassword = "NewValidPass1!",
                 ConfirmPassword = "NewValidPass1!"
             };

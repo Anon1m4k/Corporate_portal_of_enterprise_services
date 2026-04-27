@@ -4,17 +4,16 @@
     ViewData["Title"] = "Управление пользователями";
 }
 
-<div class="container mt-4 fade-in">
-    <div class="d-flex justify-content-between align-items-center mb-5 border-bottom pb-4">
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
-            <h2 class="section-title mb-1">Управление персоналом</h2>
-            <p class="text-muted mb-0">Список всех сотрудников и права доступа</p>
+            <h2 class="fw-bold text-primary">Управление персоналом</h2>
         </div>
     </div>
 
     @if (TempData["SuccessMessage"] != null)
     {
-        <div class="alert alert-success alert-dismissible fade show border-0 shadow-lg rounded-4 mb-4" role="alert">
+        <div class="alert alert-success alert-dismissible fade show border-0 shadow-lg rounded-3 mb-4" role="alert">
             <i class="fas fa-check-circle me-2"></i>@TempData["SuccessMessage"]
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
@@ -23,18 +22,19 @@
     <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4">
         @foreach (var user in Model.Users)
         {
-            <div class="col fade-in-up">
-                <div class="card h-100 border-0 shadow-xl rounded-4 user-card overflow-hidden">
+            <div class="col">
+                <div class="card h-100 shadow-lg rounded-3 user-card overflow-hidden">
                     <div class="card-body p-4 text-center">
-                        <div class="user-avatar mx-auto mb-3 pulse-glow">
-                            <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+                        <div class="mx-auto mb-3" style="width: 80px;">
+                            <div class="bg-primary bg-opacity-50 text-primary rounded-circle d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
                                 <span class="h3 mb-0 fw-bold">@user.FirstName[0]@user.LastName[0]</span>
                             </div>
                         </div>
                         <h5 class="fw-bold mb-1 text-dark">@user.FirstName @user.LastName</h5>
-                        <div class="badge bg-primary bg-opacity-10 text-primary rounded-pill px-3 mb-3">@user.Role</div>
-
-                        <div class="bg-light rounded-16 p-3 text-start mb-4">
+                        <div class="badge bg-primary bg-opacity-10 text-primary rounded-pill px-3 mb-3">
+                            @GetRoleDisplay(user.Role)
+                        </div>
+                        <div class="bg-light rounded-3 p-3 text-start mb-4">
                             <div class="mb-2 small">
                                 <i class="fas fa-envelope text-muted me-2"></i> @user.Email
                             </div>
@@ -45,14 +45,14 @@
 
                         <div class="d-flex justify-content-center gap-2">
                             <a asp-page="/Account/Profile" asp-route-id="@user.Id"
-                               class="btn btn-primary btn-sm rounded-pill px-3" title="Редактировать">
-                                <i class="fas fa-edit me-1"></i> Редактор
+                               class="btn btn-sm btn-primary" style="width: 42px; height: 42px; padding: 0; display: inline-flex; align-items: center; justify-content: center;" title="Редактировать">
+                                <i class="fas fa-edit"></i>
                             </a>
                             <a asp-page="/Admin/ChangeUserPassword" asp-route-id="@user.Id"
-                               class="btn btn-outline-warning btn-sm rounded-pill px-3" title="Сменить пароль">
+                               class="btn btn-sm btn-warning" style="width: 42px; height: 42px; padding: 0; display: inline-flex; align-items: center; justify-content: center;" title="Сменить пароль">
                                 <i class="fas fa-key"></i>
                             </a>
-                            <button type="button" class="btn btn-outline-danger btn-sm rounded-pill px-3"
+                            <button type="button" class="btn btn-sm btn-danger" style="width: 42px; height: 42px; padding: 0; display: inline-flex; align-items: center; justify-content: center;" title="Удалить"
                                     data-bs-toggle="modal" data-bs-target="#deleteModal-@user.Id">
                                 <i class="fas fa-trash"></i>
                             </button>
@@ -64,23 +64,24 @@
             <!-- Modal Удаления -->
             <div class="modal fade" id="deleteModal-@user.Id" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content border-0 shadow-lg rounded-4">
+                    <div class="modal-content border-0 shadow-lg rounded-3">
                         <div class="modal-header border-0 pb-0">
                             <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                         </div>
                         <div class="modal-body text-center p-4">
+                            <i class="fas fa-exclamation-circle fa-3x text-danger mb-3"></i>
                             <h5 class="fw-bold mb-3 text-danger">Удалить сотрудника?</h5>
-                            <p class="text-muted">Вы уверены, что хотите удалить <strong>@user.FirstName @user.LastName</strong>? Согласованные заявки останутся без владельца.</p>
+                            <p class="text-muted">Вы действительно хотите удалить сотрудника?</p>
                         </div>
                         <div class="modal-footer border-0 justify-content-center pb-4">
-                            <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Отмена</button>
+                            <button type="button" class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">Нет, оставить</button>
                             <form method="post" asp-page-handler="Delete" asp-route-id="@user.Id">
-                                <button type="submit" class="btn btn-danger rounded-pill px-4">Подтверждаю удаление</button>
+                                <button type="submit" class="btn btn-danger rounded-pill px-4">Да, удалить</button>
                             </form>
                         </div>
                     </div>
                 </div>
-            </div>
+            </div>        
         }
     </div>
 </div>

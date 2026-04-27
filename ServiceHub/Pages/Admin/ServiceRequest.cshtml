@@ -4,10 +4,10 @@
     ViewData["Title"] = Model.ServiceRequest.Id == 0 ? "Новая заявка" : "Редактирование заявки";
 }
 
-<div class="container mt-4 fade-in">
-    <div class="card border-0 shadow-lg rounded-4">
+<div class="container mt-4">
+    <div class="card border-0 shadow-lg rounded-3">
         <div class="card-header bg-transparent border-0 pt-4 px-4">
-            <h2 class="section-title mb-0">@ViewData["Title"]</h2>
+            <h2 class="fw-bold text-primary mb-0">@ViewData["Title"]</h2>
         </div>
         <div class="card-body p-4">
             <form method="post">

@@ -4,9 +4,9 @@
     ViewData["Title"] = "Управление автомобилями";
 }
 
-<div class="container mt-4 fade-in">
+<div class="container mt-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="section-title">Автомобили</h2>
+        <h2 class="fw-bold text-primary">Автомобили</h2>
         <a asp-page="Create" class="btn btn-primary rounded-pill px-4">
             <i class="fas fa-plus me-2"></i>Добавить автомобиль
         </a>
@@ -20,13 +20,13 @@
         </div>
     }
 
-    <div class="card border-0 shadow-xl rounded-4">
-        <div class="card-body p-0">
+    <div class="card shadow-lg rounded-3">
+        <div class="card-body p-2">
             @if (Model.Cars.Any())
             {
                 <div class="table-responsive">
-                    <table class="table table-hover align-middle mb-0">
-                        <thead>
+                    <table class="table table-hover align-middle text-center">
+                        <thead class="table-light">
                             <tr>
                                 <th class="ps-4">ID</th>
                                 <th>Марка</th>
@@ -34,7 +34,7 @@
                                 <th>Госномер</th>
                                 <th>Тип</th>
                                 <th>Вместимость</th>
-                                <th>Доступен</th>
+                                <th>Доступность</th>
                                 <th>Действия</th>
                             </tr>
                         </thead>
@@ -42,16 +42,16 @@
                             @foreach (var car in Model.Cars)
                             {
                                 <tr>
-                                    <td class="ps-4 fw-medium">@car.Id</td>
+                                    <td class="ps-4">@car.Id</td>
                                     <td>@car.Brand</td>
                                     <td>@car.Model</td>
                                     <td><span class="badge bg-light text-dark border">@car.LicensePlate</span></td>
-                                    <td>@car.VehicleType</td>
-                                    <td><span class="badge bg-info bg-opacity-10 text-primary">@(car.PassengerCapacity?.ToString() ?? "—")</span></td>
+                                    <td>@car.VehicleType</td>                                   
+                                    <td><span class="badge bg-secondary bg-opacity-10 text-secondary border"> <i class="fas fa-users me-1"></i> @(car.PassengerCapacity?.ToString() ?? "—")</span></td>
                                     <td>
                                         <form method="post" asp-page-handler="ToggleAvailability" class="d-inline">
                                             <input type="hidden" name="id" value="@car.Id" />
-                                            <div class="form-check form-switch custom-switch">
+                                            <div class="form-check form-switch">
                                                 <input class="form-check-input" type="checkbox" role="switch"
                                                        id="available-@car.Id"
                                                        name="isAvailable"
@@ -64,42 +64,41 @@
                                             </div>
                                         </form>
                                     </td>
-                                    <td class="text-end pe-4">
+                                    <td>
                                         <div class="d-flex justify-content-end gap-2">
                                             @if (car.VehicleType == "Минивэн" || car.VehicleType == "Автобус")
                                             {
                                                 <a asp-page="/Admin/TransferRoutes/Index" asp-route-carId="@car.Id"
-                                                   class="btn btn-square btn-outline-primary" title="Маршруты">
+                                                   class="btn btn-sm btn-primary" style="width: 42px; height: 42px; padding: 0; display: inline-flex; align-items: center; justify-content: center;" title="Маршруты">
                                                     <i class="fas fa-route"></i>
                                                 </a>
                                             }
-                                            <button type="button" class="btn btn-square btn-outline-danger"
+                                            <button type="button" class="btn btn-sm btn-danger" style="width: 42px; height: 42px; padding: 0; display: inline-flex; align-items: center; justify-content: center;"
                                                     data-bs-toggle="modal" data-bs-target="#deleteModal-@car.Id" title="Удалить">
                                                 <i class="fas fa-trash"></i>
                                             </button>
                                         </div>
 
-                                        <!-- Модальное окно подтверждения удаления -->
                                         <div class="modal fade" id="deleteModal-@car.Id" tabindex="-1" aria-hidden="true">
                                             <div class="modal-dialog modal-dialog-centered">
-                                                <div class="modal-content border-0 shadow-lg rounded-4">
-                                                    <div class="modal-header border-0">
-                                                        <h5 class="modal-title fw-bold">Удаление автомобиля</h5>
+                                                <div class="modal-content border-0 shadow-lg rounded-3">
+                                                    <div class="modal-header border-0 pb-0">
                                                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                                     </div>
-                                                    <div class="modal-body text-start">
-                                                        Вы уверены, что хотите удалить автомобиль <span class="text-primary fw-bold">@car.Brand @car.Model</span>?
-                                                        <p class="text-danger small mt-2"><i class="fas fa-exclamation-triangle me-1"></i>Все связанные заявки также будут удалены.</p>
+                                                    <div class="modal-body text-center p-4">
+                                                        <i class="fas fa-exclamation-circle fa-3x text-danger mb-3"></i>
+                                                        <h5 class="fw-bold mb-3">Удалить автомобиль?</h5>
+                                                        <p class="text-muted">Вы действительно хотите удалить автомобиль?</p>
                                                     </div>
-                                                    <div class="modal-footer border-0">
-                                                        <button type="button" class="btn btn-outline-secondary rounded-pill" data-bs-dismiss="modal">Отмена</button>
+                                                    <div class="modal-footer border-0 justify-content-center pb-4">
+                                                        <button type="button" class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">Нет, оставить</button>
                                                         <form method="post" asp-page-handler="Delete" asp-route-id="@car.Id">
-                                                            <button type="submit" class="btn btn-danger rounded-pill px-4">Удалить</button>
+                                                            <button type="submit" class="btn btn-danger rounded-pill px-4">Да, удалить</button>
                                                         </form>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </div>                                        
                                     </td>
                                 </tr>
                             }
@@ -110,8 +109,8 @@
             else
             {
                 <div class="text-center py-5">
-                    <div class="icon-box mx-auto mb-3 opacity-50">
-                        <i class="fas fa-car-side"></i>
+                    <div class="d-inline-flex align-items-center justify-content-center bg-light rounded-circle p-3 mx-auto mb-3 opacity-50" style="width: 80px; height: 80px;">
+                        <i class="fas fa-car-side fa-2x text-muted"></i>
                     </div>
                     <p class="text-muted">Автомобилей пока нет в базе данных.</p>
                     <a asp-page="Create" class="btn btn-primary rounded-pill mt-2">

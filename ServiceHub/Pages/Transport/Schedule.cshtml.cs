@@ -2,10 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using ServiceHub.Data;
-using ServiceHub.Models;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using ServiceHub.Models.Transport;
 
 namespace ServiceHub.Pages.Transport
 {

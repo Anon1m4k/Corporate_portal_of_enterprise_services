@@ -1,6 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using ServiceHub.Models;
-using System;
+﻿using ServiceHub.Models.Transport;
 
 namespace ServiceHub.Tests.Unit.Model
 {
@@ -20,7 +18,7 @@ namespace ServiceHub.Tests.Unit.Model
         {
             var stop = new TransferStop { Order = 0 };
             var results = ModelValidator.ValidateModel(stop);
-            Assert.IsTrue(results.Any(r => r.MemberNames.Contains("Order") && r.ErrorMessage.Contains("Порядковый номер должен быть от 1 до 100")));
+            Assert.IsTrue(results.Any(r => r.MemberNames.Contains("Order") && r.ErrorMessage.Contains("Колличество остановок должно быть от 1 до 20")));
         }
 
         [TestMethod]
