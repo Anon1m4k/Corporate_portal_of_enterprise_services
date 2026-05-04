@@ -25,8 +25,8 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-    dbContext.Database.Migrate();          // создаёт базу, если её нет, и применяет миграции
-    DbInitializer.Initialize(dbContext);   // заполняет базу тестовыми данными
+    dbContext.Database.EnsureCreated();   // создаёт базу по текущей модели
+    DbInitializer.Initialize(dbContext); // заполняет тестовыми данными
 }
 
 // Configure the HTTP request pipeline.

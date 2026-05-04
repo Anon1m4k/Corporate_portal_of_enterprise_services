@@ -8,7 +8,6 @@ namespace ServiceHub.Data
     {
         public static void Initialize(ApplicationDbContext context)
         {
-            // Если база уже содержит данные, ничего не делаем
             if (context.Users.Any() || context.Cars.Any())
                 return;
 
@@ -18,7 +17,6 @@ namespace ServiceHub.Data
                 new AuthUser
                 {
                     Email = "admin@servicehub.local",
-                    Password = "Admin123!",
                     FirstName = "Админ",
                     LastName = "Админов",
                     Department = "АСУ",
@@ -29,7 +27,6 @@ namespace ServiceHub.Data
                 new AuthUser
                 {
                     Email = "ivanov@servicehub.local",
-                    Password = "User123!",
                     FirstName = "Иван",
                     LastName = "Иванов",
                     Department = "Диспетчерская",
@@ -40,7 +37,6 @@ namespace ServiceHub.Data
                 new AuthUser
                 {
                     Email = "petrov@servicehub.local",
-                    Password = "User123!",
                     FirstName = "Пётр",
                     LastName = "Петров",
                     Department = "Складское хозяйство",
@@ -51,7 +47,6 @@ namespace ServiceHub.Data
                 new AuthUser
                 {
                     Email = "nachalnik@servicehub.local",
-                    Password = "User123!",
                     FirstName = "Сергей",
                     LastName = "Кузнецов",
                     Department = "Транспортный отдел",
@@ -60,6 +55,11 @@ namespace ServiceHub.Data
                     CreatedAt = DateTime.UtcNow
                 }
             };
+            users[0].HashPassword("Admin123!");
+            users[1].HashPassword("User123!");
+            users[2].HashPassword("User123!");
+            users[3].HashPassword("User123!");
+
             context.Users.AddRange(users);
             context.SaveChanges();
 

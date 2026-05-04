@@ -41,7 +41,6 @@ namespace ServiceHub.Pages.Account
             var user = new AuthUser
             {
                 Email = Input.Email,
-                Password = Input.Password,
                 FirstName = Input.FirstName,
                 LastName = Input.LastName,
                 Department = Input.Department,
@@ -49,29 +48,24 @@ namespace ServiceHub.Pages.Account
                 CreatedAt = DateTime.UtcNow,
                 IsActive = true
             };
+            user.HashPassword(Input.Password);
 
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
-            await Authenticate(user.Email, user.Role);
-
-            return RedirectToPage("/Index");
-        }
-
-        private async Task Authenticate(string userName, string role)
-        {
             var claims = new List<Claim>
             {
-                new Claim(ClaimsIdentity.DefaultNameClaimType, userName),
-                new Claim(ClaimsIdentity.DefaultRoleClaimType, role)
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(ClaimTypes.Name, $"{user.FirstName} {user.LastName}"),
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(ClaimTypes.Role, user.Role),
+                new Claim("Department", user.Department)
             };
-
-            var identity = new ClaimsIdentity(claims, "Cookies",
-                ClaimsIdentity.DefaultNameClaimType,
-                ClaimsIdentity.DefaultRoleClaimType);
+            var identity = new ClaimsIdentity(claims, "Cookies");
             var principal = new ClaimsPrincipal(identity);
-
             await HttpContext.SignInAsync("Cookies", principal);
+
+            return RedirectToPage("/Index");
         }
     }
 }
