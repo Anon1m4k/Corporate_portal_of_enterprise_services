@@ -7,118 +7,92 @@
 
 <div>
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="h2 fw-bold text-primary">История заявок</h1>
+        <h1 class="h2 glass-title">История заявок</h1>
     </div>
 
     <!-- Панель управления историей -->
-    <div class="card shadow-lg rounded-3">
-        <div class="card-header">         
-                <div class="col-md-4">
-                    <div class="input-group">
-                    <select class="form-select" id="filterStatus" onchange="filterHistory()">
-                            <option value="">Все статусы</option>
-                            <option value="На согласовании">На согласовании</option>
-                            <option value="Подтверждена">Подтверждена</option>
-                            <option value="Выполнена">Выполнена</option>
-                            <option value="Отклонена">Отклонена</option>
-                        </select>
-                    </div>
-                </div>          
-        </div>
-        <div class="card-body p-2">
-            <div class="table-responsive">
-                <table class="table table-hover align-middle text-center">
-                    <thead class="table-light">
-                        <tr>
-                            <th class="ps-4 align-middle">ID</th>
-                            <th class="align-middle">Тип</th>
-                            <th class="align-middle">Заголовок</th>
-                            <th class="align-middle">Дата создания</th>
-                            <th class="align-middle">Статус</th>
-                            <th class="align-middle">Действия</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var request in Model.ServiceRequests)
-                        {
-                            <tr class="history-row">
-                                <td class="ps-4">@request.Id</td>
-                                <td>
-                                    @switch (request.ServiceType)
-                                    {
-                                        case "Транспорт":
-                                            <span class="badge bg-info text-black"> 🚗 Транспорт</span>
-                                            break;
-                                        case "Поддержка":
-                                            <span class="badge bg-warning text-dark"> Поддержка</span>
-                                            break;
-                                        case "Питание":
-                                            <span class="badge bg-success"> Питание</span>
-                                            break;
-                                        default:
-                                            <span class="badge bg-secondary">@request.ServiceType</span>
-                                            break;
-                                    }
-                                </td>
-                                <td class="search-target">@request.Title</td>
-                                <td>
-                                    <div>@request.CreatedAt.ToString("dd.MM.yyyy")</div>
-                                    <div class="small text-primary">@request.CreatedAt.ToString("HH:mm")</div>
-                                </td>
-                                <td class="text-center status-cell">
-                                    @switch (request.Status)
-                                    {
-                                        case "На согласовании":
-                                            <span class="badge bg-warning text-black">На согласовании</span>
-                                            break;
-                                        case "Подтверждена":
-                                            <span class="badge bg-success">Подтверждена</span>
-                                            break;
-                                        case "Выполнена":
-                                            <span class="badge bg-info text-black">Выполнена</span>
-                                            break;
-                                        case "Отклонена":
-                                            <span class="badge bg-danger">Отклонена</span>
-                                            break;
-                                        default:
-                                            <span class="badge bg-secondary">@request.Status</span>
-                                            break;
-                                    }
-                                </td>
-                                <td>
-                                    <button class="btn btn-sm btn-primary view-details"
-                                            style="width: 42px; height: 42px; padding: 0; display: inline-flex; align-items: center; justify-content: center;"
-                                            title="Подробнее"
-                                            data-id="@request.Id"
-                                            data-title="@request.Title"
-                                            data-type="@request.ServiceType"
-                                            data-status="@request.Status"
-                                            data-date="@request.CreatedAt.ToString("dd.MM.yyyy HH:mm")"
-                                            data-description="@request.Description">
-                                        <i class="fas fa-info-circle"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
+    <div class="glass-container p-3 mb-4">
+        <div class="row mb-3">
+            <div class="col-md-4">
+                <select class="form-select" id="filterStatus" onchange="filterHistory()">
+                    <option value="">Все статусы</option>
+                    <option value="На согласовании">На согласовании</option>
+                    <option value="Подтверждена">Подтверждена</option>
+                    <option value="Выполнена">Выполнена</option>
+                    <option value="Отклонена">Отклонена</option>
+                </select>
             </div>
+        </div>
+
+        <div class="row g-3" id="historyContainer">
+            @foreach (var request in Model.ServiceRequests)
+            {
+                <div class="col-12 col-md-6 history-item" data-status="@request.Status">
+                    <div class="glass-card p-3 h-100">
+                        <!-- Гибкий ряд с переносом бейджей -->
+                        <div class="d-flex flex-wrap align-items-start justify-content-between mb-2 gap-2">
+                            <span class="badge badge-glass
+                                        @(request.ServiceType == "Транспорт" ? "bg-info text-white" :
+                                                                        request.ServiceType == "Поддержка" ? "bg-warning text-dark" :
+                                                                        request.ServiceType == "Питание" ? "bg-success" :
+                                                                        request.ServiceType == "Помещения" ? "bg-primary" : "bg-secondary")">
+                            @switch (request.ServiceType)
+                                {
+                                    case "Транспорт":
+                                        @("🚗 Транспорт")
+                                        break;
+                                    case "Поддержка":
+                                        @("🛠️ Поддержка")
+                                        break;
+                                    case "Питание":
+                                        @("🍽️ Питание")
+                                        break;
+                                    case "Помещения":
+                                        @("🏢 Помещения")
+                                        break;
+                                    default:
+                                        @request.ServiceType
+                                        break;
+                                }
+                        </span>
+                        <span class="badge badge-glass status-badge
+                                    @(request.Status == "На согласовании" ? "bg-warning text-dark" :
+                                                                    request.Status == "Подтверждена" ? "bg-success" :
+                                                                    request.Status == "Выполнена" ? "bg-info text-dark" :
+                                                                    request.Status == "Отклонена" ? "bg-danger" : "bg-secondary")">
+                            @request.Status
+                        </span>
+                    </div>
+                    <h6 class="fw-bold">@request.Title</h6>
+                    <div class="small" style="color: var(--text-muted);">@request.CreatedAt.ToString("dd.MM.yyyy HH:mm")</div>
+                    <button class="btn btn-sm btn-glass mt-2 view-details"
+                            data-id="@request.Id"
+                            data-title="@request.Title"
+                            data-type="@request.ServiceType"
+                            data-status="@request.Status"
+                            data-date="@request.CreatedAt.ToString("dd.MM.yyyy HH:mm")"
+                            data-description="@request.Description">
+                        <i class="fas fa-info-circle"></i>
+                    </button>
+                </div>
+            </div>
+                        }
         </div>
     </div>
 </div>
 
 <!-- Модальное окно деталей -->
-<div class="modal fade" id="detailsModal" tabindex="-1" aria-hidden="true">
+<div class="modal fade modal-glass" id="detailsModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content shadow-lg rounded-3">
+        <div class="modal-content">
             <div class="modal-header bg-primary text-white py-3">
                 <h5 class="modal-title fw-bold"><i class="fas fa-info-circle me-2"></i>Информация о заявке</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
                 <div class="d-flex align-items-center mb-4">
-                    <div class="bg-light text-primary rounded-circle d-inline-flex align-items-center justify-content-center me-3" style="width: 60px; height: 60px;">
-                        <i class="fas fa-file-invoice fa-lg"></i>
+                    <div class="service-icon me-3" style="width: 60px; height: 60px;">
+                        <i class="fas fa-file-invoice"></i>
                     </div>
                     <div>
                         <h4 class="fw-bold" id="modalTitle"></h4>
@@ -127,7 +101,7 @@
                 </div>
                 <hr class="my-4">
                 <div>
-                    <p class="text-start"><strong>Тип услуги: </strong><span id="modalType"></span></p> 
+                    <p class="text-start"><strong>Тип услуги: </strong><span id="modalType"></span></p>
                     <p class="text-start"><strong>Статус: </strong><span id="modalStatus"></span></p>
                     <p class="text-start"><strong>Дата создания: </strong><span id="modalDate"></span></p>
                     <p class="text-start"><strong>Описание: </strong><span id="modalDescription"></span></p>
@@ -141,17 +115,12 @@
     <script>
         function filterHistory() {
             const statusValue = document.getElementById('filterStatus').value;
-            const rows = document.querySelectorAll('.history-row');
-
-            rows.forEach(row => {
-                const statusCell = row.querySelector('.status-cell');
-                if (!statusCell) return;
-                const statusText = statusCell.textContent.trim();
-
-                const matchesStatus = !statusValue || statusText.includes(statusValue);
-                row.style.display = matchesStatus ? '' : 'none';
+            const items = document.querySelectorAll('.history-item');
+            items.forEach(item => {
+                item.style.display = (!statusValue || item.dataset.status === statusValue) ? '' : 'none';
             });
         }
+
         document.querySelectorAll('.view-details').forEach(button => {
             button.addEventListener('click', function() {
                 document.getElementById('modalId').textContent = 'ID Заявки: #' + this.dataset.id;
@@ -160,7 +129,6 @@
                 document.getElementById('modalDate').textContent = this.dataset.date;
                 document.getElementById('modalStatus').textContent = this.dataset.status;
                 document.getElementById('modalDescription').textContent = this.dataset.description || 'Комментарий отсутствует';
-
                 new bootstrap.Modal(document.getElementById('detailsModal')).show();
             });
         });

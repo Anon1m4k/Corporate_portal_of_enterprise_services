@@ -41,7 +41,7 @@ namespace ServiceHub.Pages.Admin
                 return RedirectToPage();
             }
 
-            // ѕровер€ем наличие св€занных за€вок (необ€зательно, они удал€тс€ каскадно)
+            // ѕровер€ем наличие св€занных за€вок
             bool hasServiceRequests = await _context.ServiceRequests.AnyAsync(r => r.UserId == id);
             bool hasTransportRequests = await _context.TransportRequests.AnyAsync(r => r.UserId == id);
 

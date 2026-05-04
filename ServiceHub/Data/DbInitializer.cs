@@ -1,4 +1,5 @@
 ﻿using ServiceHub.Models.Account;
+using ServiceHub.Models.Rooms;
 using ServiceHub.Models.Transport;
 
 namespace ServiceHub.Data
@@ -117,7 +118,6 @@ namespace ServiceHub.Data
             // --- Транспортные заявки (TransportRequest) ---
             var transportRequests = new TransportRequest[]
             {
-                // Существующие заявки
                 new TransportRequest
                 {
                     UserId = users[1].Id, // Иванов
@@ -141,7 +141,7 @@ namespace ServiceHub.Data
                     Status = "На согласовании",
                     CarId = null,
                     CreatedAt = DateTime.UtcNow.AddDays(-1)
-                },               
+                },
                 new TransportRequest
                 {
                     UserId = users[0].Id, // Админ
@@ -154,7 +154,6 @@ namespace ServiceHub.Data
                     CarId = cars[3].Id,
                     CreatedAt = DateTime.UtcNow.AddDays(-1)
                 },
-                // Новые заявки с участием ЛПУМГ
                 new TransportRequest
                 {
                     UserId = users[2].Id, // Петров
@@ -193,7 +192,7 @@ namespace ServiceHub.Data
                 }
             };
             context.TransportRequests.AddRange(transportRequests);
-            context.SaveChanges();         
+            context.SaveChanges();
 
             var route1 = new TransferRoute
             {
@@ -310,7 +309,36 @@ namespace ServiceHub.Data
                 }
             };
             context.TransferStops.AddRange(stops4);
+            context.SaveChanges();
 
+            var rooms = new Room[]
+            {
+                new Room
+                {
+                    Name = "Переговорная 1",
+                    Location = "2 этаж, корпус А",
+                    Capacity = 8,
+                    Equipment = "Проектор, флипчарт",
+                    IsActive = true
+                },
+                new Room
+                {
+                    Name = "Конференц-зал",
+                    Location = "1 этаж, корпус Б",
+                    Capacity = 30,
+                    Equipment = "Проектор, ВКС",
+                    IsActive = true
+                },
+                new Room
+                {
+                    Name = "Малый зал",
+                    Location = "3 этаж",
+                    Capacity = 4,
+                    Equipment = "Телевизор",
+                    IsActive = true
+                }
+            };
+            context.Rooms.AddRange(rooms);
             context.SaveChanges();
         }
     }

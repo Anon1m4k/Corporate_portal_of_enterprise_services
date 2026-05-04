@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using ServiceHub.Data;
 using ServiceHub.Models;
+using ServiceHub.Models.Rooms;
+using ServiceHub.Models.Transport;
 using System.Security.Claims;
 using System.Text;
 
@@ -35,235 +37,220 @@ namespace ServiceHub.Pages.Admin
             CurrentStatus = status;
             CurrentType = type;
 
-            var serviceQuery = _context.ServiceRequests
-                .Include(sr => sr.User)
-                .AsQueryable();
+            var allItems = new List<ServiceRequest>();
 
-            if (!string.IsNullOrEmpty(status) && AllStatuses.Contains(status))
-                serviceQuery = serviceQuery.Where(sr => sr.Status == status);
-            if (!string.IsNullOrEmpty(type) && type != "Транспорт")
-                serviceQuery = serviceQuery.Where(sr => sr.ServiceType == type);
-
-            var serviceRequests = await serviceQuery.ToListAsync();
-
-            var transportQuery = _context.TransportRequests
-                .Include(tr => tr.User)
-                .Include(tr => tr.Approver)
-                .Include(tr => tr.Car)
-                .AsQueryable();
-
-            if (!string.IsNullOrEmpty(status) && AllStatuses.Contains(status))
-                transportQuery = transportQuery.Where(tr => tr.Status == status);
-            if (!string.IsNullOrEmpty(type) && type == "Транспорт")
-                transportQuery = transportQuery.Where(tr => true);
-            else if (!string.IsNullOrEmpty(type))
-                transportQuery = transportQuery.Where(tr => false);
-
-            var transportRequests = await transportQuery.ToListAsync();
-
-            foreach (var tr in transportRequests)
+            // Обычные заявки
+            List<ServiceRequest> serviceRequests;
+            if (!string.IsNullOrEmpty(type) && type != "Транспорт" && type != "Помещения")
             {
-                var carInfo = tr.Car != null ? $"{tr.Car.Brand} {tr.Car.Model}" : "Не указан";
-                var description = $"{tr.StartPoint} → {tr.EndPoint}, {tr.PassengerCount} чел., Авто: {carInfo}. Цель: {tr.Purpose}";
-
-                serviceRequests.Add(new ServiceRequest
-                {
-                    Id = tr.Id,
-                    ServiceType = "Транспорт",
-                    Title = $"Служебная поездка {tr.TripDateTime:dd.MM HH:mm}",
-                    Description = description,
-                    Status = tr.Status,
-                    CreatedAt = tr.CreatedAt,
-                    User = tr.User,
-                    UserId = tr.UserId
-                });
+                IQueryable<ServiceRequest> query = _context.ServiceRequests.Include(sr => sr.User);
+                if (!string.IsNullOrEmpty(status) && AllStatuses.Contains(status))
+                    query = query.Where(sr => sr.Status == status);
+                query = query.Where(sr => sr.ServiceType == type);
+                serviceRequests = await query.ToListAsync();
+            }
+            else if (string.IsNullOrEmpty(type))
+            {
+                IQueryable<ServiceRequest> query = _context.ServiceRequests.Include(sr => sr.User);
+                if (!string.IsNullOrEmpty(status) && AllStatuses.Contains(status))
+                    query = query.Where(sr => sr.Status == status);
+                serviceRequests = await query.ToListAsync();
+            }
+            else
+            {
+                serviceRequests = new List<ServiceRequest>();
             }
 
-            ServiceRequests = serviceRequests.OrderByDescending(r => r.CreatedAt).ToList();
+            foreach (var sr in serviceRequests)
+                allItems.Add(sr);
+
+            // Транспортные заявки
+            if (string.IsNullOrEmpty(type) || type == "Транспорт")
+            {
+                IQueryable<TransportRequest> query = _context.TransportRequests
+                    .Include(tr => tr.User)
+                    .Include(tr => tr.Car);
+                if (!string.IsNullOrEmpty(status) && AllStatuses.Contains(status))
+                    query = query.Where(tr => tr.Status == status);
+
+                var transports = await query.ToListAsync();
+                foreach (var tr in transports)
+                {
+                    var carInfo = tr.Car != null ? $"{tr.Car.Brand} {tr.Car.Model}" : "Не указан";
+                    var desc = $"{tr.StartPoint} → {tr.EndPoint}, {tr.PassengerCount} чел., авто: {carInfo}. Цель: {tr.Purpose}";
+                    allItems.Add(new ServiceRequest
+                    {
+                        Id = tr.Id,
+                        ServiceType = "Транспорт",
+                        Title = $"Служебная поездка {tr.TripDateTime:dd.MM HH:mm}",
+                        Description = desc,
+                        Status = tr.Status,
+                        CreatedAt = tr.CreatedAt,
+                        User = tr.User,
+                        UserId = tr.UserId
+                    });
+                }
+            }
+
+            // Бронирования помещений
+            if (string.IsNullOrEmpty(type) || type == "Помещения")
+            {
+                IQueryable<RoomRequest> query = _context.RoomRequests
+                    .Include(r => r.User)
+                    .Include(r => r.Room);
+                if (!string.IsNullOrEmpty(status) && AllStatuses.Contains(status))
+                    query = query.Where(r => r.Status == status);
+
+                var roomRequests = await query.ToListAsync();
+                foreach (var rr in roomRequests)
+                {
+                    var roomName = rr.Room?.Name ?? "Не указано";
+                    var desc = $"Помещение: {roomName}, {rr.ParticipantsCount} уч., {rr.StartTime:t}–{rr.EndTime:t}";
+                    allItems.Add(new ServiceRequest
+                    {
+                        Id = rr.Id,
+                        ServiceType = "Помещения",
+                        Title = rr.Topic,
+                        Description = desc,
+                        Status = rr.Status,
+                        CreatedAt = rr.CreatedAt,
+                        User = rr.User,
+                        UserId = rr.UserId
+                    });
+                }
+            }
+
+            ServiceRequests = allItems.OrderByDescending(r => r.CreatedAt).ToList();
         }
 
         public async Task<IActionResult> OnPostChangeStatusAsync(int id, string type, string newStatus, string currentStatus, string currentType)
         {
             if (type == "Транспорт")
             {
-                var request = await _context.TransportRequests.FindAsync(id);
-                if (request == null)
-                    return NotFound();
-
-                request.Status = newStatus;
-                request.UpdatedAt = DateTime.UtcNow;
-
-                if (newStatus == "Подтверждена" && request.ApproverId == null)
+                var req = await _context.TransportRequests.FindAsync(id);
+                if (req == null) return NotFound();
+                req.Status = newStatus;
+                req.UpdatedAt = DateTime.UtcNow;
+                if (newStatus == "Подтверждена" && req.ApproverId == null)
                 {
                     var adminEmail = User.FindFirst(ClaimTypes.Email)?.Value ?? User.Identity?.Name;
                     var admin = await _context.Users.FirstOrDefaultAsync(u => u.Email == adminEmail);
                     if (admin != null)
                     {
-                        request.ApproverId = admin.Id;
-                        request.ApprovedAt = DateTime.UtcNow;
+                        req.ApproverId = admin.Id;
+                        req.ApprovedAt = DateTime.UtcNow;
+                    }
+                }
+            }
+            else if (type == "Помещения")
+            {
+                var req = await _context.RoomRequests.FindAsync(id);
+                if (req == null) return NotFound();
+                req.Status = newStatus;
+                req.UpdatedAt = DateTime.UtcNow;
+                if (newStatus == "Подтверждена" && req.ApproverId == null)
+                {
+                    var adminEmail = User.FindFirst(ClaimTypes.Email)?.Value ?? User.Identity?.Name;
+                    var admin = await _context.Users.FirstOrDefaultAsync(u => u.Email == adminEmail);
+                    if (admin != null)
+                    {
+                        req.ApproverId = admin.Id;
+                        req.ApprovedAt = DateTime.UtcNow;
                     }
                 }
             }
             else
             {
-                var request = await _context.ServiceRequests.FindAsync(id);
-                if (request == null)
-                    return NotFound();
-
-                request.Status = newStatus;
-                request.UpdatedAt = DateTime.UtcNow;
+                var req = await _context.ServiceRequests.FindAsync(id);
+                if (req == null) return NotFound();
+                req.Status = newStatus;
+                req.UpdatedAt = DateTime.UtcNow;
             }
 
             await _context.SaveChangesAsync();
             return RedirectToPage(new { status = currentStatus, type = currentType });
         }
 
-        // Обработчик POST для экспорта отчёта
         public async Task<IActionResult> OnPostExportAsync(DateTime startDate, DateTime endDate, string? status)
         {
-            // Собираем обычные заявки
-            var serviceQuery = _context.ServiceRequests
-                .Include(sr => sr.User)
-                .AsQueryable();
-
-            if (!string.IsNullOrEmpty(status) && AllStatuses.Contains(status))
-                serviceQuery = serviceQuery.Where(sr => sr.Status == status);
-
-            var serviceRequests = await serviceQuery
-                .Where(sr => sr.CreatedAt.Date >= startDate.Date && sr.CreatedAt.Date <= endDate.Date)
-                .OrderBy(sr => sr.CreatedAt)
-                .ToListAsync();
-
-            // Транспортные заявки
-            var transportQuery = _context.TransportRequests
-                .Include(tr => tr.User)
-                .Include(tr => tr.Car)
-                .AsQueryable();
-
+            var allItems = new List<ReportItem>();
+            
+            // Транспорт
+            IQueryable<TransportRequest> transportQuery = _context.TransportRequests
+                .Include(tr => tr.User).Include(tr => tr.Car);
             if (!string.IsNullOrEmpty(status) && AllStatuses.Contains(status))
                 transportQuery = transportQuery.Where(tr => tr.Status == status);
-
-            var transportRequests = await transportQuery
+            var transports = await transportQuery
                 .Where(tr => tr.CreatedAt.Date >= startDate.Date && tr.CreatedAt.Date <= endDate.Date)
-                .OrderBy(tr => tr.CreatedAt)
                 .ToListAsync();
-
-            var allItems = new List<ReportItem>();
-
-            foreach (var sr in serviceRequests)
+            foreach (var tr in transports)
             {
-                allItems.Add(new ReportItem
-                {
-                    Id = sr.Id,
-                    Type = sr.ServiceType,
-                    UserName = sr.User != null ? $"{sr.User.FirstName} {sr.User.LastName}" : "—",
-                    Title = sr.Title,
-                    Details = sr.Description,
-                    CreatedAt = sr.CreatedAt,
-                    Status = sr.Status
-                });
-            }
-
-            foreach (var tr in transportRequests)
-            {
-                string details = $"{tr.StartPoint} → {tr.EndPoint}, {tr.PassengerCount} чел.";
-                if (tr.Car != null)
-                    details += $", авто: {tr.Car.Brand} {tr.Car.Model} ({tr.Car.LicensePlate})";
-                details += $". Цель: {tr.Purpose}";
-
+                string car = tr.Car != null ? $"{tr.Car.Brand} {tr.Car.Model} ({tr.Car.LicensePlate})" : "Нет";
+                string details = $"{tr.StartPoint} → {tr.EndPoint}, {tr.PassengerCount} чел., авто: {car}. Цель: {tr.Purpose}";
                 allItems.Add(new ReportItem
                 {
                     Id = tr.Id,
                     Type = "Транспорт",
-                    UserName = tr.User != null ? $"{tr.User.FirstName} {tr.User.LastName}" : "—",
-                    Title = $"Служебная поездка {tr.TripDateTime:dd.MM HH:mm}",
+                    UserName = tr.User?.FirstName + " " + tr.User?.LastName,
+                    Title = $"Поездка {tr.TripDateTime:dd.MM HH:mm}",
                     Details = details,
                     CreatedAt = tr.CreatedAt,
                     Status = tr.Status
                 });
             }
 
+            // Помещения
+            IQueryable<RoomRequest> roomQuery = _context.RoomRequests
+                .Include(r => r.User).Include(r => r.Room);
+            if (!string.IsNullOrEmpty(status) && AllStatuses.Contains(status))
+                roomQuery = roomQuery.Where(r => r.Status == status);
+            var rooms = await roomQuery
+                .Where(r => r.CreatedAt.Date >= startDate.Date && r.CreatedAt.Date <= endDate.Date)
+                .ToListAsync();
+            foreach (var rr in rooms)
+            {
+                string roomName = rr.Room?.Name ?? "Не указано";
+                string details = $"Помещение: {roomName}, {rr.ParticipantsCount} уч., {rr.StartTime:dd.MM HH:mm}–{rr.EndTime:HH:mm}";
+                allItems.Add(new ReportItem
+                {
+                    Id = rr.Id,
+                    Type = "Помещения",
+                    UserName = rr.User?.FirstName + " " + rr.User?.LastName,
+                    Title = rr.Topic,
+                    Details = details,
+                    CreatedAt = rr.CreatedAt,
+                    Status = rr.Status
+                });
+            }
+
             allItems = allItems.OrderBy(i => i.CreatedAt).ToList();
 
             var html = new StringBuilder();
-            html.AppendLine("<!DOCTYPE html>");
-            html.AppendLine("<html>");
-            html.AppendLine("<head>");
-            html.AppendLine("<meta charset='utf-8'>");
-            html.AppendLine("<title>Отчёт по заявкам</title>");
-            html.AppendLine("<style>");
-            html.AppendLine("body { font-family: Arial, sans-serif; margin: 20px; background-color: #f8f9fa; }");
-            html.AppendLine("h2 { color: #0d6efd; }");
-            html.AppendLine("table { border-collapse: collapse; width: 100%; background: white; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }");
-            html.AppendLine("th { background-color: #0d6efd; color: white; padding: 10px; text-align: left; }");
-            html.AppendLine("td { padding: 8px 10px; border-bottom: 1px solid #ddd; }");
-            html.AppendLine("tr:hover { background-color: #f1f5f9; }");
-            html.AppendLine(".badge { padding: 4px 8px; border-radius: 20px; font-size: 0.9em; }");
-            html.AppendLine(".bg-warning { background-color: #ffc107; color: #212529; }");
-            html.AppendLine(".bg-success { background-color: #28a745; color: white; }");
-            html.AppendLine(".bg-info { background-color: #17a2b8; color: white; }");
-            html.AppendLine(".bg-danger { background-color: #dc3545; color: white; }");
-            html.AppendLine(".bg-secondary { background-color: #6c757d; color: white; }");
-            html.AppendLine("</style>");
-            html.AppendLine("</head>");
-            html.AppendLine("<body>");
-            html.AppendLine($"<h2>Отчёт по заявкам за период {startDate:dd.MM.yyyy} - {endDate:dd.MM.yyyy}</h2>");
-            if (!string.IsNullOrEmpty(status))
-                html.AppendLine($"<p><strong>Фильтр по статусу:</strong> {status}</p>");
+            html.AppendLine("<!DOCTYPE html><html><head><meta charset='utf-8'><title>Отчёт по заявкам</title>");
+            html.AppendLine("<style>body{font-family:Arial;margin:20px}table{border-collapse:collapse;width:100%}th{background:#0d6efd;color:white;padding:8px}td{padding:6px;border-bottom:1px solid #ddd}</style>");
+            html.AppendLine("</head><body>");
+            html.AppendLine($"<h2>Отчёт за {startDate:dd.MM.yyyy} – {endDate:dd.MM.yyyy}</h2>");
+            if (!string.IsNullOrEmpty(status)) html.AppendLine($"<p>Фильтр: {status}</p>");
 
-            if (allItems.Any())
+            html.AppendLine("<table><tr><th>ID</th><th>Тип</th><th>Пользователь</th><th>Заголовок</th><th>Детали</th><th>Дата</th><th>Статус</th></tr>");
+            foreach (var item in allItems)
             {
-                html.AppendLine("<table>");
-                html.AppendLine("<thead><tr><th>ID</th><th>Тип</th><th>Пользователь</th><th>Заголовок</th><th>Детали</th><th>Дата создания</th><th>Статус</th></tr></thead>");
-                html.AppendLine("<tbody>");
-
-                foreach (var item in allItems)
-                {
-                    string statusClass = item.Status switch
-                    {
-                        "На согласовании" => "bg-warning",
-                        "Подтверждена" => "bg-success",
-                        "Выполнена" => "bg-info",
-                        "Отклонена" => "bg-danger",
-                        _ => "bg-secondary"
-                    };
-
-                    html.AppendLine("<tr>");
-                    html.AppendLine($"<td>#{item.Id}</td>");
-                    html.AppendLine($"<td>{item.Type}</td>");
-                    html.AppendLine($"<td>{item.UserName}</td>");
-                    html.AppendLine($"<td>{item.Title}</td>");
-                    html.AppendLine($"<td>{item.Details}</td>");
-                    html.AppendLine($"<td>{item.CreatedAt:dd.MM.yyyy HH:mm}</td>");
-                    html.AppendLine($"<td><span class='badge {statusClass}'>{item.Status}</span></td>");
-                    html.AppendLine("</tr>");
-                }
-
-                html.AppendLine("</tbody>");
-                html.AppendLine("</table>");
+                html.AppendLine($"<tr><td>{item.Id}</td><td>{item.Type}</td><td>{item.UserName}</td><td>{item.Title}</td><td>{item.Details}</td><td>{item.CreatedAt:dd.MM.yyyy}</td><td>{item.Status}</td></tr>");
             }
-            else
-            {
-                html.AppendLine("<p>Нет заявок за выбранный период.</p>");
-            }
+            html.AppendLine("</table></body></html>");
 
-            html.AppendLine("</body>");
-            html.AppendLine("</html>");
-
-            byte[] bytes = Encoding.UTF8.GetBytes(html.ToString());
-            string fileName = $"ServiceReport_{startDate:yyyyMMdd}_{endDate:yyyyMMdd}.html";
-            return File(bytes, "text/html", fileName);
+            return File(Encoding.UTF8.GetBytes(html.ToString()), "text/html", $"Report_{startDate:yyyyMMdd}_{endDate:yyyyMMdd}.html");
         }
 
         private class ReportItem
         {
             public int Id { get; set; }
-            public string Type { get; set; } = string.Empty;
-            public string UserName { get; set; } = string.Empty;
-            public string Title { get; set; } = string.Empty;
-            public string Details { get; set; } = string.Empty;
+            public string Type { get; set; } = "";
+            public string UserName { get; set; } = "";
+            public string Title { get; set; } = "";
+            public string Details { get; set; } = "";
             public DateTime CreatedAt { get; set; }
-            public string Status { get; set; } = string.Empty;
+            public string Status { get; set; } = "";
         }
     }
 }

@@ -7,149 +7,72 @@
 
 <div>
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="h2 fw-bold text-primary">Обзор активности</h1>
+        <h1 class="h2 glass-title">Обзор активности</h1>
     </div>
 
-    <!-- Информационные карточки (Статистика) -->
+    <!-- Градиентные кубики статистики -->
     <div class="row g-4 mb-4">
-        <div class="col-xl-3 col-md-6">
-            <div class="card bg-success text-white h-100 shadow-lg">
-                <div class="card-body p-4">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <h6 class="card-title mb-2">Подтверждено</h6>
-                            <h2 class="card-text mb-0 display-6 fw-bold">@Model.ActiveRequests</h2>
-                        </div>
-                    </div>
-                </div>
+        <div class="col-6 col-xl-3">
+            <div class="glass-card dashboard-stat-card p-4 h-100" style="background: linear-gradient(135deg, #198754, #0d6efd); color: white; min-width: 145px; max-width: 100%;">
+                <h6 class="card-title mb-2">Подтверждено</h6>
+                <h3 class="card-text mb-0 fw-bold">@Model.ActiveRequests</h3>
             </div>
         </div>
-        <div class="col-xl-3 col-md-6">
-            <div class="card bg-warning text-dark h-100 shadow-lg">
-                <div class="card-body p-4">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <h6 class="card-title mb-2">На согласовании</h6>
-                            <h2 class="card-text mb-0 display-6 fw-bold">@Model.PendingRequests</h2>
-                        </div>
-                    </div>
-                </div>
+        <div class="col-6 col-xl-3">
+            <div class="glass-card dashboard-stat-card p-4 h-100" style="background: linear-gradient(135deg, #ffc107, #fd7e14); color: #212529; min-width: 145px; max-width: 100%;">
+                <h6 class="card-title mb-2">На согласовании</h6>
+                <h3 class="card-text mb-0 fw-bold">@Model.PendingRequests</h3>
             </div>
         </div>
-
-        <div class="col-xl-3 col-md-6">
-            <div class="card bg-primary text-white h-100 shadow-lg">
-                <div class="card-body p-4">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <h6 class="card-title mb-2">Завершено</h6>
-                            <h2 class="card-text mb-0 display-6 fw-bold">@Model.CompletedRequests</h2>
-                        </div>
-                    </div>
-                </div>
+        <div class="col-6 col-xl-3">
+            <div class="glass-card dashboard-stat-card p-4 h-100" style="background: linear-gradient(135deg, #0dcaf0, #6610f2); color: white; min-width: 145px; max-width: 100%;">
+                <h6 class="card-title mb-2">Завершено</h6>
+                <h3 class="card-text mb-0 fw-bold">@Model.CompletedRequests</h3>
             </div>
-        </div>      
-        <div class="col-xl-3 col-md-6">
-            <div class="card bg-info text-dark h-100 shadow-lg">
-                <div class="card-body p-4">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <h6 class="card-title mb-2">Всего заявок</h6>
-                            <h2 class="card-text mb-0 display-6 fw-bold">@Model.TotalRequests</h2>
-                        </div>
-                    </div>
-                </div>
+        </div>
+        <div class="col-6 col-xl-3">
+            <div class="glass-card dashboard-stat-card p-4 h-100" style="background: linear-gradient(135deg, #475569, #1e293b); color: white; min-width: 145px; max-width: 100%;">
+                <h6 class="card-title mb-2">Всего заявок</h6>
+                <h3 class="card-text mb-0 fw-bold">@Model.TotalRequests</h3>
             </div>
         </div>
     </div>
 
-    <!-- Последние события -->
-    <div class="row">
-        <div class="col-12">
-            <div class="card shadow-lg rounded-3 overflow-hidden">
-                <div class="card-header bg-white py-4 px-4 d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0 fw-bold">Последняя активность</h5>
-                    <a asp-page="/Account/History" class="btn btn-primary rounded-pill px-4 text-nowrap"><i class="fas fa-history me-2"></i>Вся история</a>
-                </div>
-                <div class="card-body p-0">
-                    @if (Model.RecentRequests.Any())
-                    {
-                        <div class="table-responsive">
-                            <table class="table table-hover align-middle text-center">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th class="ps-4">Тип услуги</th>
-                                        <th>Описание</th>
-                                        <th>Дата</th>
-                                        <th>Статус</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach (var request in Model.RecentRequests)
-                                    {
-                                        <tr>
-                                            <td class="ps-4">
-                                                @if (request.ServiceType == "Транспорт")
-                                                {
-                                                    <span class="badge bg-info text-black">🚗 @request.ServiceType</span>
-                                                }
-                                                else if (request.ServiceType == "Поддержка")
-                                                {
-                                                    <span class="badge bg-warning">🛠️ @request.ServiceType</span>
-                                                }
-                                                else if (request.ServiceType == "Питание")
-                                                {
-                                                    <span class="badge bg-success">🍽️ @request.ServiceType</span>
-                                                }
-                                                else if (request.ServiceType == "Помещения")
-                                                {
-                                                    <span class="badge bg-primary">🏢 @request.ServiceType</span>
-                                                }
-                                                else
-                                                {
-                                                    <span class="badge bg-primary"><i class="fas fa-cube me-2"></i>@request.ServiceType</span>
-                                                }                                                
-                                            </td>
-                                            <td>@request.Title</td>
-                                            <td>
-                                                <div>@request.CreatedAt.ToString("dd.MM.yyyy")</div>
-                                                <div class="small text-primary">@request.CreatedAt.ToString("HH:mm")</div>
-                                            </td>
-                                            <td class="text-center">
-                                                @switch (request.Status)
-                                                {
-                                                    case "На согласовании":
-                                                        <span class="badge bg-warning text-dark"> На согласовании</span>
-                                                        break;
-                                                    case "Подтверждена":
-                                                        <span class="badge bg-success"> Подтверждена</span>
-                                                        break;
-                                                    case "Выполнена":
-                                                        <span class="badge bg-info text-dark"> Выполнена</span>
-                                                        break;
-                                                    case "Отклонена":
-                                                        <span class="badge bg-danger"> Отклонена</span>
-                                                        break;
-                                                    default:
-                                                        <span class="text-secondary small fw-bold">@request.Status</span>
-                                                        break;
-                                                }
-                                            </td>
-                                        </tr>
-                                    }
-                                </tbody>
-                            </table>
-                        </div>
-                    }
-                    else
-                    {
-                        <div class="text-center py-5">
-                            <i class="fas fa-inbox fa-3x text-muted opacity-25 mb-3"></i>
-                            <p class="text-muted">Активных уведомлений пока нет</p>
-                        </div>
-                    }
+    <!-- Последняя активность -->
+    <div class="glass-container p-4">
+        <h5 class="fw-bold mb-3">Последняя активность</h5>
+        @if (Model.RecentRequests.Any())
+        {
+            <div class="row g-3">
+                @foreach (var request in Model.RecentRequests)
+                {
+                    <div class="col-md-6">
+                        <div class="glass-card p-3 h-100">
+                            <!-- Разрешаем перенос бейджей -->
+                            <div class="d-flex flex-wrap align-items-start justify-content-between mb-2 gap-2">
+                                <span class="badge badge-glass
+                                            @(request.ServiceType == "Транспорт" ? "bg-info text-white" :
+                                                                            request.ServiceType == "Помещения" ? "bg-primary" : "bg-secondary")">
+                                                                                                                                             @(request.ServiceType == "Транспорт" ? "🚗 Транспорт" : "🏢 Помещения")
+                                                                                                                                         </span>
+                                                                                                                                         <span class="badge badge-glass
+                                            @(request.Status == "На согласовании" ? "bg-warning text-dark" :
+                                                                            request.Status == "Подтверждена" ? "bg-success" :
+                                                                            request.Status == "Выполнена" ? "bg-info text-dark" :
+                                                                            request.Status == "Отклонена" ? "bg-danger" : "bg-secondary")">
+                            @request.Status
+                        </span>
+                    </div>
+                    <h6 class="fw-bold">@request.Title</h6>
+                    <small style="color: var(--text-muted)">@request.CreatedAt.ToString("dd.MM.yyyy HH:mm")</small>
                 </div>
             </div>
-        </div>
+                        }
+            </div>
+        }
+        else
+        {
+            <p style="color: var(--text-muted)">Активных уведомлений пока нет</p>
+        }
     </div>
 </div>

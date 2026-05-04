@@ -35,7 +35,7 @@ namespace ServiceHub.Pages.Transport
                 })
                 .ToListAsync();
 
-            CarOptions.Insert(0, new SelectListItem("-- Выберите автомобиль --", ""));
+            CarOptions.Insert(0, new SelectListItem("Выберите автомобиль", ""));
 
             if (TransportRequest.TripDateTime == default)
             {

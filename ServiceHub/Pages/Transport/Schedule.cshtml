@@ -5,23 +5,23 @@
 }
 
 <div class="container mt-4">
-    <div class="d-flex justify-content-between align-items-center mb-5">
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
         <div>
-            <h2 class="fw-bold text-primary mb-1"><i class="fas fa-bus-alt me-3"></i>Регулярные маршруты</h2>       
+            <h2 class="glass-title mb-1"><i class="fas fa-bus-alt me-2"></i>Регулярные маршруты</h2>
         </div>
-        <a asp-page="/Transport/Index" class="btn btn-outline-secondary rounded-pill px-4 text-nowrap">
+        <a asp-page="/Transport/Index" class="btn btn-outline-glass px-4 text-nowrap">
             <i class="fas fa-arrow-left me-2"></i>Мои заявки
         </a>
     </div>
 
+
     @if (!Model.Routes.Any())
     {
-        <div class="card shadow-lg rounded-3 p-5 text-center">
+        <div class="glass-card p-4 text-center">
             <div class="d-inline-flex align-items-center justify-content-center bg-light rounded-circle p-3 mx-auto mb-3 opacity-25" style="width: 80px; height: 80px;">
                 <i class="fas fa-calendar-times fa-2x text-muted"></i>
             </div>
             <h5 class="text-muted">Активных маршрутов не найдено</h5>
-            <p class="mb-0">Обратитесь к администратору для уточнения расписания.</p>
         </div>
     }
     else
@@ -30,28 +30,25 @@
             @foreach (var route in Model.Routes)
             {
                 <div class="col">
-                    <div class="card h-100 shadow-lg rounded-3 overflow-hidden">
-                        <div class="card-header bg-white border-0 p-4">
+                    <div class="glass-card h-100 overflow-hidden">
+                        <div class="card-header p-3">
                             <div class="d-flex justify-content-between align-items-start">
                                 <div>
-                                    <h5 class="fw-bold mb-1 text-primary">@route.Name</h5>
-                                    <span class="badge border text-muted">Код: RT-@route.Id</span>
-                                </div>
-                                <div class="bg-primary bg-opacity-10 text-primary p-3 rounded-3">
-                                    <i class="fas fa-route fa-xl"></i>
+                                    <h5 class="fw-bold glass-title">@route.Name</h5>
+                                    <span class="badge border text-muted">№@route.Id</span>
                                 </div>
                             </div>
                         </div>
-                        <div class="card-body p-4 pt-0">
+                        <div class="card-body p-3">
                             @if (!string.IsNullOrEmpty(route.Description))
                             {
                                 <div class="bg-light rounded-3 p-3 mb-4 border-start border-4 border-primary">
-                                    <p class="small mb-0 text-muted">@route.Description</p>
+                                    <p class="small mb-0">@route.Description</p>
                                 </div>
                             }
 
                             <p class="mb-4">
-                                <i class="fas fa-shuttle-van text-primary me-2"></i>
+                                <i class="fas fa-shuttle-van text-primary"></i>
                                 <strong>Транспорт:</strong>
                                 @if (route.Car != null)
                                 {
@@ -67,7 +64,7 @@
                             <div>
                                 <h6 class="fw-bold mb-3"><i class="far fa-clock me-2"></i>Остановки и время:</h6>
                                 <div class="table-responsive">
-                                    <table class="table table-sm table-borderless align-middle">
+                                    <table class="table table-sm table-borderless align-middle table-dark-glass">
                                         <tbody>
                                             @foreach (var stop in route.Stops.OrderBy(s => s.Order))
                                             {
@@ -77,7 +74,7 @@
                                                             <i class="fas fa-circle text-primary" style="font-size: 9px;"></i>
                                                             @if (stop != route.Stops.OrderBy(s => s.Order).Last())
                                                             {
-                                                                <div style="width: 2px; height: 25px; border-left: 2px dashed #000000;"></div>
+                                                                <div class="stop-line"></div>
                                                             }
                                                         </div>
                                                     </td>

@@ -1,0 +1,81 @@
+﻿@page "/Rooms/Calendar"
+@model ServiceHub.Pages.Rooms.CalendarModel
+@{
+    ViewData["Title"] = "Календарь бронирований";
+}
+
+<div class="container mt-4">
+    <h2 class="glass-title mb-4">Календарь бронирований</h2>
+
+    <div class="glass-container p-4">
+        <form method="get" class="row g-3 mb-4">
+            <div class="col-md-4">
+                <label class="form-label fw-medium">Помещение</label>
+                <select name="roomId" class="form-select" onchange="this.form.submit()">
+                    <option value="">Все помещения</option>
+                    @foreach (var room in Model.AllRooms)
+                    {
+                        if (Model.SelectedRoomId == room.Id)
+                        {
+                            <option value="@room.Id" selected="selected">@room.Name</option>
+                        }
+                        else
+                        {
+                            <option value="@room.Id">@room.Name</option>
+                        }
+                    }
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label for="selectedDate" class="form-label fw-medium">Дата</label>
+                <input type="date" id="selectedDate" name="selectedDate" class="form-control"
+                       value="@Model.SelectedDate.ToString("yyyy-MM-dd")"
+                       onchange="this.form.submit()" />
+            </div>
+            <div class="col-md-2 d-flex align-items-end">
+                <button type="submit" class="btn btn-glass w-100">
+                    <i class="fas fa-sync-alt me-1"></i>Обновить
+                </button>
+            </div>
+        </form>
+
+        @if (Model.Bookings.Any())
+        {
+            <div class="table-responsive">
+                <table class="table table-hover align-middle text-center">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Помещение</th>
+                            <th>Тема</th>
+                            <th>Дата</th>
+                            <th>Время</th>
+                            <th>Участников</th>
+                            <th>Статус</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var b in Model.Bookings)
+                        {
+                            <tr>
+                                <td>@b.Room?.Name</td>
+                                <td>@b.Topic</td>
+                                <td>@b.StartTime.ToString("dd.MM.yyyy")</td>
+                                <td>@b.StartTime.ToString("HH:mm") – @b.EndTime.ToString("HH:mm")</td>
+                                <td>@b.ParticipantsCount</td>
+                                <td>
+                                    <span class="badge badge-glass @(b.Status == "Подтверждена" ? "bg-success" : b.Status == "На согласовании" ? "bg-warning text-dark" : "bg-secondary")">
+                                        @b.Status
+                                    </span>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <p class="text-muted">На выбранную дату бронирований нет.</p>
+        }
+    </div>
+</div>

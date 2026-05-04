@@ -46,7 +46,6 @@ namespace ServiceHub.Pages.Admin.Cars
                 return NotFound();
             }
 
-            // Проверяем, есть ли заявки, привязанные к этому автомобилю
             bool hasRequests = await _context.TransportRequests.AnyAsync(r => r.CarId == id);
             if (hasRequests)
             {

@@ -1,0 +1,728 @@
+/* === Liquid Glass Theme === */
+:root {
+    --glass-bg: rgba(255, 255, 255, 0.25);
+    --glass-border: rgba(255, 255, 255, 0.4);
+    --glass-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
+    --glass-blur: 12px;
+    --primary-gradient: linear-gradient(135deg, #0d6efd, #6610f2);
+    --secondary-gradient: linear-gradient(135deg, #0d6efd 0%, #3a7bd5 100%);
+    --surface-bg: rgba(240, 245, 255, 0.6);
+    --text-primary: #0b3d7b;
+    --text-muted: #4a6fa5;
+    --border-radius: 1.5rem;
+    --transition: 0.3s cubic-bezier(0.25, 0.8, 0.25, 1.2);
+    --body-bg: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%);
+    --card-text: #212529;
+    --status-pending: #ffc107;
+    --status-approved: #198754;
+    --status-completed: #0dcaf0;
+    --status-rejected: #dc3545;
+}
+
+[data-theme="dark"] {
+    --glass-bg: rgba(20, 30, 48, 0.35);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    --surface-bg: rgba(20, 30, 48, 0.7);
+    --text-primary: #e0eafc;
+    --text-muted: #aab7d4;
+    --card-text: #f0f4ff;
+    --body-bg: linear-gradient(135deg, #0a0f1a 0%, #141e30 100%);
+    --status-pending: #664d00;
+    --status-approved: #0a4626;
+    --status-completed: #074a54;
+    --status-rejected: #5c1a1a;
+}
+
+body {
+    background: var(--body-bg);
+    background-attachment: fixed;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    color: var(--text-primary);
+    transition: background 0.5s ease, color 0.3s ease;
+    overflow-x: hidden;
+    min-height: 100vh;
+}
+
+/* ===== Глобальные переопределения Bootstrap для тёмной темы ===== */
+[data-theme="dark"] .text-muted,
+[data-theme="dark"] .text-secondary {
+    color: var(--text-muted) !important;
+}
+
+[data-theme="dark"] .text-dark {
+    color: var(--text-primary) !important;
+}
+
+[data-theme="dark"] .text-primary {
+    color: #7ea8f8 !important;
+}
+
+[data-theme="dark"] .text-black {
+    color: var(--text-primary) !important;
+}
+
+[data-theme="dark"] .bg-light {
+    background-color: rgba(255,255,255,0.08) !important;
+}
+
+[data-theme="dark"] .bg-white {
+    background-color: rgba(255,255,255,0.05) !important;
+}
+
+[data-theme="dark"] .table {
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] .table-light {
+    background-color: rgba(255,255,255,0.05) !important;
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] .form-control,
+[data-theme="dark"] .form-select {
+    background-color: rgba(255,255,255,0.1);
+    border-color: rgba(255,255,255,0.15);
+    color: var(--text-primary);
+}
+
+    [data-theme="dark"] .form-control:focus,
+    [data-theme="dark"] .form-select:focus {
+        background-color: rgba(255,255,255,0.15);
+        color: var(--text-primary);
+    }
+
+[data-theme="dark"] .form-label {
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] .form-control::placeholder {
+    color: rgba(255,255,255,0.6) !important;
+    opacity: 1;
+}
+
+[data-theme="dark"] input:-webkit-autofill,
+[data-theme="dark"] textarea:-webkit-autofill,
+[data-theme="dark"] select:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0px 1000px rgba(20,30,48,0.8) inset !important;
+    -webkit-text-fill-color: var(--text-primary) !important;
+    border: 1px solid rgba(255,255,255,0.15) !important;
+    transition: background-color 5000s ease-in-out 0s;
+}
+
+[data-theme="dark"] .alert-success {
+    background-color: rgba(25,135,84,0.2);
+    color: #d4edda;
+}
+
+[data-theme="dark"] .alert-danger {
+    background-color: rgba(220,53,69,0.2);
+    color: #f8d7da;
+}
+
+[data-theme="dark"] .modal-header {
+    border-bottom-color: rgba(255,255,255,0.1);
+}
+
+[data-theme="dark"] .dropdown-divider {
+    border-top-color: rgba(255,255,255,0.1);
+}
+
+[data-theme="dark"] .bg-success {
+    background-color: var(--status-approved) !important;
+}
+
+[data-theme="dark"] .bg-warning {
+    background-color: var(--status-pending) !important;
+    color: #fff !important;
+}
+
+[data-theme="dark"] .bg-info {
+    background-color: var(--status-completed) !important;
+}
+
+[data-theme="dark"] .bg-danger {
+    background-color: var(--status-rejected) !important;
+}
+
+[data-theme="dark"] .bg-primary {
+    background-color: #2c5282 !important;
+}
+
+[data-theme="dark"] .bg-secondary {
+    background-color: #475569 !important;
+}
+
+[data-theme="dark"] .bg-warning.text-dark {
+    color: #fff !important;
+}
+
+[data-theme="dark"] .bg-info.text-dark {
+    color: #fff !important;
+}
+
+.glass-card {
+    background: rgba(255, 255, 255, 0.45);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.65);
+    border-radius: var(--border-radius);
+    box-shadow: 0 12px 40px rgba(31, 38, 135, 0.2);
+    transition: transform var(--transition), box-shadow var(--transition), background 0.3s ease;
+    animation: fadeInUp 0.6s ease backwards;
+    color: var(--text-primary);
+}
+
+    .glass-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 20px 50px rgba(31, 38, 135, 0.35);
+    }
+
+/* Тёмная тема */
+[data-theme="dark"] .glass-card {
+    background: rgba(20, 30, 48, 0.5);
+    border-color: rgba(255, 255, 255, 0.25);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+}
+
+    [data-theme="dark"] .glass-card:hover {
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+    }
+
+/* Контейнеры */
+.glass-container {
+    background: var(--glass-bg);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    border: 1px solid var(--glass-border);
+    border-radius: var(--border-radius);
+    box-shadow: var(--glass-shadow);
+    transition: background 0.3s ease;
+    color: var(--text-primary);
+}
+
+/* Кнопки */
+.btn-glass {
+    background: var(--primary-gradient);
+    border: none;
+    color: white;
+    backdrop-filter: blur(4px);
+    border-radius: 2rem;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    transition: all var(--transition);
+    box-shadow: 0 4px 15px rgba(13, 110, 253, 0.3);
+}
+
+    .btn-glass:hover {
+        transform: scale(1.03);
+        box-shadow: 0 8px 25px rgba(13, 110, 253, 0.5);
+        color: white;
+    }
+
+.btn-outline-glass {
+    background: transparent;
+    border: 1px solid rgba(13, 110, 253, 0.5);
+    color: var(--text-primary);
+    backdrop-filter: blur(4px);
+    border-radius: 2rem;
+    transition: all var(--transition);
+}
+
+    .btn-outline-glass:hover {
+        background: rgba(13, 110, 253, 0.1);
+        border-color: rgba(13, 110, 253, 0.8);
+        color: #0d6efd;
+    }
+
+.btn-sm {
+    padding: 0.5rem 1rem !important;    
+    border-radius: 2rem !important;
+    min-width: 42px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.glass-title {
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+}
+
+.badge-glass {
+    backdrop-filter: blur(4px);
+    border-radius: 20px;
+    padding: 0.35em 0.8em;
+    font-weight: 500;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-in {
+    animation: fadeInUp 0.6s ease forwards;
+}
+
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(255,255,255,0.2);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--primary-gradient);
+    border-radius: 4px;
+}
+
+/* Навигация */
+.navbar-glass {
+    background: rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.6);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    position: relative;
+    z-index: 1000;
+    transition: background 0.3s ease, border-color 0.3s ease;
+}
+
+[data-theme="dark"] .navbar-glass {
+    background: rgba(20, 30, 48, 0.5);
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.navbar-nav .nav-link {
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-weight: 500;
+    color: var(--text-primary);
+    transition: all var(--transition);
+    padding: 0.5rem 1.2rem;
+}
+
+    .navbar-nav .nav-link.active {
+        background: rgba(13, 110, 253, 0.12);
+        border-radius: 2rem;
+        color: #0d6efd !important;
+        font-weight: 700;
+        box-shadow: 0 0 0 2px rgba(13, 110, 253, 0.3);
+        padding: 0.5rem 1.5rem;
+    }
+
+[data-theme="dark"] .nav-link {
+    color: var(--text-primary);
+}
+
+    [data-theme="dark"] .nav-link.active {
+        background: rgba(13, 110, 253, 0.25);
+        box-shadow: 0 0 0 2px rgba(13, 110, 253, 0.6);
+        color: #7ea8f8 !important;
+    }
+
+/* Выпадающие меню */
+.dropdown-menu.glass-dropdown {
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: 1.25rem;
+    box-shadow: var(--glass-shadow);
+    padding: 0.5rem;
+    z-index: 1100;
+    min-width: 220px;
+    width: max-content;
+}
+
+[data-theme="dark"] .dropdown-menu.glass-dropdown {
+    background: rgba(20, 30, 48, 0.85);
+    border: 1px solid rgba(255,255,255,0.15);
+}
+
+.dropdown-menu.glass-dropdown .dropdown-item {
+    border-radius: 1rem;
+    padding: 0.6rem 1rem;
+    font-weight: 500;
+    transition: background 0.2s;
+    white-space: nowrap;
+    color: var(--text-primary);
+    background: transparent !important;
+}
+
+    .dropdown-menu.glass-dropdown .dropdown-item:hover {
+        background: rgba(13, 110, 253, 0.1);
+        color: #0d6efd;
+    }
+
+[data-theme="dark"] .dropdown-menu.glass-dropdown .dropdown-item {
+    color: var(--text-primary) !important;
+}
+
+    [data-theme="dark"] .dropdown-menu.glass-dropdown .dropdown-item:hover,
+    [data-theme="dark"] .dropdown-menu.glass-dropdown .dropdown-item:focus,
+    [data-theme="dark"] .dropdown-menu.glass-dropdown .dropdown-item:active {
+        background: rgba(13, 110, 253, 0.25) !important;
+        color: #ffffff !important;
+    }
+
+/* Модальные окна */
+.modal-glass .modal-content {
+    background: rgba(255,255,255,0.7);
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
+    border: 1px solid rgba(255,255,255,0.5);
+    border-radius: var(--border-radius);
+    box-shadow: var(--glass-shadow);
+}
+
+[data-theme="dark"] .modal-glass .modal-content {
+    background: rgba(20,30,48,0.9);
+    border: 1px solid rgba(255,255,255,0.15);
+}
+
+.modal-glass {
+    z-index: 1055;
+}
+
+.modal-backdrop {
+    z-index: 1050;
+}
+
+.footer-glass {
+    background: rgba(255,255,255,0.2);
+    backdrop-filter: blur(10px);
+    border-top: 1px solid rgba(255,255,255,0.3);
+    color: var(--text-muted);
+    transition: background 0.3s ease;
+}
+
+[data-theme="dark"] .footer-glass {
+    background: rgba(20,30,48,0.5);
+    border-top: 1px solid rgba(255,255,255,0.1);
+}
+
+.theme-toggle {
+    background: none;
+    border: none;
+    color: var(--text-primary);
+    font-size: 1.2rem;
+    padding: 0.5rem;
+    margin: 0 0.5rem;
+    border-radius: 50%;
+    transition: background 0.2s, color 0.2s;
+    display: flex;
+    align-items: center;
+}
+
+    .theme-toggle:hover {
+        background: rgba(13,110,253,0.15);
+        color: #0d6efd;
+    }
+
+[data-theme="dark"] .theme-toggle {
+    color: #ffd166;
+}
+
+/* ==========================================
+   СТИЛИ ДЛЯ ГЛАВНОЙ СТРАНИЦЫ И АВТОРИЗАЦИИ
+   ========================================== */
+.service-icon,
+.auth-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 80px;
+    height: 80px;
+    background: var(--primary-gradient);
+    border-radius: 50%;
+    color: white;
+    box-shadow: 0 8px 25px rgba(13, 110, 253, 0.3);
+    margin-bottom: 1rem;
+}
+
+.service-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+}
+
+    .service-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    }
+
+/* ==========================================
+   АДАПТИВНОСТЬ
+   ========================================== */
+@media (max-width: 991px) {
+    .navbar-collapse {
+        background: rgba(255,255,255,0.9) !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+        border-radius: 0.75rem;
+        padding: 1rem;
+        margin-top: 0.5rem;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        border: 1px solid rgba(0,0,0,0.1);
+    }
+
+    [data-theme="dark"] .navbar-collapse {
+        background: rgba(20,30,48,0.95) !important;
+        border-color: rgba(255,255,255,0.15);
+    }
+
+    .navbar-collapse .dropdown-menu.glass-dropdown {
+        position: static !important;
+        float: none;
+        width: 100%;
+        margin: 0.5rem 0 0 0;
+        background: rgba(255,255,255,0.85) !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+        border: 1px solid rgba(0,0,0,0.1);
+        border-radius: 0.5rem;
+        padding: 0.5rem;
+        box-shadow: none;
+        min-width: 0;
+    }
+
+    [data-theme="dark"] .navbar-collapse .dropdown-menu.glass-dropdown {
+        background: rgba(30,40,55,0.95) !important;
+        border-color: rgba(255,255,255,0.2);
+    }
+
+    .navbar-collapse .dropdown-menu.glass-dropdown .dropdown-item {
+        color: var(--text-primary) !important;
+        padding: 0.7rem 1rem;
+        border-radius: 0.4rem;
+        white-space: nowrap;
+    }
+
+        .navbar-collapse .dropdown-menu.glass-dropdown .dropdown-item:hover {
+            background: rgba(13,110,253,0.15) !important;
+            color: #0d6efd !important;
+        }
+
+    .navbar-toggler {
+        border: 1px solid var(--text-primary);
+        background: rgba(255,255,255,0.2);
+    }
+
+    [data-theme="dark"] .navbar-toggler {
+        border-color: rgba(255,255,255,0.5);
+        background: rgba(255,255,255,0.1);
+    }
+
+    .navbar-toggler-icon {
+        background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3e%3cpath stroke='rgba(0,0,0,0.5)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+    }
+
+    [data-theme="dark"] .navbar-toggler-icon {
+        background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3e%3cpath stroke='rgba(255,255,255,0.8)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+    }
+}
+
+@media (max-width: 576px) {
+    .navbar-nav .nav-link {
+        padding: 0.6rem 0.8rem;
+        font-size: 0.9rem;
+    }
+
+        .navbar-nav .nav-link.active {
+            padding: 0.6rem 1.2rem;
+        }
+
+    .container {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+    .glass-card, .glass-container {
+        border-radius: 1rem;
+        padding: 1rem;
+    }
+
+    .btn, .btn-glass, .btn-outline-glass {
+        padding: 0.6rem 1rem;
+        font-size: 0.9rem;
+    }
+
+    h1, .h1 {
+        font-size: 1.8rem;
+    }
+
+    h2, .h2 {
+        font-size: 1.5rem;
+    }
+
+    .display-4 {
+        font-size: 2.2rem;
+    }
+}
+
+html, body {
+    min-width: 360px;
+    overflow-x: auto;
+}
+
+/*СТИЛИ ДЛЯ БОКОВОЙ ПАНЕЛИ ПРОФИЛЯ */
+.profile-nav .nav-link {
+    color: var(--text-primary);
+    border-radius: 0.75rem;
+    padding: 0.6rem 1rem;
+    margin-bottom: 0.2rem;
+    font-weight: 500;
+    transition: background 0.2s, color 0.2s;
+}
+
+    .profile-nav .nav-link i {
+        width: 1.5rem;
+        text-align: center;
+    }
+
+    .profile-nav .nav-link:hover {
+        background: rgba(13, 110, 253, 0.1);
+        color: #0d6efd;
+    }
+
+    .profile-nav .nav-link.active {
+        background: var(--primary-gradient);
+        color: white !important;
+        font-weight: 600;
+        box-shadow: 0 4px 10px rgba(13, 110, 253, 0.3);
+    }
+
+/* Кубики активности на Dashboard */
+.dashboard-stat-card {
+    padding: 1.25rem !important;
+}
+
+    .dashboard-stat-card h2 {
+        font-size: 1.6rem;
+    }
+
+.profile-nav .nav-link {
+    color: var(--text-primary);
+    border-radius: 0.75rem;
+    padding: 0.5rem 0.8rem;
+    margin-bottom: 0.2rem;
+    font-weight: 500;
+    transition: background 0.2s, color 0.2s;
+    white-space: normal;
+    word-break: break-word;
+    line-height: 1.4;
+}
+
+    .profile-nav .nav-link i {
+        width: 1.2rem;
+        text-align: center;
+        flex-shrink: 0;
+    }
+
+    .profile-nav .nav-link:hover {
+        background: rgba(13, 110, 253, 0.1);
+        color: #0d6efd;
+    }
+
+    .profile-nav .nav-link.active {
+        background: var(--primary-gradient);
+        color: white !important;
+        font-weight: 600;
+        box-shadow: 0 4px 10px rgba(13, 110, 253, 0.3);
+    }
+
+[data-theme="dark"] .btn-close {
+    filter: invert(1) grayscale(100%) brightness(200%);
+}
+
+[data-theme="dark"] select option,
+[data-theme="dark"] optgroup option {
+    background-color: #1e293b;
+    color: #e0eafc;
+}
+
+/* Таблица с тёмным фоном в тёмной теме */
+.table-dark-glass {
+    background-color: transparent !important;
+    border-radius: 0.5rem;
+    overflow: hidden;
+}
+
+[data-theme="dark"] .table-dark-glass {
+    background-color: #FFFFFF14 !important;
+    color: var(--text-primary) !important;
+}
+
+    [data-theme="dark"] .table-dark-glass td,
+    [data-theme="dark"] .table-dark-glass th {
+        background-color: transparent !important;
+        color: var(--text-primary) !important;
+        border-color: rgba(255, 255, 255, 0.1);
+    }
+
+/* Пунктирная линия между остановками */
+.stop-line {
+    width: 2px;
+    height: 25px;
+    border-left: 2px dashed #000;
+}
+
+[data-theme="dark"] .stop-line {
+    border-left-color: rgba(255, 255, 255, 0.5);
+}
+
+/* Компактные отступы в карточках маршрутов */
+.glass-card.card-schedule .card-header,
+.glass-card.card-schedule .card-body {
+    padding: 1rem 1.25rem;
+}
+
+.glass-card.card-schedule .card-body {
+    padding-top: 0.25rem;
+}
+
+@media (max-width: 576px) {
+    .glass-card.card-schedule .card-header,
+    .glass-card.card-schedule .card-body {
+        padding: 0.8rem 1rem;
+    }
+
+    .glass-card.card-schedule .card-body {
+        padding-top: 0;
+    }
+}
+
+/* Календарь и время в тёмной теме */
+[data-theme="dark"] input[type="date"],
+[data-theme="dark"] input[type="time"] {
+    background-color: rgba(255,255,255,0.1);
+    border-color: rgba(255,255,255,0.15);
+    color: var(--text-primary);
+}
+
+    [data-theme="dark"] input[type="date"]:focus,
+    [data-theme="dark"] input[type="time"]:focus {
+        background-color: rgba(255,255,255,0.15);
+        color: var(--text-primary);
+    }
+
+    /* Иконка календаря/часов в webkit-браузерах */
+    [data-theme="dark"] input[type="date"]::-webkit-calendar-picker-indicator,
+    [data-theme="dark"] input[type="time"]::-webkit-calendar-picker-indicator {
+        filter: invert(1);
+    }

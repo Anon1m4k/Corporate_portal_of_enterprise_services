@@ -66,11 +66,10 @@ namespace ServiceHub.Pages.Account
             user.LastName = CurrentUser.LastName;
             user.Email = CurrentUser.Email;
             user.Department = CurrentUser.Department;
-            user.Role = CurrentUser.Role; // администратор может менять роль
+            user.Role = CurrentUser.Role;
 
             await _context.SaveChangesAsync();
-
-            // Если редактировали свой профиль – обновляем клэймы
+            
             var currentUserId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
             if (user.Id == currentUserId)
             {

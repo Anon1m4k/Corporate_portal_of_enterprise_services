@@ -1,0 +1,76 @@
+﻿@page
+@model ServiceHub.Pages.Rooms.IndexModel
+@{
+    ViewData["Title"] = "Помещения для встреч";
+}
+
+<div class="container mt-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+        <div>
+            <h2 class="glass-title mb-1">Доступные помещения</h2>
+        </div>
+        <div class="d-flex gap-2">
+            <a asp-page="/Rooms/Calendar" class="btn btn-outline-glass px-3">
+                <i class="fas fa-calendar-alt me-2"></i>Календарь
+            </a>
+            <a asp-page="/Rooms/MyBookings" class="btn btn-outline-glass px-3">
+                <i class="fas fa-list me-2"></i>Мои бронирования
+            </a>
+        </div>
+    </div>
+    <!-- Фильтры -->
+    <div class="glass-container p-4 mb-4">
+        <h5 class="mb-3 fw-bold">Фильтр</h5>
+        <form method="get" class="row g-3">
+            <div class="col-md-4">
+                <label class="form-label fw-medium">Мин. вместимость</label>
+                <input type="number" name="minCapacity" class="form-control" value="@Model.MinCapacity" min="1" />
+            </div>
+            <div class="col-md-4">
+                <label class="form-label fw-medium">Оснащение</label>
+                <input type="text" name="equipment" class="form-control" value="@Model.Equipment" placeholder="проектор, флипчарт..." maxlength="100" />
+            </div>
+            <div class="col-md-4 d-flex justify-content-center align-items-end">
+                <button type="submit" class="btn btn-glass px-4 shadow-sm text-nowrap">
+                    <i class="fas fa-filter me-2"></i>Применить
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <div class="row">
+        @if (Model.Rooms.Any())
+        {
+            @foreach (var room in Model.Rooms)
+            {
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="glass-card p-4 h-100 d-flex flex-column">
+                        <h5 class="card-title fw-bold">@room.Name</h5>
+                        <p class="text-muted"><i class="fas fa-map-marker-alt me-2"></i>@room.Location</p>
+                        <p><i class="fas fa-users me-2"></i>Вместимость: @room.Capacity чел.</p>
+                        <p><i class="fas fa-tools me-2"></i>Оснащение: @(string.IsNullOrEmpty(room.Equipment) ? "не указано" : room.Equipment)</p>
+
+                        <div class="mt-auto">
+                            <div class="d-flex flex-wrap justify-content-center gap-2 mt-3">
+                                <a asp-page="/Rooms/Book" asp-route-roomId="@room.Id" class="btn btn-glass btn-sm px-3 shadow-sm text-nowrap">
+                                    <i class="fas fa-plus me-2"></i>Забронировать
+                                </a>
+                                <a asp-page="/Rooms/Calendar" asp-route-roomId="@room.Id" class="btn btn-outline-glass btn-sm px-3 text-nowrap">
+                                    <i class="fas fa-calendar-alt me-2"></i>Календарь
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="col-12 text-center py-5">
+                <i class="fas fa-door-open fa-3x text-muted mb-3"></i>
+                <p class="text-muted">Нет помещений, соответствующих условиям.</p>
+            </div>
+        }
+    </div>
+</div>

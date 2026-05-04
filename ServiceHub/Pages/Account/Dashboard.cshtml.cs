@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using ServiceHub.Data;
 using ServiceHub.Models;
+using ServiceHub.Models.Rooms;
 using System.Security.Claims;
 
 namespace ServiceHub.Pages.Account
@@ -48,26 +49,35 @@ namespace ServiceHub.Pages.Account
                 .Include(tr => tr.Car)
                 .Include(tr => tr.User)
                 .AsQueryable();
+            var roomQuery = _context.RoomRequests
+                .Include(r => r.Room)
+                .Include(r => r.User)
+                .AsQueryable();
 
             if (!isAdmin)
             {
                 serviceQuery = serviceQuery.Where(sr => sr.UserId == userId);
                 transportQuery = transportQuery.Where(tr => tr.UserId == userId);
+                roomQuery = roomQuery.Where(r => r.UserId == userId);
             }
 
             var serviceRequests = await serviceQuery.ToListAsync();
             var transportRequests = await transportQuery.ToListAsync();
+            var roomRequests = await roomQuery.ToListAsync();
 
             // Подсчёт статусов
             ActiveRequests = serviceRequests.Count(sr => sr.Status == "Подтверждена") +
-                             transportRequests.Count(tr => tr.Status == "Подтверждена");
+                             transportRequests.Count(tr => tr.Status == "Подтверждена") +
+                             roomRequests.Count(r => r.Status == "Подтверждена");
             CompletedRequests = serviceRequests.Count(sr => sr.Status == "Выполнена") +
-                                transportRequests.Count(tr => tr.Status == "Выполнена");
+                                transportRequests.Count(tr => tr.Status == "Выполнена") +
+                                roomRequests.Count(r => r.Status == "Завершена"); // для помещений статус "Завершена"
             PendingRequests = serviceRequests.Count(sr => sr.Status == "На согласовании") +
-                              transportRequests.Count(tr => tr.Status == "На согласовании");
-            TotalRequests = serviceRequests.Count + transportRequests.Count;
+                              transportRequests.Count(tr => tr.Status == "На согласовании") +
+                              roomRequests.Count(r => r.Status == "На согласовании");
+            TotalRequests = serviceRequests.Count + transportRequests.Count + roomRequests.Count;
 
-            // Формирование списка последних заявок (с именем пользователя для админа)
+            // Формирование списка последних заявок
             var recent = new List<ServiceRequest>();
             foreach (var sr in serviceRequests)
             {
@@ -86,6 +96,21 @@ namespace ServiceHub.Pages.Account
                     Status = tr.Status,
                     CreatedAt = tr.CreatedAt,
                     User = tr.User
+                });
+            }
+            foreach (var rr in roomRequests)
+            {
+                var roomName = rr.Room?.Name ?? "Не указано";
+                var description = $"Помещение: {roomName}, {rr.ParticipantsCount} уч., {rr.StartTime:dd.MM.yyyy HH:mm}–{rr.EndTime:HH:mm}";
+                recent.Add(new ServiceRequest
+                {
+                    Id = rr.Id,
+                    ServiceType = "Помещения",
+                    Title = rr.Topic,
+                    Description = description,
+                    Status = rr.Status,
+                    CreatedAt = rr.CreatedAt,
+                    User = rr.User
                 });
             }
 
