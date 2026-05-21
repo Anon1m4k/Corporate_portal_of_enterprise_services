@@ -104,26 +104,27 @@ namespace ServiceHub.Pages.Rooms
                     worksheet.Cell(row, 7).Value = b.Topic;
                     worksheet.Cell(row, 8).Value = b.Status;
 
-                    // Яркие цвета статусов
                     var statusCell = worksheet.Cell(row, 8);
-                    switch (b.Status)
+                    string status = b.Status;
+                    if (status == "На согласовании")
                     {
-                        case "На согласовании":
-                            statusCell.Style.Fill.BackgroundColor = XLColor.FromHtml("#FFC107");
-                            statusCell.Style.Font.FontColor = XLColor.Black;
-                            break;
-                        case "Подтверждена":
-                            statusCell.Style.Fill.BackgroundColor = XLColor.FromHtml("#28A745");
-                            statusCell.Style.Font.FontColor = XLColor.White;
-                            break;
-                        case "Завершена":
-                            statusCell.Style.Fill.BackgroundColor = XLColor.FromHtml("#17A2B8");
-                            statusCell.Style.Font.FontColor = XLColor.White;
-                            break;
-                        case "Отклонена":
-                            statusCell.Style.Fill.BackgroundColor = XLColor.FromHtml("#DC3545");
-                            statusCell.Style.Font.FontColor = XLColor.White;
-                            break;
+                        statusCell.Style.Fill.BackgroundColor = XLColor.FromHtml("#FFC107");
+                        statusCell.Style.Font.FontColor = XLColor.Black;
+                    }
+                    else if (status == "Подтверждена")
+                    {
+                        statusCell.Style.Fill.BackgroundColor = XLColor.FromHtml("#28A745");
+                        statusCell.Style.Font.FontColor = XLColor.White;
+                    }
+                    else if (status == "Завершена")
+                    {
+                        statusCell.Style.Fill.BackgroundColor = XLColor.FromHtml("#17A2B8");
+                        statusCell.Style.Font.FontColor = XLColor.White;
+                    }
+                    else if (status == "Отклонена")
+                    {
+                        statusCell.Style.Fill.BackgroundColor = XLColor.FromHtml("#DC3545");
+                        statusCell.Style.Font.FontColor = XLColor.White;
                     }
                     row++;
                 }
