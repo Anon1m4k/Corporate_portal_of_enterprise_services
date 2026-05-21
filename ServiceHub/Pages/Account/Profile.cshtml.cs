@@ -1,11 +1,13 @@
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ServiceHub.Data;
+using ServiceHub.Helpers;
 using ServiceHub.Models.Account;
 using System.Security.Claims;
-using Microsoft.AspNetCore.Authentication;
 
 namespace ServiceHub.Pages.Account
 {
@@ -23,6 +25,8 @@ namespace ServiceHub.Pages.Account
         public AuthUser CurrentUser { get; set; } = new();
 
         public bool IsAdmin => User.IsInRole("Admin");
+
+        public List<SelectListItem> RoleOptions { get; set; } = new();
 
         public async Task<IActionResult> OnGetAsync(int? id = null)
         {
@@ -43,6 +47,15 @@ namespace ServiceHub.Pages.Account
             }
 
             CurrentUser = user;
+
+            // «аполн€ем список ролей с отображаемыми названи€ми
+            RoleOptions = new List<SelectListItem>
+            {
+                new SelectListItem(RoleHelper.GetRoleDisplay("User"), "User"),
+                new SelectListItem(RoleHelper.GetRoleDisplay("Chief"), "Chief"),
+                new SelectListItem(RoleHelper.GetRoleDisplay("Admin"), "Admin")
+            };
+
             return Page();
         }
 

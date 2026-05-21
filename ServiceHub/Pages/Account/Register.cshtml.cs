@@ -28,6 +28,7 @@ namespace ServiceHub.Pages.Account
             if (!ModelState.IsValid)
                 return Page();
 
+            // Проверяем наличие пользователя с таким email по всей базе
             var existingUser = _context.Users.FirstOrDefault(u => u.Email == Input.Email);
             if (existingUser != null)
             {
@@ -37,6 +38,7 @@ namespace ServiceHub.Pages.Account
 
             bool isFirstUser = !_context.Users.Any();
             var role = isFirstUser ? "Admin" : "User";
+            var isActive = isFirstUser; // только первый пользователь активен сразу
 
             var user = new AuthUser
             {
@@ -46,26 +48,34 @@ namespace ServiceHub.Pages.Account
                 Department = Input.Department,
                 Role = role,
                 CreatedAt = DateTime.UtcNow,
-                IsActive = true
+                IsActive = isActive
             };
             user.HashPassword(Input.Password);
 
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
-            var claims = new List<Claim>
+            // Автоматический вход только для активной учётной записи
+            if (user.IsActive)
             {
-                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim(ClaimTypes.Name, $"{user.FirstName} {user.LastName}"),
-                new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.Role, user.Role),
-                new Claim("Department", user.Department)
-            };
-            var identity = new ClaimsIdentity(claims, "Cookies");
-            var principal = new ClaimsPrincipal(identity);
-            await HttpContext.SignInAsync("Cookies", principal);
-
-            return RedirectToPage("/Index");
+                var claims = new List<Claim>
+        {
+            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+            new Claim(ClaimTypes.Name, $"{user.FirstName} {user.LastName}"),
+            new Claim(ClaimTypes.Email, user.Email),
+            new Claim(ClaimTypes.Role, user.Role),
+            new Claim("Department", user.Department)
+        };
+                var claimsIdentity = new ClaimsIdentity(claims, "Cookies");
+                var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
+                await HttpContext.SignInAsync("Cookies", claimsPrincipal);
+                return RedirectToPage("/Index");
+            }
+            else
+            {
+                TempData["RegistrationMessage"] = "Регистрация успешна. Ожидайте активации учётной записи администратором.";
+                return RedirectToPage("/Account/Login");
+            }
         }
     }
 }

@@ -1,0 +1,100 @@
+﻿@page
+@model ServiceHub.Pages.Transport.ReportModel
+@{
+    ViewData["Title"] = "Предпросмотр отчёта";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="glass-title">Предпросмотр отчёта по транспортным заявкам</h2>
+    </div>
+
+    <div class="glass-container p-3">
+        <p><strong>Период:</strong> @Model.StartDate.ToString("dd.MM.yyyy") – @Model.EndDate.ToString("dd.MM.yyyy")</p>
+        <p><strong>Пользователь:</strong> @Model.UserName</p>
+        <p><strong>Сформирован:</strong> @Model.GeneratedAt.ToString("dd.MM.yyyy HH:mm")</p>
+
+        <div class="table-responsive">
+            <table class="table table-hover table-report align-middle text-center">
+            <thead class="table-light">
+                <tr>
+                    <th>№</th>
+                    <th>ID</th>
+                    <th>Дата и время</th>
+                    <th>Откуда</th>
+                    <th>Куда</th>
+                    <th>Пассажиров</th>
+                    <th>Автомобиль</th>
+                    <th>Госномер</th>
+                    <th>Цель</th>
+                    <th>Статус</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    int index = 1;
+                }
+                @foreach (var req in Model.Requests)
+                {
+                    <tr>
+                        <td>@index</td>
+                        <td>@req.Id</td>
+                        <td>@req.TripDateTime.ToString("dd.MM.yyyy HH:mm")</td>
+                        <td>@req.StartPoint</td>
+                        <td>@req.EndPoint</td>
+                        <td>@req.PassengerCount</td>
+                        <td>@(req.Car != null ? $"{req.Car.Brand} {req.Car.Model}" : "—")</td>
+                        <td>@(req.Car?.LicensePlate ?? "—")</td>
+                        <td>@req.Purpose</td>
+                        <td>
+                            @switch (req.Status)
+                            {
+                                case "На согласовании":
+                                        <span class="badge badge-glass bg-warning text-dark">@req.Status</span>
+                                    break;
+                                case "Подтверждена":
+                                        <span class="badge badge-glass bg-success">@req.Status</span>
+                                    break;
+                                case "Выполнена":
+                                        <span class="badge badge-glass bg-info text-dark">@req.Status</span>
+                                    break;
+                                case "Отклонена":
+                                        <span class="badge badge-glass bg-danger">@req.Status</span>
+                                    break;
+                                default:
+                                        <span class="badge badge-glass bg-secondary">@req.Status</span>
+                                    break;
+                            }
+                        </td>
+                    </tr>
+                    index++;
+                }
+            </tbody>
+        </table>
+        </div>
+
+        @{
+            int confirmed = Model.Requests.Count(r => r.Status == "Подтверждена");
+            int completed = Model.Requests.Count(r => r.Status == "Выполнена");
+            int rejected = Model.Requests.Count(r => r.Status == "Отклонена");
+            int pending = Model.Requests.Count(r => r.Status == "На согласовании");
+        }
+        <div class="mt-3">
+            <p><strong>Итого заявок: @Model.Requests.Count</strong></p>
+            <p>Подтверждено: @confirmed | Выполнено: @completed | Отклонено: @rejected | На согласовании: @pending</p>
+        </div>
+
+        <div class="d-flex gap-2 mt-4">
+            <form method="post" asp-page-handler="Download">
+                <input type="hidden" name="startDate" value="@Model.StartDate.ToString("yyyy-MM-dd")" />
+                <input type="hidden" name="endDate" value="@Model.EndDate.ToString("yyyy-MM-dd")" />
+                <button type="submit" class="btn btn-glass px-4">
+                    <i class="fas fa-save me-2"></i>Сохранить в Excel
+                </button>
+            </form>
+            <a asp-page="/Transport/Index" class="btn btn-outline-glass px-4">
+                <i class="fas fa-times me-2"></i>Отмена
+            </a>
+        </div>
+    </div>
+</div>

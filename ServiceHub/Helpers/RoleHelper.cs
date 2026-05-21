@@ -5,8 +5,8 @@
         public static string GetRoleDisplay(string role) => role switch
         {
             "Admin" => "Администратор",
-            "Chief" => "Начальник",
-            "User" => "Пользователь",
+            "Chief" => "Согласователь",
+            "User" => "Заказчик",
             _ => role
         };
     }

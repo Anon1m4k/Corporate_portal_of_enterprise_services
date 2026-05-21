@@ -6,14 +6,15 @@
 
 <div class="container py-5">
     <div class="text-center mb-5 animate-in">
-        <h4 class="display-5 fw-bold glass-title mb-3">Добро пожаловать в ServiceHub</h4>
+        <h1 class="display-5 fw-bold glass-title mb-3">Добро пожаловать в ServiceHub</h1>
         <p class="lead" style="color: var(--text-muted);">Единый портал для заказа внутренних услуг предприятия</p>
     </div>
 
     <div class="row g-4 justify-content-center">
         @if (User.Identity?.IsAuthenticated == true)
         {
-            <div class="col-md-4 animate-in" style="animation-delay: 0.1s">
+            <!-- Поездки -->
+            <div class="col-lg-3 col-md-6 animate-in" style="animation-delay: 0.1s">
                 <a asp-page="/Transport/Index" class="text-decoration-none">
                     <div class="glass-card p-4 h-100 text-center service-card">
                         <div class="service-icon mb-3">
@@ -24,40 +25,36 @@
                     </div>
                 </a>
             </div>
-        }
 
-        @if (User.IsInRole("Admin"))
-        {
-            <div class="col-md-4 animate-in" style="animation-delay: 0.2s">
-                <a asp-page="/Admin/Cars/Index" class="text-decoration-none">
+            <!-- Переговорные -->
+            <div class="col-lg-3 col-md-6 animate-in" style="animation-delay: 0.2s">
+                <a asp-page="/Rooms/Index" class="text-decoration-none">
                     <div class="glass-card p-4 h-100 text-center service-card">
                         <div class="service-icon mb-3">
-                            <i class="fas fa-warehouse fa-2x"></i>
+                            <i class="fas fa-door-open fa-2x"></i>
                         </div>
-                        <h5 class="fw-bold mb-2" style="color: var(--text-primary);">Автопарк</h5>
-                        <p class="small" style="color: var(--text-muted);">Управление автомобилями и их состоянием</p>
+                        <h5 class="fw-bold mb-2" style="color: var(--text-primary);">Переговорные</h5>
+                        <p class="small" style="color: var(--text-muted);">Бронирование помещений для встреч и совещаний</p>
                     </div>
                 </a>
             </div>
-        }
 
-        @if (User.Identity?.IsAuthenticated == true)
-        {
-            <div class="col-md-4 animate-in" style="animation-delay: 0.3s">
-                <a asp-page="/Transport/Schedule" class="text-decoration-none">
+            <!-- Личный кабинет -->
+            <div class="col-lg-3 col-md-6 animate-in" style="animation-delay: 0.4s">
+                <a asp-page="/Account/Dashboard" class="text-decoration-none">
                     <div class="glass-card p-4 h-100 text-center service-card">
                         <div class="service-icon mb-3">
-                            <i class="fas fa-route fa-2x"></i>
+                            <i class="fas fa-tachometer-alt fa-2x"></i>
                         </div>
-                        <h5 class="fw-bold mb-2" style="color: var(--text-primary);">Маршруты</h5>
-                        <p class="small" style="color: var(--text-muted);">Расписание регулярных трансферов и остановок</p>
+                        <h5 class="fw-bold mb-2" style="color: var(--text-primary);">Личный кабинет</h5>
+                        <p class="small" style="color: var(--text-muted);">Статистика, история заявок и профиль</p>
                     </div>
                 </a>
-            </div>
+            </div>            
         }
-
-        @if (!User.Identity?.IsAuthenticated == true)
+        else
         {
+            <!-- Блок для неавторизованных посетителей -->
             <div class="col-md-8 col-lg-6 animate-in">
                 <div class="glass-card p-5 text-center">
                     <div class="auth-icon mb-4">
