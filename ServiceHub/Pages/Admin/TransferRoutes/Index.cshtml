@@ -44,9 +44,6 @@
                     <div class="glass-card p-4 h-100">
                         <div class="d-flex justify-content-between align-items-start mb-3">
                             <h6 class="fw-bold mb-0">@route.Name</h6>
-                            <span class="badge badge-glass @(route.IsActive ? "bg-success" : "bg-secondary")">
-                                @(route.IsActive ? "Активен" : "Неактивен")
-                            </span>
                         </div>
                         <p class="small text-muted mb-3">@(route.Description ?? "—")</p>
                         <div class="small mb-3">
