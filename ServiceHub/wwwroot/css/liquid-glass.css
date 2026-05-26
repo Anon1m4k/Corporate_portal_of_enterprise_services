@@ -236,7 +236,7 @@ body {
     }
 
 .btn-sm {
-    padding: 0.5rem 1rem !important;    
+    padding: 0.5rem 1rem !important;
     border-radius: 2rem !important;
     min-width: 42px;
     display: inline-flex;
@@ -465,7 +465,7 @@ body {
     }
 
 /*АДАПТИВНОСТЬ*/
-@media (max-width: 991px) {
+@media (max-width: 1099.98px) {
     .navbar-collapse {
         background: rgba(255,255,255,0.9) !important;
         backdrop-filter: none !important;
@@ -514,14 +514,32 @@ body {
             color: #0d6efd !important;
         }
 
-    .navbar-toggler {
-        border: 1px solid var(--text-primary);
-        background: rgba(255,255,255,0.2);
+    .navbar-nav .nav-link {
+        display: inline-block !important;
+        width: auto !important;
+        margin-bottom: 0.25rem;
+    }
+
+        .navbar-nav .nav-link.active {
+            display: inline-block !important;
+            width: auto !important;
+            background: rgba(13, 110, 253, 0.20) !important;
+            color: #0d6efd !important;
+            box-shadow: 0 0 0 2px rgba(13, 110, 253, 0.3) !important;
+            font-weight: 700 !important;
+            border-radius: 2rem !important;
+            padding: 0.5rem 1.5rem !important;
+        }
+
+    [data-theme="dark"] .navbar-nav .nav-link.active {
+        background: rgba(13, 110, 253, 0.25) !important;
+        color: #7ea8f8 !important;
+        box-shadow: 0 0 0 2px rgba(13, 110, 253, 0.6) !important;
     }
 
     [data-theme="dark"] .navbar-toggler {
-        border-color: rgba(255,255,255,0.5);
-        background: rgba(255,255,255,0.1);
+        border-color: rgba(255, 255, 255, 0.5);
+        background: rgba(255, 255, 255, 0.1);
     }
 
     .navbar-toggler-icon {
@@ -573,7 +591,6 @@ body {
 
 html, body {
     min-width: 360px;
-
 }
 
 /*СТИЛИ ДЛЯ БОКОВОЙ ПАНЕЛИ ПРОФИЛЯ */
@@ -747,4 +764,234 @@ html, body {
     background-color: rgba(20, 30, 48, 0.7);
     color: var(--text-primary);
     border-color: rgba(255, 255, 255, 0.08);
+}
+
+/* ===== Календарь бронирований ===== */
+.calendar-grid {
+    table-layout: auto;
+    width: 100%;
+    border-radius: 12px;
+    overflow: hidden;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+    .calendar-grid th,
+    .calendar-grid td {
+        border: 1px solid rgba(0, 0, 0, 0.15) !important;
+        transition: background 0.2s;
+        vertical-align: top;
+        padding: 0.5rem;
+        min-height: 100px;
+        word-break: break-word;
+        overflow-wrap: break-word;
+    }
+
+[data-theme="dark"] .calendar-grid th,
+[data-theme="dark"] .calendar-grid td {
+    background-color: rgba(20, 30, 48, 0.8);
+    color: #e0eafc;
+    border-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+/* Светлая тема: шапка */
+.calendar-grid thead th {
+    background-color: #0d6efd;
+    color: white;
+    border: none;
+}
+
+/* Тёмная тема: шапка */
+[data-theme="dark"] .calendar-grid thead th {
+    background-color: #2c5282;
+    color: white;
+    border-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+/* Сегодняшний день */
+.calendar-grid td.today {
+    background-color: rgba(13, 110, 253, 0.1);
+    border: 2px solid rgba(13, 110, 253, 0.4) !important;
+}
+
+[data-theme="dark"] .calendar-grid td.today {
+    background-color: rgba(126, 168, 248, 0.2);
+    border: 2px solid rgba(126, 168, 248, 0.5) !important;
+}
+
+/* Hover */
+.calendar-grid td:hover:not(:empty) {
+    background-color: rgba(13, 110, 253, 0.08);
+}
+
+[data-theme="dark"] .calendar-grid td:hover:not(:empty) {
+    background-color: rgba(126, 168, 248, 0.15);
+}
+
+/* Кастомный брейкпоинт 1100px для navbar */
+@media (min-width: 1100px) {
+    .navbar-expand-1100 {
+        flex-wrap: nowrap;
+        justify-content: flex-start;
+    }
+
+        .navbar-expand-1100 .navbar-nav {
+            flex-direction: row;
+        }
+
+            .navbar-expand-1100 .navbar-nav .dropdown-menu {
+                position: absolute;
+            }
+
+            .navbar-expand-1100 .navbar-nav .nav-link {
+                padding-right: 0.5rem;
+                padding-left: 0.5rem;
+            }
+
+        .navbar-expand-1100 .navbar-collapse {
+            display: flex !important;
+            flex-basis: auto;
+        }
+
+        .navbar-expand-1100 .navbar-toggler {
+            display: none;
+        }
+}
+
+/* Кнопка "Удалить" с градиентом и анимацией */
+.btn-delete {
+    background: linear-gradient(135deg, #dc3545, #c0392b);
+    border: none;
+    color: white;
+    backdrop-filter: blur(4px);
+    border-radius: 2rem;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    transition: all var(--transition);
+    box-shadow: 0 4px 15px rgba(220, 53, 69, 0.3);
+    padding: 0.5rem 1rem;
+    min-width: 42px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+    .btn-delete:hover {
+        transform: scale(1.03);
+        box-shadow: 0 8px 25px rgba(220, 53, 69, 0.5);
+        color: white;
+    }
+
+/* Кнопка "Сменить пароль" с градиентом и анимацией */
+.btn-warning-glass {
+    background: linear-gradient(135deg, #ffc107, #e0a800);
+    border: none;
+    color: #212529;
+    backdrop-filter: blur(4px);
+    border-radius: 2rem;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    transition: all var(--transition);
+    box-shadow: 0 4px 15px rgba(255, 193, 7, 0.3);
+    padding: 0.5rem 1rem;
+    min-width: 42px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+    .btn-warning-glass:hover {
+        transform: scale(1.03);
+        box-shadow: 0 8px 25px rgba(255, 193, 7, 0.5);
+        color: #212529;
+    }
+
+/* Переопределение стандартной btn-danger в модальных окнах */
+.btn-danger {
+    background: linear-gradient(135deg, #dc3545, #c0392b);
+    border: none;
+    color: white;
+    font-weight: 600;
+    border-radius: 2rem;
+    transition: all var(--transition);
+    box-shadow: 0 4px 15px rgba(220, 53, 69, 0.3);
+}
+
+    .btn-danger:hover {
+        transform: scale(1.03);
+        box-shadow: 0 8px 25px rgba(220, 53, 69, 0.5);
+        color: white;
+        background: linear-gradient(135deg, #dc3545, #c0392b);
+    }
+
+    /* ==========================================
+   ИСПРАВЛЕНИЯ И УЛУЧШЕНИЯ ИНТЕРФЕЙСА
+   ========================================== */
+
+.btn-outline-glass {
+    background: transparent;
+    border: 1px solid rgba(13, 110, 253, 0.5);
+    color: var(--text-primary);
+    backdrop-filter: blur(4px);
+    border-radius: 2rem;
+    transition: all var(--transition);
+}
+
+    .btn-outline-glass:hover {
+        background: rgba(13, 110, 253, 0.1);
+        border-color: rgba(13, 110, 253, 0.8);
+        color: #0d6efd;
+        transform: scale(1.03);
+        box-shadow: 0 8px 25px rgba(13, 110, 253, 0.3);
+    }
+
+/* 2. Тени карточек в тёмной теме */
+[data-theme="dark"] .glass-card {
+    background: rgba(20, 30, 48, 0.5);
+    border-color: rgba(255, 255, 255, 0.25);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+}
+    /* При наведении: внешнее свечение */
+    [data-theme="dark"] .glass-card:hover {
+        box-shadow: 0 20px 50px rgba(13, 110, 253, 0.15), 0 12px 40px rgba(0, 0, 0, 0.6);
+    }
+
+/* 3. Анимация кубиков активности (Dashboard) */
+.dashboard-stat-card {
+    padding: 1.25rem !important;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: default;
+}
+    .dashboard-stat-card:hover {
+        transform: scale(1.03);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+    }
+    /* Для тёмной темы */
+    [data-theme="dark"] .dashboard-stat-card:hover {
+        box-shadow: 0 15px 30px rgba(13, 110, 253, 0.2);
+    }
+
+/* 4. Анимация баджей (лейблов) */
+.badge-glass {
+    backdrop-filter: blur(4px);
+    border-radius: 20px;
+    padding: 0.35em 0.8em;
+    font-weight: 500;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    transition: all 0.2s ease;
+}
+    /* При наведении: легкое увеличение и тень */
+    .badge-glass:hover {
+        transform: scale(1.05);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        cursor: default;
+    }
+    /* В тёмной теме */
+    [data-theme="dark"] .badge-glass:hover {
+        box-shadow: 0 4px 8px rgba(13,110,253, 0.2);
+        background: rgba(255,255,255,0.15);
+    }
+
+.modal-glass .modal-header:first-child {
+    border-radius: var(--border-radius) var(--border-radius) 0 0;
 }

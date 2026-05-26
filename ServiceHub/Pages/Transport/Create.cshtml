@@ -18,14 +18,17 @@
                         <div asp-validation-summary="ModelOnly" class="text-danger mb-4 p-3 bg-light rounded-3"></div>
 
                         <div class="row g-3">
-                            <div class="col-md-6">
-                                <label asp-for="TransportRequest.TripDateTime" class="form-label fw-medium">Дата и время поездки</label>
-                                <input asp-for="TransportRequest.TripDateTime" class="form-control shadow-sm" type="datetime-local" />
-                                <span asp-validation-for="TransportRequest.TripDateTime" class="text-danger small"></span>
+                            <div class="col-md-3">
+                                <label for="TripDate" class="form-label fw-medium">Дата поездки</label>
+                                <input id="TripDate" name="TripDate" type="date" class="form-control shadow-sm" value="@DateTime.Now.AddHours(1).ToString("yyyy-MM-dd")" />
+                            </div>
+                            <div class="col-md-3">
+                                <label for="TripTime" class="form-label fw-medium">Время поездки</label>
+                                <input id="TripTime" name="TripTime" type="time" step="60" class="form-control shadow-sm" value="@DateTime.Now.AddHours(1).ToString("HH:mm")" />
                             </div>
                             <div class="col-md-6">
                                 <label asp-for="TransportRequest.PassengerCount" class="form-label fw-medium">Количество пассажиров</label>
-                                <input asp-for="TransportRequest.PassengerCount" class="form-control shadow-sm" type="number" value="1"/>
+                                <input asp-for="TransportRequest.PassengerCount" class="form-control shadow-sm" type="number" value="1" />
                                 <span asp-validation-for="TransportRequest.PassengerCount" class="text-danger small"></span>
                             </div>
 

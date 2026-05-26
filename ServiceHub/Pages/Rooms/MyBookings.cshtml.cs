@@ -44,11 +44,10 @@ namespace ServiceHub.Pages.Rooms
             if (booking == null || booking.Status != "На согласовании")
                 return BadRequest();
 
-            booking.Status = "Отклонена";
-            booking.UpdatedAt = DateTime.UtcNow;
+            _context.RoomRequests.Remove(booking);
             await _context.SaveChangesAsync();
 
-            TempData["SuccessMessage"] = "Бронирование отменено.";
+            TempData["SuccessMessage"] = "Бронирование удалено.";
             return RedirectToPage();
         }
 

@@ -71,10 +71,10 @@
                             <i class="fas fa-edit"></i>
                         </a>
                         <a asp-page="/Admin/ChangeUserPassword" asp-route-id="@user.Id"
-                           class="btn btn-sm btn-warning" title="Сменить пароль">
+                           class="btn btn-sm btn-warning-glass" title="Сменить пароль">
                             <i class="fas fa-key"></i>
                         </a>
-                        <button type="button" class="btn btn-sm btn-danger" title="Удалить"
+                        <button type="button" class="btn btn-sm btn-delete" title="Удалить"
                                 data-bs-toggle="modal" data-bs-target="#deleteModal-@user.Id">
                             <i class="fas fa-trash"></i>
                         </button>
@@ -97,7 +97,7 @@
                         <div class="modal-footer border-0 justify-content-center pb-4">
                             <button type="button" class="btn btn-outline-glass px-4" data-bs-dismiss="modal">Нет, оставить</button>
                             <form method="post" asp-page-handler="Delete" asp-route-id="@user.Id">
-                                <button type="submit" class="btn btn-glass px-4">Да, удалить</button>
+                                <button type="submit" class="btn btn-danger px-4">Да, удалить</button>
                             </form>
                         </div>
                     </div>

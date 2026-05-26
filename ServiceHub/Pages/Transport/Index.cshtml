@@ -20,24 +20,24 @@
     </div>
 
     <!-- Блок формирования отчёта -->
-<div class="glass-container p-4 mb-4">
-    <h5 class="mb-3 fw-bold">Сформировать отчёт</h5>
-    <form method="get" asp-page="/Transport/Report" class="row g-3 align-items-end">
-        <div class="col-md-4">
-            <label class="form-label fw-medium">Начальная дата</label>
-            <input type="date" name="startDate" class="form-control" required />
-        </div>
-        <div class="col-md-4">
-            <label class="form-label fw-medium">Конечная дата</label>
-            <input type="date" name="endDate" class="form-control" required />
-        </div>
-        <div class="col-md-4 d-flex justify-content-center align-items-end">
-            <button type="submit" class="btn btn-glass px-4 shadow-sm text-nowrap">
-                <i class="fas fa-file-excel me-2"></i>Сформировать
-            </button>
-        </div>
-    </form>
-</div>
+    <div class="glass-container p-4 mb-4">
+        <h5 class="mb-3 fw-bold">Сформировать отчёт</h5>
+        <form method="get" asp-page="/Transport/Report" class="row g-3 align-items-end">
+            <div class="col-md-4">
+                <label class="form-label fw-medium">Начальная дата</label>
+                <input type="date" name="startDate" class="form-control" required />
+            </div>
+            <div class="col-md-4">
+                <label class="form-label fw-medium">Конечная дата</label>
+                <input type="date" name="endDate" class="form-control" required />
+            </div>
+            <div class="col-md-4 d-flex justify-content-center align-items-end">
+                <button type="submit" class="btn btn-glass px-4 shadow-sm text-nowrap">
+                    <i class="fas fa-file-excel me-2"></i>Сформировать
+                </button>
+            </div>
+        </form>
+    </div>
 
     @if (TempData["TransportSuccess"] != null)
     {
@@ -61,26 +61,30 @@
                         <div class="glass-card p-4 h-100 d-flex flex-column">
                             <div class="d-flex justify-content-between align-items-start mb-3">
                                 <div>
-                                    <h6 class="fw-bold mb-1">№@req.Id</h6>
+                                    <h6 class="fw-bold mb-3">№@req.Id</h6>
+<div class="small text-muted mt-1">
+    <i class="far fa-calendar-alt me-1"></i> @req.TripDateTime.ToString("dd.MM.yyyy")
+</div>
                                     <div class="small text-muted">
-                                        @req.TripDateTime.ToString("dd.MM.yyyy") в @req.TripDateTime.ToString("HH:mm")
+                                        <i class="far fa-clock me-1"></i> @req.TripDateTime.ToString("HH:mm")
                                     </div>
                                 </div>
-                                <span class="badge badge-glass bg-secondary bg-opacity-10 text-secondary border">
-                                    <i class="fas fa-users me-1"></i> @req.PassengerCount
+                                <span class="badge badge-glass @(req.Status == "На согласовании" ? "bg-warning text-dark" : req.Status == "Подтверждена" ? "bg-success" : req.Status == "Выполнена" ? "bg-info text-dark" : req.Status == "Отклонена" ? "bg-danger" : "bg-secondary")">
+                                    @req.Status
                                 </span>
                             </div>
 
-                            <div class="mb-3">
-                                <div class="d-flex align-items-center flex-wrap">
-                                    <span class="text-primary fw-medium">@req.StartPoint</span>
-                                    <i class="fas fa-long-arrow-alt-right mx-2 text-muted"></i>
-                                    <span class="text-primary fw-medium">@req.EndPoint</span>
-                                </div>
+                            <div class="mb-2 small">
+                                <i class="fas fa-map-marker-alt me-1"></i> @req.StartPoint → @req.EndPoint
                             </div>
-
-                            <div class="mb-3 small">
-                                <strong>Авто:</strong>
+                            <div class="mb-2 small">
+                                <strong>Цель:</strong> @req.Purpose
+                            </div>
+                            <div class="mb-2 small">
+                                <strong>Пассажиров:</strong> @req.PassengerCount
+                            </div>
+                            <div class="mb-2 small">
+                                <strong>Автомобиль:</strong>
                                 @if (req.Car != null)
                                 {
                                     @req.Car.Brand @req.Car.Model <span class="text-muted">(@req.Car.LicensePlate)</span>
@@ -88,27 +92,6 @@
                                 else
                                 {
                                     <span class="text-muted fst-italic">Будет назначен</span>
-                                }
-                            </div>
-
-                            <div class="mb-3">
-                                @switch (req.Status)
-                                {
-                                    case "На согласовании":
-                                        <span class="badge badge-glass bg-warning text-dark">@req.Status</span>
-                                        break;
-                                    case "Подтверждена":
-                                        <span class="badge badge-glass bg-success">@req.Status</span>
-                                        break;
-                                    case "Выполнена":
-                                        <span class="badge badge-glass bg-info text-dark">@req.Status</span>
-                                        break;
-                                    case "Отклонена":
-                                        <span class="badge badge-glass bg-danger">@req.Status</span>
-                                        break;
-                                    default:
-                                        <span class="badge badge-glass bg-secondary">@req.Status</span>
-                                        break;
                                 }
                             </div>
 
@@ -164,7 +147,7 @@
                     <div class="modal-footer border-0 justify-content-center pb-4">
                         <button type="button" class="btn btn-outline-glass px-4" data-bs-dismiss="modal">Нет, оставить</button>
                         <form method="post" asp-page-handler="Delete" asp-route-id="@req.Id">
-                            <button type="submit" class="btn btn-glass px-4">Да, отменить</button>
+                            <button type="submit" class="btn btn-danger px-4">Да, отменить</button>
                         </form>
                     </div>
                 </div>

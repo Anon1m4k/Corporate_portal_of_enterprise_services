@@ -4,9 +4,15 @@
     ViewData["Title"] = "Мои бронирования";
 }
 
-
 <div class="container mt-4">
-    <h2 class="glass-title">Мои бронирования помещений</h2>
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+        <div>
+    <h2 class="glass-title mb-1">Мои бронирования помещений</h2>
+        </div>
+        <a asp-page="/Rooms/Index" class="btn btn-outline-glass px-4 text-nowrap">
+            <i class="fas fa-arrow-left me-2"></i>К помещениям
+        </a>
+    </div>             
 
     <!-- Блок формирования отчёта -->
     <div class="glass-container p-4 mb-4">
@@ -65,6 +71,12 @@
                             <div class="mb-2 small">
                                 <strong>Тема:</strong> @booking.Topic
                             </div>
+                            @if (!string.IsNullOrWhiteSpace(booking.Description))
+                            {
+                                <div class="mb-2 small">
+                                    <strong>Пожелания:</strong> @booking.Description
+                                </div>
+                            }
                             <div class="mb-3 small">
                                 <strong>Участников:</strong> @booking.ParticipantsCount
                             </div>
@@ -72,11 +84,10 @@
                             <div class="d-flex justify-content-end gap-2">
                                 @if (booking.Status == "На согласовании")
                                 {
-                                    <form method="post" asp-page-handler="Cancel" asp-route-id="@booking.Id">
-                                        <button type="submit" class="btn btn-sm btn-danger">
-                                            <i class="fas fa-trash me-2"></i>Отменить
-                                        </button>
-                                    </form>
+                                    <button type="button" class="btn btn-sm btn-danger" title="Отменить"
+                                            data-bs-toggle="modal" data-bs-target="#deleteModal-@booking.Id">
+                                        <i class="fas fa-trash me-2"></i>Отменить
+                                    </button>
                                 }
                                 @if (booking.Status == "Подтверждена")
                                 {
@@ -98,3 +109,31 @@
         }
     </div>
 </div>
+
+<!-- Модальные окна подтверждения удаления -->
+@foreach (var booking in Model.Bookings)
+{
+    @if (booking.Status == "На согласовании")
+    {
+        <div class="modal fade modal-glass" id="deleteModal-@booking.Id" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header border-0 pb-0">
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body text-center p-4">
+                        <i class="fas fa-exclamation-circle fa-3x text-danger mb-3"></i>
+                        <h5 class="fw-bold mb-3">Удалить бронирование?</h5>
+                        <p class="text-muted">Вы действительно хотите удалить это бронирование? Действие нельзя отменить.</p>
+                    </div>
+                    <div class="modal-footer border-0 justify-content-center pb-4">
+                        <button type="button" class="btn btn-outline-glass px-4" data-bs-dismiss="modal">Нет, оставить</button>
+                        <form method="post" asp-page-handler="Cancel" asp-route-id="@booking.Id">
+                            <button type="submit" class="btn btn-danger px-4">Да, удалить</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}

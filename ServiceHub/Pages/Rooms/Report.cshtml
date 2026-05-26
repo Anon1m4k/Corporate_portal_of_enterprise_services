@@ -16,18 +16,19 @@
 
         <div class="table-responsive">
             <table class="table table-hover table-report align-middle text-center">
-            <thead class="table-light">
-                <tr>
-                    <th>№</th>
-                    <th>ID</th>
-                    <th>Помещение</th>
-                    <th>Дата</th>
-                    <th>Время</th>
-                    <th>Участников</th>
-                    <th>Тема</th>
-                    <th>Статус</th>
-                </tr>
-            </thead>
+                <thead class="table-light">
+                    <tr>
+                        <th>№</th>
+                        <th>ID</th>
+                        <th>Помещение</th>
+                        <th>Дата</th>
+                        <th>Время</th>
+                        <th>Участников</th>
+                        <th>Тема</th>
+                        <th>Пожелания</th>
+                        <th>Статус</th>
+                    </tr>
+                </thead>
             <tbody>
                 @{
                     int index = 1;
@@ -42,6 +43,7 @@
                         <td>@b.StartTime.ToString("HH:mm") – @b.EndTime.ToString("HH:mm")</td>
                         <td>@b.ParticipantsCount</td>
                         <td>@b.Topic</td>
+                        <td>@(string.IsNullOrWhiteSpace(b.Description) ? "—" : b.Description)</td>
                         <td>
                             @switch (b.Status)
                             {

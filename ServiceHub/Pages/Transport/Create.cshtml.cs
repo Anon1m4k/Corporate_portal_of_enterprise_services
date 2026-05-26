@@ -24,6 +24,12 @@ namespace ServiceHub.Pages.Transport
 
         public List<SelectListItem> CarOptions { get; set; } = new();
 
+        // Дополнительные свойства для формы
+        [BindProperty]
+        public DateTime? TripDate { get; set; }
+        [BindProperty]
+        public TimeSpan? TripTime { get; set; }
+
         public async Task OnGetAsync()
         {
             CarOptions = await _context.Cars
@@ -36,15 +42,18 @@ namespace ServiceHub.Pages.Transport
                 .ToListAsync();
 
             CarOptions.Insert(0, new SelectListItem("Выберите автомобиль", ""));
-
-            if (TransportRequest.TripDateTime == default)
-            {
-                TransportRequest.TripDateTime = DateTime.Now.AddHours(1);
-            }
         }
 
         public async Task<IActionResult> OnPostAsync()
         {
+            // Собираем дату и время
+            if (TripDate.HasValue && TripTime.HasValue)
+            {
+                TransportRequest.TripDateTime = TripDate.Value.Date + TripTime.Value;
+            }
+
+            // Убираем ошибку валидации поля TripDateTime, т.к. мы его собрали вручную
+            ModelState.Remove("TransportRequest.TripDateTime");
 
             if (!ModelState.IsValid)
             {

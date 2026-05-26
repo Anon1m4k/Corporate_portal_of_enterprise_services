@@ -66,32 +66,10 @@
                                         <i class="fas fa-route"></i>
                                     </a>
                                 }
-                                <button type="button" class="btn btn-sm btn-danger" title="Удалить"
-                                        data-bs-toggle="modal" data-bs-target="#deleteModal-@car.Id">
+                                <button type="button" class="btn btn-sm btn-delete" title="Удалить"
+                                        data-bs-toggle="modal" data-bs-target="#deleteCarModal-@car.Id">
                                     <i class="fas fa-trash"></i>
                                 </button>
-                            </div>
-
-                            <!-- Модальное окно удаления -->
-                            <div class="modal fade modal-glass" id="deleteModal-@car.Id" tabindex="-1" aria-hidden="true">
-                                <div class="modal-dialog modal-dialog-centered">
-                                    <div class="modal-content">
-                                        <div class="modal-header border-0 pb-0">
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                        </div>
-                                        <div class="modal-body text-center p-4">
-                                            <i class="fas fa-exclamation-circle fa-3x text-danger mb-3"></i>
-                                            <h5 class="fw-bold mb-3">Удалить автомобиль?</h5>
-                                            <p class="text-muted">Вы действительно хотите удалить автомобиль?</p>
-                                        </div>
-                                        <div class="modal-footer border-0 justify-content-center pb-4">
-                                            <button type="button" class="btn btn-outline-glass px-4" data-bs-dismiss="modal">Нет, оставить</button>
-                                            <form method="post" asp-page-handler="Delete" asp-route-id="@car.Id">
-                                                <button type="submit" class="btn btn-glass px-4">Да, удалить</button>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -109,3 +87,28 @@
         }
     </div>
 </div>
+
+<!-- Модальные окна удаления -->
+@foreach (var car in Model.Cars)
+{
+    <div class="modal fade modal-glass" id="deleteCarModal-@car.Id" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-0 pb-0">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body text-center p-4">
+                    <i class="fas fa-exclamation-circle fa-3x text-danger mb-3"></i>
+                    <h5 class="fw-bold mb-3">Удалить автомобиль?</h5>
+                    <p class="text-muted">Вы действительно хотите удалить автомобиль @car.Brand @car.Model?</p>
+                </div>
+                <div class="modal-footer border-0 justify-content-center pb-4">
+                    <button type="button" class="btn btn-outline-glass px-4" data-bs-dismiss="modal">Нет, оставить</button>
+                    <form method="post" asp-page-handler="Delete" asp-route-id="@car.Id">
+                        <button type="submit" class="btn btn-danger px-4">Да, удалить</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+}

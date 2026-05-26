@@ -13,15 +13,15 @@
     <div class="glass-container p-4 mb-4">
         <h5 class="mb-3 fw-bold">Сформировать отчёт</h5>
         <form method="get" asp-page="/Admin/Report" class="row g-3 align-items-end">
-            <div class="col-md-3">
+            <div class="col-sm-6 col-md-3">
                 <label class="form-label fw-bold">Начальная дата</label>
                 <input type="date" name="startDate" class="form-control" required />
             </div>
-            <div class="col-md-3">
+            <div class="col-sm-6 col-md-3">
                 <label class="form-label fw-bold">Конечная дата</label>
                 <input type="date" name="endDate" class="form-control" required />
             </div>
-            <div class="col-md-3">
+            <div class="col-sm-6 col-md-3">
                 <label class="form-label fw-bold">Статус</label>
                 <select name="status" class="form-select">
                     <option value="">Все статусы</option>
@@ -31,7 +31,7 @@
                     }
                 </select>
             </div>
-            <div class="col-md-3 d-flex justify-content-center align-items-end">
+            <div class="col-12 col-md-auto d-flex align-items-end">
                 <button type="submit" class="btn btn-glass px-4 shadow-sm text-nowrap">
                     <i class="fas fa-file-excel me-2"></i>Сформировать
                 </button>
@@ -61,38 +61,34 @@
                         <div class="glass-card p-4 h-100">
                             <div class="d-flex justify-content-between align-items-start mb-3">
                                 <span class="badge badge-glass
-                                        @(item.ServiceType == "Транспорт" ? "bg-info text-black" :
-                                                                        item.ServiceType == "Поддержка" ? "bg-warning" :
-                                                                        item.ServiceType == "Питание" ? "bg-success" :
-                                                                        item.ServiceType == "Помещения" ? "bg-primary" : "bg-secondary")">
+                                                @(item.ServiceType == "Транспорт" ? "bg-info text-black" :
+                                                                                                              item.ServiceType == "Поддержка" ? "bg-warning" :
+                                                                                                              item.ServiceType == "Питание" ? "bg-success" :
+                                                                                                              item.ServiceType == "Помещения" ? "bg-primary" : "bg-secondary")">
                             @switch (item.ServiceType)
                                     {
                                         case "Транспорт":
                                             @("🚗 Транспорт")
                                             break;
                                         case "Поддержка":
-
                                             @("🛠️ Поддержка")
                                             break;
                                         case "Питание":
-
                                             @("🍽️ Питание")
                                             break;
                                         case "Помещения":
-
                                             @("🏢 Помещения")
                                             break;
                                         default:
-
                                             @item.ServiceType
                                             break;
                                     }
                             </span>
                             <span class="badge badge-glass
-                                    @(item.Status == "На согласовании" ? "bg-warning text-dark" :
-                                                                    item.Status == "Подтверждена" ? "bg-success" :
-                                                                    item.Status == "Выполнена" ? "bg-info text-dark" :
-                                                                    item.Status == "Отклонена" ? "bg-danger" : "bg-secondary")">
+                                        @(item.Status == "На согласовании" ? "bg-warning text-dark" :
+                                                                                                      item.Status == "Подтверждена" ? "bg-success" :
+                                                                                                      item.Status == "Выполнена" ? "bg-info text-dark" :
+                                                                                                      item.Status == "Отклонена" ? "bg-danger" : "bg-secondary")">
                             @item.Status
                         </span>
                     </div>
@@ -112,16 +108,18 @@
                                     <input type="hidden" name="type" value="@item.ServiceType" />
                                     <input type="hidden" name="currentStatus" value="@Model.CurrentStatus" />
                                     <input type="hidden" name="currentType" value="@Model.CurrentType" />
-                                    <div class="input-group">
-                                        <select name="newStatus" class="form-select">
-                                            @foreach (var s in Model.AllStatuses)
-                                            {
-                                                <option value="@s" selected="@(s == item.Status)">@s</option>
-                                            }
-                                        </select>
-                                        <button type="submit" class="btn btn-glass" title="Изменить статус">
-                                            <i class="fas fa-check"></i>
-                                        </button>
+                                    <div class="d-flex justify-content-end">
+                                        <div class="input-group" style="max-width: 240px;">
+                                            <select name="newStatus" class="form-select">
+                                                @foreach (var s in Model.AllStatuses)
+                                                {
+                                                    <option value="@s" selected="@(s == item.Status)">@s</option>
+                                                }
+                                            </select>
+                                            <button type="submit" class="btn btn-glass" title="Изменить статус">
+                                                <i class="fas fa-check"></i>
+                                            </button>
+                                        </div>
                                     </div>
                                 </form>
                             }

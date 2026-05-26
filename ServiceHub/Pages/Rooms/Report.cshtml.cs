@@ -82,7 +82,7 @@ namespace ServiceHub.Pages.Rooms
 
                 // === Таблица данных ===
                 int headerRow = 6;
-                var headers = new[] { "№", "ID", "Помещение", "Дата", "Время", "Участников", "Тема", "Статус" };
+                var headers = new[] { "№", "ID", "Помещение", "Дата", "Время", "Участников", "Тема", "Пожелания", "Статус" };
                 var tableHeaderRange = worksheet.Range(headerRow, 1, headerRow, headers.Length);
                 tableHeaderRange.Style.Font.Bold = true;
                 tableHeaderRange.Style.Font.FontColor = XLColor.White;
@@ -102,9 +102,10 @@ namespace ServiceHub.Pages.Rooms
                     worksheet.Cell(row, 5).Value = $"{b.StartTime:HH:mm} – {b.EndTime:HH:mm}";
                     worksheet.Cell(row, 6).Value = b.ParticipantsCount.ToString() ?? "—";
                     worksheet.Cell(row, 7).Value = b.Topic;
-                    worksheet.Cell(row, 8).Value = b.Status;
+                    worksheet.Cell(row, 8).Value = string.IsNullOrWhiteSpace(b.Description) ? "—" : b.Description;
+                    worksheet.Cell(row, 9).Value = b.Status;
 
-                    var statusCell = worksheet.Cell(row, 8);
+                    var statusCell = worksheet.Cell(row, 9);
                     string status = b.Status;
                     if (status == "На согласовании")
                     {

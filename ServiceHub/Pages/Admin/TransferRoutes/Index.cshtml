@@ -74,82 +74,10 @@
                                     data-bs-toggle="modal" data-bs-target="#detailsModal-@route.Id">
                                 <i class="fas fa-info-circle"></i>
                             </button>
-                            <button type="button" class="btn btn-sm btn-danger" title="Удалить"
-                                    data-bs-toggle="modal" data-bs-target="#deleteModal-@route.Id">
+                            <button type="button" class="btn btn-sm btn-delete" title="Удалить"
+                                    data-bs-toggle="modal" data-bs-target="#deleteRouteModal-@route.Id">
                                 <i class="fas fa-trash"></i>
                             </button>
-                        </div>
-
-                        <!-- Модальное окно подробностей -->
-                        <div class="modal fade modal-glass" id="detailsModal-@route.Id" tabindex="-1" aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-centered">
-                                <div class="modal-content">
-                                    <div class="modal-header bg-primary text-white py-3">
-                                        <h5 class="modal-title fw-bold"><i class="fas fa-info-circle me-2"></i>@route.Name</h5>
-                                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        @if (!string.IsNullOrEmpty(route.Description))
-                                        {
-                                            <p class="text-start"><strong>Описание:</strong> @route.Description</p>
-                                        }
-                                        <p class="text-start">
-                                            <strong>Автомобиль:</strong>
-                                            @if (route.Car != null)
-                                            {
-                                                @($"{route.Car.Brand} {route.Car.Model} ({route.Car.LicensePlate})")
-                                            }
-                                            else
-                                            {
-                                                <span>Не указан</span>
-                                            }
-                                        </p>
-                                        <p class="text-start"><strong>Статус:</strong> @(route.IsActive ? "Активен" : "Неактивен")</p>
-                                        <h6 class="text-start"><strong>Остановки:</strong></h6>
-                                        <table class="table table-hover align-middle text-center">
-                                            <thead class="table-light">
-                                                <tr>
-                                                    <th>№</th>
-                                                    <th>Адрес</th>
-                                                    <th>Время прибытия</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @foreach (var stop in route.Stops.OrderBy(s => s.Order))
-                                                {
-                                                    <tr>
-                                                        <td>@stop.Order</td>
-                                                        <td>@stop.Address</td>
-                                                        <td>@stop.ArrivalTime.ToString(@"hh\:mm")</td>
-                                                    </tr>
-                                                }
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Модальное окно удаления -->
-                        <div class="modal fade modal-glass" id="deleteModal-@route.Id" tabindex="-1" aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-centered">
-                                <div class="modal-content">
-                                    <div class="modal-header border-0 pb-0">
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                    </div>
-                                    <div class="modal-body text-center p-4">
-                                        <i class="fas fa-exclamation-circle fa-3x text-danger mb-3"></i>
-                                        <h5 class="fw-bold mb-3">Удалить маршрут?</h5>
-                                        <p class="text-muted">Вы действительно хотите удалить маршрут?</p>
-                                    </div>
-                                    <div class="modal-footer border-0 justify-content-center pb-4">
-                                        <button type="button" class="btn btn-outline-glass px-4" data-bs-dismiss="modal">Нет, оставить</button>
-                                        <form method="post" asp-page-handler="Delete" asp-route-id="@route.Id">
-                                            <button type="submit" class="btn btn-glass px-4">Да, удалить</button>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -160,7 +88,83 @@
     {
         <div class="text-center py-5">
             <h5 class="text-muted">Для этого автомобиля пока нет маршрутов.</h5>
-            <p class="mb-0">Добавьте новый маршрут.</p>
         </div>
     }
 </div>
+
+<!-- Модальные окна удаления (вынесены) -->
+@foreach (var route in Model.Routes)
+{
+    <div class="modal fade modal-glass" id="deleteRouteModal-@route.Id" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-0 pb-0">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body text-center p-4">
+                    <i class="fas fa-exclamation-circle fa-3x text-danger mb-3"></i>
+                    <h5 class="fw-bold mb-3">Удалить маршрут?</h5>
+                    <p class="text-muted">Вы действительно хотите удалить маршрут "@route.Name"?</p>
+                </div>
+                <div class="modal-footer border-0 justify-content-center pb-4">
+                    <button type="button" class="btn btn-outline-glass px-4" data-bs-dismiss="modal">Нет, оставить</button>
+                    <form method="post" asp-page-handler="Delete" asp-route-id="@route.Id">
+                        <button type="submit" class="btn btn-danger px-4">Да, удалить</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальные окна подробностей (вынесены) -->
+    <div class="modal fade modal-glass" id="detailsModal-@route.Id" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white py-3">
+                    <h5 class="modal-title fw-bold"><i class="fas fa-info-circle me-2"></i>@route.Name</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    @if (!string.IsNullOrEmpty(route.Description))
+                    {
+                        <p class="text-start"><strong>Описание:</strong> @route.Description</p>
+                    }
+                    <p class="text-start">
+                        <strong>Автомобиль:</strong>
+                        @if (route.Car != null)
+                        {
+                            @($"{route.Car.Brand} {route.Car.Model} ({route.Car.LicensePlate})")
+                        }
+                        else
+                        {
+                            <span>Не указан</span>
+                        }
+                    </p>
+                    <p class="text-start"><strong>Статус:</strong> @(route.IsActive ? "Активен" : "Неактивен")</p>
+                    <h6 class="text-start"><strong>Остановки:</strong></h6>
+                    <div class="table-responsive">
+                        <table class="table table-hover table-report align-middle text-center">
+                            <thead>
+                                <tr>
+                                    <th>№</th>
+                                    <th>Адрес</th>
+                                    <th>Время прибытия</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var stop in route.Stops.OrderBy(s => s.Order))
+                                {
+                                    <tr>
+                                        <td>@stop.Order</td>
+                                        <td>@stop.Address</td>
+                                        <td>@stop.ArrivalTime.ToString(@"hh\:mm")</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

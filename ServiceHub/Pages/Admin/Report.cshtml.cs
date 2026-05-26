@@ -51,12 +51,17 @@ namespace ServiceHub.Pages.Admin
             foreach (var tr in transports)
             {
                 var car = tr.Car;
+                var details = $"{tr.StartPoint} --> {tr.EndPoint}, {tr.PassengerCount} чел., авто: {(car != null ? $"{car.Brand} {car.Model} ({car.LicensePlate})" : "—")}";
+                // Добавляем цель поездки
+                if (!string.IsNullOrWhiteSpace(tr.Purpose))
+                    details += $". Цель: {tr.Purpose}";
+
                 Items.Add(new ReportItem
                 {
                     Type = "Транспорт",
                     UserName = $"{tr.User?.LastName} {tr.User?.FirstName}",
                     Title = $"Поездка {tr.TripDateTime:dd.MM HH:mm}",
-                    Details = $"{tr.StartPoint} --> {tr.EndPoint}, {tr.PassengerCount} чел., авто: {(car != null ? $"{car.Brand} {car.Model} ({car.LicensePlate})" : "—")}",
+                    Details = details,
                     CreatedAt = tr.CreatedAt,
                     Status = tr.Status
                 });
@@ -73,12 +78,17 @@ namespace ServiceHub.Pages.Admin
             var rooms = await roomQuery.ToListAsync();
             foreach (var rr in rooms)
             {
+                var details = $"Помещение: {rr.Room?.Name ?? "—"}, {rr.ParticipantsCount} уч., {rr.StartTime:dd.MM HH:mm} – {rr.EndTime:HH:mm}";
+                // Добавляем дополнительные пожелания
+                if (!string.IsNullOrWhiteSpace(rr.Description))
+                    details += $". Пожелания: {rr.Description}";
+
                 Items.Add(new ReportItem
                 {
                     Type = "Помещения",
                     UserName = $"{rr.User?.LastName} {rr.User?.FirstName}",
                     Title = rr.Topic,
-                    Details = $"Помещение: {rr.Room?.Name ?? "—"}, {rr.ParticipantsCount} уч., {rr.StartTime:dd.MM HH:mm} – {rr.EndTime:HH:mm}",
+                    Details = details,
                     CreatedAt = rr.CreatedAt,
                     Status = rr.Status
                 });
@@ -112,7 +122,7 @@ namespace ServiceHub.Pages.Admin
                     worksheet.Cell(5, 1).Value = $"Фильтр по статусу: {status}";
 
                 int headerRow = string.IsNullOrEmpty(status) ? 6 : 7;
-                var headers = new[] { "№", "Тип", "Автор", "Заголовок / Маршрут", "Детали", "Дата создания", "Статус" };
+                var headers = new[] { "№", "Тип", "Автор", "Заголовок", "Детали", "Дата создания", "Статус" };
                 var tableHeaderRange = worksheet.Range(headerRow, 1, headerRow, headers.Length);
                 tableHeaderRange.Style.Font.Bold = true;
                 tableHeaderRange.Style.Font.FontColor = XLColor.White;

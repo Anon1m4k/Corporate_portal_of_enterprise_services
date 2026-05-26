@@ -7,7 +7,6 @@ using ServiceHub.Models;
 using ServiceHub.Models.Rooms;
 using ServiceHub.Models.Transport;
 using System.Security.Claims;
-using System.Text;
 
 namespace ServiceHub.Pages.Admin
 {
@@ -77,7 +76,7 @@ namespace ServiceHub.Pages.Admin
                 foreach (var tr in transports)
                 {
                     var carInfo = tr.Car != null ? $"{tr.Car.Brand} {tr.Car.Model}" : "Не указан";
-                    var desc = $"{tr.StartPoint} → {tr.EndPoint}, {tr.PassengerCount} чел., авто: {carInfo}. Цель: {tr.Purpose}";
+                    var desc = $"{tr.StartPoint} --> {tr.EndPoint}, {tr.PassengerCount} чел., авто: {carInfo}. Цель: {tr.Purpose}";
                     allItems.Add(new ServiceRequest
                     {
                         Id = tr.Id,
@@ -106,6 +105,13 @@ namespace ServiceHub.Pages.Admin
                 {
                     var roomName = rr.Room?.Name ?? "Не указано";
                     var desc = $"Помещение: {roomName}, {rr.ParticipantsCount} уч., {rr.StartTime:t}–{rr.EndTime:t}";
+
+                    // Добавляем дополнительные пожелания, если они указаны
+                    if (!string.IsNullOrWhiteSpace(rr.Description))
+                    {
+                        desc += $". Пожелания: {rr.Description}";
+                    }
+
                     allItems.Add(new ServiceRequest
                     {
                         Id = rr.Id,
@@ -169,6 +175,6 @@ namespace ServiceHub.Pages.Admin
 
             await _context.SaveChangesAsync();
             return RedirectToPage(new { status = currentStatus, type = currentType });
-        }      
+        }
     }
 }
