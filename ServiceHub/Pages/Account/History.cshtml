@@ -9,8 +9,6 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1 class="h2 glass-title">История заявок</h1>
     </div>
-
-    <!-- Панель управления историей -->
     <div class="glass-container p-3 mb-4">
         <div class="row mb-3">
             <div class="col-md-4">
@@ -18,7 +16,7 @@
                     <option value="">Все статусы</option>
                     <option value="На согласовании">На согласовании</option>
                     <option value="Подтверждена">Подтверждена</option>
-                    <option value="Выполнена">Выполнена</option>
+                    <option value="Завершена">Завершена</option>
                     <option value="Отклонена">Отклонена</option>
                 </select>
             </div>
@@ -29,24 +27,14 @@
             {
                 <div class="col-12 col-md-6 history-item" data-status="@request.Status">
                     <div class="glass-card p-3 h-100">
-                        <!-- Гибкий ряд с переносом бейджей -->
                         <div class="d-flex flex-wrap align-items-start justify-content-between mb-2 gap-2">
                             <span class="badge badge-glass
-                                        @(request.ServiceType == "Транспорт" ? "bg-info text-white" :
-                                                                        request.ServiceType == "Поддержка" ? "bg-warning text-dark" :
-                                                                        request.ServiceType == "Питание" ? "bg-success" :
-                                                                        request.ServiceType == "Помещения" ? "bg-primary" : "bg-secondary")">
+                                        @(request.ServiceType == "Транспорт" ? "bg-info text-white" : request.ServiceType == "Помещения" ? "bg-primary" : "bg-secondary")">
                             @switch (request.ServiceType)
                                 {
                                     case "Транспорт":
                                         @("🚗 Транспорт")
-                                        break;
-                                    case "Поддержка":
-                                        @("🛠️ Поддержка")
-                                        break;
-                                    case "Питание":
-                                        @("🍽️ Питание")
-                                        break;
+                                        break;                                    
                                     case "Помещения":
                                         @("🏢 Помещения")
                                         break;
@@ -58,7 +46,7 @@
                         <span class="badge badge-glass status-badge
                                     @(request.Status == "На согласовании" ? "bg-warning text-dark" :
                                                                     request.Status == "Подтверждена" ? "bg-success" :
-                                                                    request.Status == "Выполнена" ? "bg-info text-dark" :
+                                                                    request.Status == "Завершена" ? "bg-info text-dark" :
                                                                     request.Status == "Отклонена" ? "bg-danger" : "bg-secondary")">
                             @request.Status
                         </span>
@@ -80,8 +68,6 @@
         </div>
     </div>
 </div>
-
-<!-- Модальное окно деталей -->
 <div class="modal fade modal-glass" id="detailsModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">

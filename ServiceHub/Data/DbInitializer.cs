@@ -240,7 +240,7 @@ namespace ServiceHub.Data
                     EndPoint = "Автостанция",
                     PassengerCount = 3,
                     Purpose = "Встреча гостей",
-                    Status = "Выполнена",
+                    Status = "Завершена",
                     CarId = cars[1].Id,
                     CreatedAt = DateTime.UtcNow.AddDays(-4)
                 },
@@ -289,7 +289,7 @@ namespace ServiceHub.Data
                     EndPoint = "Автовокзал Торжок",
                     PassengerCount = 2,
                     Purpose = "Получение запчастей",
-                    Status = "Выполнена",
+                    Status = "Завершена",
                     CarId = cars[6].Id, // Ford Transit Connect
                     CreatedAt = DateTime.UtcNow.AddDays(-5)
                 },
@@ -618,7 +618,7 @@ namespace ServiceHub.Data
                     ParticipantsCount = 2,
                     Topic = "Встреча с соискателем",
                     Description = null,
-                    Status = "Выполнена",
+                    Status = "Завершена",
                     ApprovedAt = DateTime.UtcNow.AddDays(-5),
                     ApproverId = users[0].Id,
                     CreatedAt = DateTime.UtcNow.AddDays(-6)

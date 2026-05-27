@@ -155,7 +155,7 @@ namespace ServiceHub.Pages.Admin
                         statusCell.Style.Fill.BackgroundColor = XLColor.FromHtml("#28A745");
                         statusCell.Style.Font.FontColor = XLColor.White;
                     }
-                    else if (itemStatus == "Выполнена" || itemStatus == "Завершена")
+                    else if (itemStatus == "Завершена")
                     {
                         statusCell.Style.Fill.BackgroundColor = XLColor.FromHtml("#17A2B8");
                         statusCell.Style.Font.FontColor = XLColor.White;
@@ -181,10 +181,10 @@ namespace ServiceHub.Pages.Admin
 
                 row++;
                 int confirmed = items.Count(i => i.Status == "Подтверждена");
-                int completed = items.Count(i => i.Status == "Выполнена" || i.Status == "Завершена");
+                int completed = items.Count(i => i.Status == "Завершена");
                 int rejected = items.Count(i => i.Status == "Отклонена");
                 int pending = items.Count(i => i.Status == "На согласовании");
-                worksheet.Cell(row, 1).Value = $"Подтверждено: {confirmed} | Выполнено/Завершено: {completed} | Отклонено: {rejected} | На согласовании: {pending}";
+                worksheet.Cell(row, 1).Value = $"Подтверждено: {confirmed} | Завершено: {completed} | Отклонено: {rejected} | На согласовании: {pending}";
 
                 using (var stream = new MemoryStream())
                 {

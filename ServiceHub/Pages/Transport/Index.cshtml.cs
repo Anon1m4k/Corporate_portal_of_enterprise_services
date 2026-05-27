@@ -24,7 +24,7 @@ namespace ServiceHub.Pages.Transport
         {
             "На согласовании",
             "Подтверждена",
-            "Выполнена",
+            "Завершена",
             "Отклонена"
         };
         public string? CurrentStatus { get; set; }
@@ -92,10 +92,10 @@ namespace ServiceHub.Pages.Transport
 
             if (request.Status == "Подтверждена")
             {
-                request.Status = "Выполнена";
+                request.Status = "Завершена";
                 request.UpdatedAt = DateTime.UtcNow;
                 await _context.SaveChangesAsync();
-                TempData["TransportSuccess"] = "Заявка отмечена как выполненная.";
+                TempData["TransportSuccess"] = "Заявка отмечена как завершённая.";
             }
             else
             {

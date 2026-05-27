@@ -8,8 +8,6 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="glass-title">Управление заявками</h2>
     </div>
-
-    <!-- Форма для отчёта -->
     <div class="glass-container p-4 mb-4">
         <h5 class="mb-3 fw-bold">Сформировать отчёт</h5>
         <form method="get" asp-page="/Admin/Report" class="row g-3 align-items-end">
@@ -38,7 +36,6 @@
             </div>
         </form>
     </div>
-
     <div class="glass-container p-3">
         <div class="row mb-3">
             <div class="col-md-3">
@@ -51,7 +48,6 @@
                 </select>
             </div>
         </div>
-
         @if (Model.ServiceRequests.Any())
         {
             <div class="row g-3">
@@ -61,21 +57,12 @@
                         <div class="glass-card p-4 h-100">
                             <div class="d-flex justify-content-between align-items-start mb-3">
                                 <span class="badge badge-glass
-                                                @(item.ServiceType == "Транспорт" ? "bg-info text-black" :
-                                                                                                              item.ServiceType == "Поддержка" ? "bg-warning" :
-                                                                                                              item.ServiceType == "Питание" ? "bg-success" :
-                                                                                                              item.ServiceType == "Помещения" ? "bg-primary" : "bg-secondary")">
+                                                @(item.ServiceType == "Транспорт" ? "bg-info text-black" : item.ServiceType == "Помещения" ? "bg-primary" : "bg-secondary")">
                             @switch (item.ServiceType)
                                     {
                                         case "Транспорт":
                                             @("🚗 Транспорт")
-                                            break;
-                                        case "Поддержка":
-                                            @("🛠️ Поддержка")
-                                            break;
-                                        case "Питание":
-                                            @("🍽️ Питание")
-                                            break;
+                                            break;                                        
                                         case "Помещения":
                                             @("🏢 Помещения")
                                             break;
@@ -86,9 +73,9 @@
                             </span>
                             <span class="badge badge-glass
                                         @(item.Status == "На согласовании" ? "bg-warning text-dark" :
-                                                                                                      item.Status == "Подтверждена" ? "bg-success" :
-                                                                                                      item.Status == "Выполнена" ? "bg-info text-dark" :
-                                                                                                      item.Status == "Отклонена" ? "bg-danger" : "bg-secondary")">
+                                        item.Status == "Подтверждена" ? "bg-success" :
+                                        item.Status == "Завершена" ? "bg-info text-dark" :
+                                        item.Status == "Отклонена" ? "bg-danger" : "bg-secondary")">
                             @item.Status
                         </span>
                     </div>
@@ -101,7 +88,7 @@
                         @item.CreatedAt.ToString("dd.MM.yyyy HH:mm")
                     </div>
 
-                    @if (item.Status != "Выполнена")
+                    @if (item.Status != "Завершена")
                             {
                                 <form method="post" asp-page-handler="ChangeStatus" class="mt-2">
                                     <input type="hidden" name="id" value="@item.Id" />

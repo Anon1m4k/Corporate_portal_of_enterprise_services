@@ -25,7 +25,7 @@ namespace ServiceHub.Pages.Admin
         {
             "На согласовании",
             "Подтверждена",
-            "Выполнена",
+            "Завершена",
             "Отклонена"
         };
         public string? CurrentStatus { get; set; }

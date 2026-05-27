@@ -69,7 +69,7 @@
                                         <i class="far fa-clock me-1"></i> @req.TripDateTime.ToString("HH:mm")
                                     </div>
                                 </div>
-                                <span class="badge badge-glass @(req.Status == "На согласовании" ? "bg-warning text-dark" : req.Status == "Подтверждена" ? "bg-success" : req.Status == "Выполнена" ? "bg-info text-dark" : req.Status == "Отклонена" ? "bg-danger" : "bg-secondary")">
+                                <span class="badge badge-glass @(req.Status == "На согласовании" ? "bg-warning text-dark" : req.Status == "Подтверждена" ? "bg-success" : req.Status == "Завершена" ? "bg-info text-dark" : req.Status == "Отклонена" ? "bg-danger" : "bg-secondary")">
                                     @req.Status
                                 </span>
                             </div>

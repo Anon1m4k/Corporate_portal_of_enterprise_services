@@ -69,9 +69,10 @@ namespace ServiceHub.Pages.Account
             ActiveRequests = serviceRequests.Count(sr => sr.Status == "Подтверждена") +
                              transportRequests.Count(tr => tr.Status == "Подтверждена") +
                              roomRequests.Count(r => r.Status == "Подтверждена");
-            CompletedRequests = serviceRequests.Count(sr => sr.Status == "Выполнена") +
-                                transportRequests.Count(tr => tr.Status == "Выполнена") +
-                                roomRequests.Count(r => r.Status == "Завершена"); // для помещений статус "Завершена"
+
+            CompletedRequests = serviceRequests.Count(sr => sr.Status == "Завершена") +
+                                transportRequests.Count(tr => tr.Status == "Завершена") +
+                                roomRequests.Count(r => r.Status == "Завершена");
             PendingRequests = serviceRequests.Count(sr => sr.Status == "На согласовании") +
                               transportRequests.Count(tr => tr.Status == "На согласовании") +
                               roomRequests.Count(r => r.Status == "На согласовании");

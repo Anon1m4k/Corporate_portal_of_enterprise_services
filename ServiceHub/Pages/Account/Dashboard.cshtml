@@ -37,8 +37,6 @@
             </div>
         </div>
     </div>
-
-    <!-- Последняя активность -->
     <div class="glass-container p-4">
         <h5 class="fw-bold mb-3">Последняя активность</h5>
         @if (Model.RecentRequests.Any())
@@ -48,26 +46,25 @@
                 {
                     <div class="col-md-6">
                         <div class="glass-card p-3 h-100">
-                            <!-- Разрешаем перенос бейджей -->
                             <div class="d-flex flex-wrap align-items-start justify-content-between mb-2 gap-2">
                                 <span class="badge badge-glass
-                                            @(request.ServiceType == "Транспорт" ? "bg-info text-white" :
-                                                                            request.ServiceType == "Помещения" ? "bg-primary" : "bg-secondary")">
-                                                                                                                                             @(request.ServiceType == "Транспорт" ? "🚗 Транспорт" : "🏢 Помещения")
-                                                                                                                                         </span>
-                                                                                                                                         <span class="badge badge-glass
-                                            @(request.Status == "На согласовании" ? "bg-warning text-dark" :
-                                                                            request.Status == "Подтверждена" ? "bg-success" :
-                                                                            request.Status == "Выполнена" ? "bg-info text-dark" :
-                                                                            request.Status == "Отклонена" ? "bg-danger" : "bg-secondary")">
+                                    @(request.ServiceType == "Транспорт" ? "bg-info text-white" :
+                                    request.ServiceType == "Помещения" ? "bg-primary" : "bg-secondary")">
+                                    @(request.ServiceType == "Транспорт" ? "🚗 Транспорт" : "🏢 Помещения")
+                                </span>
+                        <span class="badge badge-glass
+                            @(request.Status == "На согласовании" ? "bg-warning text-dark" :
+                            request.Status == "Подтверждена" ? "bg-success" :
+                            request.Status == "Завершена" ? "bg-info text-dark" :
+                            request.Status == "Отклонена" ? "bg-danger" : "bg-secondary")">
                             @request.Status
                         </span>
+                            </div>
+                            <h6 class="fw-bold">@request.Title</h6>
+                            <small style="color: var(--text-muted)">@request.CreatedAt.ToString("dd.MM.yyyy HH:mm")</small>
+                        </div>
                     </div>
-                    <h6 class="fw-bold">@request.Title</h6>
-                    <small style="color: var(--text-muted)">@request.CreatedAt.ToString("dd.MM.yyyy HH:mm")</small>
-                </div>
-            </div>
-                        }
+            }
             </div>
         }
         else
