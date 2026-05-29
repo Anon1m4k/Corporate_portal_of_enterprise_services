@@ -2,7 +2,7 @@
 using ServiceHub.Models.Account;
 using System;
 
-namespace ServiceHub.Tests.Unit.Model
+namespace ServiceHub.Tests.Unit.Model.Account
 {
     [TestClass]
     public class AuthUserTests

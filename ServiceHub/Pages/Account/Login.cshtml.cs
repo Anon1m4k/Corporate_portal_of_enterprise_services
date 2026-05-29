@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using ServiceHub.Data;
 using ServiceHub.Models;
-using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 
 namespace ServiceHub.Pages
@@ -20,7 +19,7 @@ namespace ServiceHub.Pages
         }
 
         [BindProperty]
-        public Models.Account.LoginModel Input { get; set; } 
+        public Models.Account.LoginModel Input { get; set; }
 
         public void OnGet()
         {
@@ -29,14 +28,12 @@ namespace ServiceHub.Pages
         public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)
-            {
                 return Page();
-            }
 
             var user = await _context.Users
-                .FirstOrDefaultAsync(u => u.Email == Input.Email && u.Password == Input.Password && u.IsActive);
+                .FirstOrDefaultAsync(u => u.Email == Input.Email && u.IsActive);
 
-            if (user != null)
+            if (user != null && user.VerifyPassword(Input.Password))
             {
                 var claims = new List<Claim>
                 {
@@ -49,9 +46,7 @@ namespace ServiceHub.Pages
 
                 var claimsIdentity = new ClaimsIdentity(claims, "Cookies");
                 var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
-
                 await HttpContext.SignInAsync("Cookies", claimsPrincipal);
-
                 return RedirectToPage("/Index");
             }
 

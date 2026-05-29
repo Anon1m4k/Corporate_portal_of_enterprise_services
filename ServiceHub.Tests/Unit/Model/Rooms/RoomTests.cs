@@ -2,7 +2,7 @@
 using ServiceHub.Models.Rooms;
 using System.Linq;
 
-namespace ServiceHub.Tests.Unit.Model
+namespace ServiceHub.Tests.Unit.Model.Rooms
 {
     [TestClass]
     public class RoomTests

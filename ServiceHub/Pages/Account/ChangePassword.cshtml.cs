@@ -37,13 +37,14 @@ namespace ServiceHub.Pages.Account
             if (user == null)
                 return NotFound();
 
-            if (user.Password != Input.CurrentPassword)
+            // Проверяем старый пароль
+            if (!user.VerifyPassword(Input.CurrentPassword))
             {
                 ModelState.AddModelError("Input.CurrentPassword", "Текущий пароль неверен");
                 return Page();
             }
 
-            user.Password = Input.NewPassword;
+            user.HashPassword(Input.NewPassword);
             await _context.SaveChangesAsync();
 
             TempData["PasswordChangeSuccess"] = "Пароль успешно изменён";

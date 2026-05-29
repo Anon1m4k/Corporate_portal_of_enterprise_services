@@ -1,7 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ServiceHub.Models.Account;
 
-namespace ServiceHub.Tests.Unit.Model
+namespace ServiceHub.Tests.Unit.Model.Account
 {
     [TestClass]
     public class LoginModelTests

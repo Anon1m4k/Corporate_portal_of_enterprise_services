@@ -1,9 +1,8 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ServiceHub.Models.Account; // <-- ChangePasswordInput
-using ServiceHub.Tests;          // <-- ModelValidator
 using System.Linq;
 
-namespace ServiceHub.Tests.Unit.Model
+namespace ServiceHub.Tests.Unit.Model.Account
 {
     [TestClass]
     public class ChangePasswordModelTests

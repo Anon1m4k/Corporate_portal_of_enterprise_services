@@ -8,7 +8,7 @@ namespace ServiceHub.Models
         public int Id { get; set; }
 
         [Required]
-        public string ServiceType { get; set; } = string.Empty; // "Транспорт", "Поддержка", "Питание", "Помещения"
+        public string ServiceType { get; set; } = string.Empty; // "Транспорт", "Помещения"
 
         [Required]
         public string Title { get; set; } = string.Empty;

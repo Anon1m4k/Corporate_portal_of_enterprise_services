@@ -1,0 +1,128 @@
+﻿@page "/Rooms/Calendar"
+@model ServiceHub.Pages.Rooms.CalendarModel
+@{
+    ViewData["Title"] = "Календарь бронирований";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+        <div>
+            <h2 class="glass-title mb-1">Календарь бронирований</h2>
+        </div>
+        <a asp-page="/Rooms/Index" class="btn btn-outline-glass px-4 text-nowrap">
+            <i class="fas fa-arrow-left me-2"></i>К помещениям
+        </a>
+    </div>
+
+    <!-- Фильтр и навигация -->
+    <div class="glass-container p-4 mb-4">
+        <form method="get" class="row g-3 align-items-end">
+            <div class="col-md-3">
+                <label class="form-label fw-medium">Помещение</label>
+                <select name="roomId" class="form-select" onchange="this.form.submit()">
+                    <option value="">Все помещения</option>
+                    @foreach (var room in Model.AllRooms)
+                    {
+                        if (Model.SelectedRoomId == room.Id)
+                        {
+                            <option value="@room.Id" selected>@room.Name</option>
+                        }
+                        else
+                        {
+                            <option value="@room.Id">@room.Name</option>
+                        }
+                    }
+                </select>
+            </div>
+            <div class="col-md-5">
+                <label class="form-label fw-medium">Месяц</label>
+                <div class="d-flex align-items-center gap-2">
+                    <a asp-route-year="@Model.PreviousMonth.Year"
+                       asp-route-month="@Model.PreviousMonth.Month"
+                       asp-route-roomId="@Model.SelectedRoomId"
+                       class="btn btn-outline-glass btn-sm">
+                        <i class="fas fa-chevron-left"></i>
+                    </a>
+                    <span class="fw-medium fs-5">
+                        @(new DateTime(Model.SelectedYear, Model.SelectedMonth, 1).ToString("MMMM yyyy"))
+                    </span>
+                    <a asp-route-year="@Model.NextMonth.Year"
+                       asp-route-month="@Model.NextMonth.Month"
+                       asp-route-roomId="@Model.SelectedRoomId"
+                       class="btn btn-outline-glass btn-sm">
+                        <i class="fas fa-chevron-right"></i>
+                    </a>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- Календарная сетка (без изменений) -->
+    <div class="glass-container p-3">
+        <div class="table-responsive">
+            <table class="table table-bordered align-middle text-center calendar-grid">
+                <thead>
+                    <tr>
+                        <th>Пн</th>
+                        <th>Вт</th>
+                        <th>Ср</th>
+                        <th>Чт</th>
+                        <th>Пт</th>
+                        <th>Сб</th>
+                        <th>Вс</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        int currentDay = 1;
+                        int totalDays = Model.DaysInMonth;
+                        int startDow = Model.StartDayOfWeek;
+                        int weeks = (int)Math.Ceiling((startDow + totalDays) / 7.0);
+                    }
+                    @for (int w = 0; w < weeks; w++)
+                    {
+                        <tr>
+                            @for (int d = 0; d < 7; d++)
+                            {
+                                int cellIndex = w * 7 + d;
+                                if (cellIndex < startDow || currentDay > totalDays)
+                                {
+                                    <td class="text-muted" style="height:100px; vertical-align:top;"></td>
+                                }
+                                else
+                                {
+                                    var date = new DateTime(Model.SelectedYear, Model.SelectedMonth, currentDay);
+                                    string todayClass = date == DateTime.Today ? "today" : "";
+                                    <td class="@todayClass" style="height:100px; vertical-align:top;">
+                                        <div class="fw-bold">@currentDay</div>
+                                        @if (Model.BookingsByDay.ContainsKey(currentDay))
+                                        {
+                                            <div class="mt-1">
+                                                @foreach (var b in Model.BookingsByDay[currentDay])
+                                                {
+                                                    <div class="small mb-1">
+                                                        <span class="badge
+                                                                                @(b.Status == "Подтверждена" ? "bg-success" :
+                                                                                                                            b.Status == "На согласовании" ? "bg-warning text-dark" : "bg-secondary")"
+                                          style="font-size:0.7rem;">
+                                        @b.StartTime.ToString("HH:mm")-@b.EndTime.ToString("HH:mm")
+                                    </span>
+                                    <br />
+                                    <span class="fw-semibold">@(b.Room?.Name ?? "—")</span>
+                                    <br />
+                                    <span class="text-muted small">@b.Topic</span>
+                                </div>
+                                                                }
+                                            </div>
+                                        }
+                                    </td>
+                                    currentDay++;
+                                }
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

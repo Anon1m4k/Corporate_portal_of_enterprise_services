@@ -1,0 +1,68 @@
+﻿@page
+@model ServiceHub.Pages.Admin.Rooms.CreateModel
+@{
+    ViewData["Title"] = "Добавление помещения";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="glass-card overflow-hidden">
+                <div class="card-header py-3 px-4">
+                    <div class="d-flex align-items-center">
+                        <h2 class="glass-title mb-1">Добавление помещения</h2>
+                    </div>
+                </div>
+                <div class="card-body pt-2 pb-4 px-4">
+                    <form method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-4 p-3 bg-light rounded-3"></div>
+
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label asp-for="Room.Name" class="form-label fw-medium">Название</label>
+                                <input asp-for="Room.Name" class="form-control shadow-sm" placeholder="Например: Переговорная 1" />
+                                <span asp-validation-for="Room.Name" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="Room.Location" class="form-label fw-medium">Расположение</label>
+                                <input asp-for="Room.Location" class="form-control shadow-sm" placeholder="Этаж, корпус" />
+                                <span asp-validation-for="Room.Location" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label asp-for="Room.Capacity" class="form-label fw-medium">Вместимость</label>
+                                <input asp-for="Room.Capacity" class="form-control shadow-sm" type="number" min="1" placeholder="10" />
+                                <span asp-validation-for="Room.Capacity" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="Room.Equipment" class="form-label fw-medium">Оснащение</label>
+                                <input asp-for="Room.Equipment" class="form-control shadow-sm" placeholder="Проектор, флипчарт..." />
+                                <span asp-validation-for="Room.Equipment" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-check">
+                                    <input asp-for="Room.IsActive" class="form-check-input" />
+                                    <label asp-for="Room.IsActive" class="form-check-label fw-medium">Активно</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-end flex-column flex-md-row align-items-center mt-4 gap-3">
+                            <button type="submit" class="btn btn-glass rounded-pill px-3 shadow-sm text-nowrap">
+                                <i class="fas fa-save me-2"></i>Сохранить
+                            </button>
+                            <a asp-page="Index" class="btn btn-outline-glass rounded-pill px-3 text-nowrap">
+                                <i class="fas fa-times me-2"></i>Отмена
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

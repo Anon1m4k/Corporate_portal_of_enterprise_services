@@ -4,7 +4,6 @@ using ServiceHub.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddHttpContextAccessor();
 
@@ -26,8 +25,8 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-    dbContext.Database.Migrate();          // создаёт базу, если её нет, и применяет миграции
-    DbInitializer.Initialize(dbContext);   // заполняет базу тестовыми данными
+    dbContext.Database.EnsureCreated();   // создаёт базу по текущей модели
+    DbInitializer.Initialize(dbContext); // заполняет тестовыми данными
 }
 
 // Configure the HTTP request pipeline.
@@ -39,12 +38,8 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
 app.UseRouting();
-
 app.UseAuthentication();
 app.UseAuthorization();
-
 app.MapRazorPages();
-
 app.Run();

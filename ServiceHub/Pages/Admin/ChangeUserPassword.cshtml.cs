@@ -56,9 +56,7 @@ namespace ServiceHub.Pages.Admin
             var user = await _context.Users.FindAsync(UserId);
             if (user == null) return NotFound();
 
-            // В реальном проекте пароль нужно хешировать!
-            user.Password = NewPassword;
-
+            user.HashPassword(NewPassword);
             await _context.SaveChangesAsync();
 
             TempData["SuccessMessage"] = "Пароль успешно изменён.";

@@ -20,9 +20,13 @@ namespace ServiceHub.Pages.Admin
 
         public List<AuthUser> Users { get; set; } = new();
 
+        public int CurrentUserId { get; set; }
+
         public async Task OnGetAsync()
         {
             Users = await _context.Users.ToListAsync();
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            CurrentUserId = userIdClaim != null ? int.Parse(userIdClaim) : 0;
         }
 
         public async Task<IActionResult> OnPostDeleteAsync(int id)
@@ -33,7 +37,6 @@ namespace ServiceHub.Pages.Admin
                 return NotFound();
             }
 
-            // Запрещаем удалять самого себя
             var currentUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
             if (user.Id == currentUserId)
             {
@@ -41,14 +44,32 @@ namespace ServiceHub.Pages.Admin
                 return RedirectToPage();
             }
 
-            // Проверяем наличие связанных заявок (необязательно, они удалятся каскадно)
-            bool hasServiceRequests = await _context.ServiceRequests.AnyAsync(r => r.UserId == id);
-            bool hasTransportRequests = await _context.TransportRequests.AnyAsync(r => r.UserId == id);
-
             _context.Users.Remove(user);
             await _context.SaveChangesAsync();
 
             TempData["SuccessMessage"] = $"Пользователь {user.FirstName} {user.LastName} удалён.";
+            return RedirectToPage();
+        }
+
+        public async Task<IActionResult> OnPostToggleActiveAsync(int id, bool isActive)
+        {
+            var user = await _context.Users.FindAsync(id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var currentUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+            if (user.Id == currentUserId && !isActive)
+            {
+                TempData["ErrorMessage"] = "Нельзя деактивировать свою учётную запись.";
+                return RedirectToPage();
+            }
+
+            user.IsActive = isActive;
+            await _context.SaveChangesAsync();
+
+            TempData["SuccessMessage"] = $"Пользователь {user.FirstName} {user.LastName} {(isActive ? "активирован" : "деактивирован")}.";
             return RedirectToPage();
         }
     }

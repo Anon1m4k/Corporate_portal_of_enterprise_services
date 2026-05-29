@@ -7,7 +7,7 @@
 <div class="container mt-4">
     <div class="row justify-content-center">
         <div class="col-lg-10">
-            <div class="card shadow-lg rounded-3 overflow-hidden">
+            <div class="glass-card overflow-hidden">
                 <div class="card-header bg-primary text-white p-4">
                     <div class="d-flex align-items-center">
                         <div class="bg-white rounded-circle p-3 text-primary me-3 shadow-sm" style="width: 50px; height: 50px; display: inline-flex; align-items: center; justify-content: center;">
@@ -23,12 +23,12 @@
 
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label asp-for="TransferRoute.Name" class="form-label fw-medium"></label>
+                                <label asp-for="TransferRoute.Name" class="form-label fw-medium">Название</label>
                                 <input asp-for="TransferRoute.Name" class="form-control" maxlength="30" />
                                 <span asp-validation-for="TransferRoute.Name" class="text-danger"></span>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label asp-for="TransferRoute.Description" class="form-label fw-medium"></label>
+                                <label asp-for="TransferRoute.Description" class="form-label fw-medium">Описание</label>
                                 <textarea asp-for="TransferRoute.Description" class="form-control" rows="2" maxlength="100"></textarea>
                                 <span asp-validation-for="TransferRoute.Description" class="text-danger"></span>
                             </div>
@@ -39,7 +39,7 @@
                                 <label for="stopCount" class="form-label fw-medium">Количество остановок</label>
                                 <input type="number" id="stopCount" name="stopCount" class="form-control" min="1" max="20" value="1" />
                                 <div class="d-block text-center mt-2">
-                                    <button type="button" class="btn btn-outline-primary rounded-pill px-4" onclick="generateStops()">
+                                    <button type="button" class="btn btn-outline-glass px-4" onclick="generateStops()">
                                         Сгенерировать поля
                                     </button>
                                 </div>
@@ -51,10 +51,10 @@
                         </div>
 
                         <div class="d-flex gap-2 mt-3">
-                            <button type="submit" class="btn btn-primary rounded-pill px-4">
+                            <button type="submit" class="btn btn-glass rounded-pill px-4">
                                 <i class="fas fa-save me-2"></i>Сохранить
                             </button>
-                            <a asp-page="Index" asp-route-carId="@Model.TransferRoute.CarId" class="btn btn-outline-secondary rounded-pill px-4">
+                            <a asp-page="Index" asp-route-carId="@Model.TransferRoute.CarId" class="btn btn-outline-glass rounded-pill px-4">
                                 <i class="fas fa-times me-2"></i>Отмена
                             </a>
                         </div>
@@ -75,7 +75,7 @@
 
             for (let i = 0; i < count; i++) {
                 const stopDiv = document.createElement('div');
-                stopDiv.className = 'card mb-3 p-3';
+                stopDiv.className = 'glass-card mb-3 p-3';
                 stopDiv.innerHTML = `
                     <h6 class="mb-3">Остановка ${i + 1}</h6>
                     <div class="row">
@@ -94,7 +94,6 @@
             }
         }
 
-        // Загрузка существующих остановок при возврате формы с ошибками
         function loadExistingStops() {
             const stops = @Html.Raw(Json.Serialize(Model.TransferRoute.Stops));
             if (stops && stops.length > 0) {
@@ -103,7 +102,7 @@
                 container.innerHTML = '';
                 stops.forEach((stop, i) => {
                     const stopDiv = document.createElement('div');
-                    stopDiv.className = 'card mb-3 p-3';
+                    stopDiv.className = 'glass-card mb-3 p-3';
                     stopDiv.innerHTML = `
                         <h6 class="mb-3">Остановка ${i + 1}</h6>
                         <div class="row">

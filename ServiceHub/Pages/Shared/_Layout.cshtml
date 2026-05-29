@@ -1,11 +1,11 @@
-﻿﻿﻿@using Microsoft.AspNetCore.Http
+﻿@using Microsoft.AspNetCore.Http
 @inject IHttpContextAccessor HttpContextAccessor
 @{
     var user = HttpContextAccessor.HttpContext?.User;
     var isAuthenticated = user?.Identity?.IsAuthenticated ?? false;
     var userName = user?.Identity?.Name ?? "";
     var isAdmin = user?.IsInRole("Admin") ?? false;
-    var isChief = user?.IsInRole("Chief") ?? false;   
+    var isChief = user?.IsInRole("Chief") ?? false;
 }
 <!DOCTYPE html>
 <html lang="ru" class="h-100">
@@ -21,14 +21,14 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <!-- site.css отключён -->
-    @* <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" /> *@
+    <!-- Liquid Glass Theme -->
+    <link rel="stylesheet" href="~/css/liquid-glass.css" asp-append-version="true" />
 </head>
 <body class="d-flex flex-column h-100">
     <header>
-        <nav class="navbar navbar-expand-lg navbar-light bg-white">
+        <nav class="navbar navbar-expand-1100 navbar-glass">
             <div class="container">
-                <a class="navbar-brand fw-bold text-primary" asp-area="" asp-page="/Index">
+                <a class="navbar-brand fw-bold glass-title" asp-area="" asp-page="/Index">
                     <i class="fas fa-cubes me-2"></i>ServiceHub
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
@@ -46,27 +46,33 @@
                         {
                             <li class="nav-item">
                                 <a class="nav-link @((ViewContext.RouteData.Values["page"]?.ToString()?.StartsWith("/Transport") ?? false) ? "active" : "")" asp-area="" asp-page="/Transport/Index">
-                                    <i class="fas fa-car me-1"></i>Транспорт
+                                    <i class="fas fa-car me-1"></i>Поездки
                                 </a>
                             </li>
-                            @if (isAdmin || isChief)
-                            {
-                                <li class="nav-item">
-                                    <a class="nav-link @((ViewContext.RouteData.Values["page"]?.ToString()?.StartsWith("/Admin/ServiceRequests") ?? false) ? "active" : "")" asp-area="" asp-page="/Admin/ServiceRequests">
-                                        <i class="fas fa-clipboard-list me-1"></i>Заявки
-                                    </a>
-                                </li>
-                            }
+                            <li class="nav-item">
+                                <a class="nav-link @((ViewContext.RouteData.Values["page"]?.ToString()?.StartsWith("/Rooms") ?? false) ? "active" : "")" asp-area="" asp-page="/Rooms/Index">
+                                    <i class="fas fa-door-open me-1"></i>Переговорные
+                                </a>
+                            </li>
                             @if (isAdmin)
                             {
-                                <li class="nav-item">
-                                    <a class="nav-link @((ViewContext.RouteData.Values["page"]?.ToString()?.StartsWith("/Admin/Cars") ?? false) ? "active" : "")" asp-area="" asp-page="/Admin/Cars/Index">
-                                        <i class="fas fa-truck me-1"></i>Автомобили
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle @(ViewContext.RouteData.Values["page"]?.ToString()?.StartsWith("/Admin/") ?? false ? "active" : "")" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="fas fa-cogs me-1"></i>Администрирование
                                     </a>
-                                </li>                    
+                                    <ul class="dropdown-menu glass-dropdown" aria-labelledby="adminDropdown">
+                                        <li><a class="dropdown-item" asp-page="/Admin/ServiceRequests"><i class="fas fa-clipboard-list me-2"></i>Заявки</a></li>
+                                        <li><a class="dropdown-item" asp-page="/Admin/Cars/Index"><i class="fas fa-car-side me-2"></i>Автопарк</a></li>
+                                        <li><a class="dropdown-item" asp-page="/Admin/Users"><i class="fas fa-users me-2"></i>Сотрудники</a></li>
+                                        <li><a class="dropdown-item" asp-page="/Admin/Rooms/Index"><i class="fas fa-building me-2"></i>Помещения</a></li>
+                                    </ul>
+                                </li>
+                            }
+                            else if (isChief)
+                            {
                                 <li class="nav-item">
-                                    <a class="nav-link @((ViewContext.RouteData.Values["page"]?.ToString()?.StartsWith("/Admin/Users") ?? false) ? "active" : "")" asp-area="" asp-page="/Admin/Users">
-                                        <i class="fas fa-users me-1"></i>Пользователи
+                                    <a class="nav-link @(ViewContext.RouteData.Values["page"]?.ToString()?.StartsWith("/Admin/ServiceRequests") ?? false ? "active" : "")" asp-page="/Admin/ServiceRequests">
+                                        <i class="fas fa-clipboard-list me-1"></i>Заявки
                                     </a>
                                 </li>
                             }
@@ -92,26 +98,22 @@
                                 <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     <i class="fas fa-user-circle me-1"></i>@userName
                                 </a>
-                                <div class="dropdown-menu dropdown-menu-end shadow-lg rounded-3 p-2" aria-labelledby="userDropdown">
-                                    <a class="dropdown-item rounded-3 py-2 px-3" asp-page="/Account/Dashboard">
-                                        <i class="fas fa-tachometer-alt me-2 text-primary"></i>Личный кабинет
-                                    </a>
-                                    <a class="dropdown-item rounded-3 py-2 px-3" asp-page="/Account/Profile">
-                                        <i class="fas fa-id-card me-2 text-info"></i>Профиль
-                                    </a>
-                                    <a class="dropdown-item rounded-3 py-2 px-3" asp-page="/Account/History">
-                                        <i class="fas fa-history me-2 text-warning"></i>История заявок
-                                    </a>
-                                    <a class="dropdown-item rounded-3 py-2 px-3" asp-page="/Account/ChangePassword">
-                                        <i class="fas fa-lock me-2 text-secondary"></i>Смена пароля
-                                    </a>
-                                    <hr class="dropdown-divider my-1">
-                                    <a class="dropdown-item text-danger rounded-3 py-2 px-3" asp-page="/Account/Logout">
-                                        <i class="fas fa-sign-out-alt me-2"></i>Выйти из системы
-                                    </a>
-                                </div>
+                                <ul class="dropdown-menu dropdown-menu-end glass-dropdown" aria-labelledby="userDropdown">
+                                    <li><a class="dropdown-item" asp-page="/Account/Dashboard"><i class="fas fa-tachometer-alt me-2"></i>Личный кабинет</a></li>
+                                    <li><a class="dropdown-item" asp-page="/Account/Profile"><i class="fas fa-id-card me-2"></i>Профиль</a></li>
+                                    <li><a class="dropdown-item" asp-page="/Account/History"><i class="fas fa-history me-2"></i>История заявок</a></li>
+                                    <li><a class="dropdown-item" asp-page="/Account/ChangePassword"><i class="fas fa-lock me-2"></i>Смена пароля</a></li>
+                                    <li><hr class="dropdown-divider my-1"></li>
+                                    <li><a class="dropdown-item" asp-page="/Account/Logout"><i class="fas fa-sign-out-alt me-2"></i>Выйти из системы</a></li>
+                                </ul>
                             </li>
                         }
+                        <!-- Кнопка темы: на узких экранах – пункт меню в бургере, на широких – справа -->
+                        <li class="nav-item d-flex align-items-center">
+                            <button id="themeToggle" class="theme-toggle" title="Переключить тему">
+                                <i class="fas fa-moon"></i>
+                            </button>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -124,15 +126,16 @@
         </div>
     </main>
 
-    <footer class="footer mt-auto py-3 bg-dark text-white">
+    <footer class="footer mt-auto py-3 footer-glass">
         <div class="container text-center">
-            <small>© 2026 ServiceHub. Все права защищены.</small>
+            <small>© 2026 ServiceHub.</small>
         </div>
     </footer>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/animations.js" asp-append-version="true"></script>
+    <script src="~/js/theme.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

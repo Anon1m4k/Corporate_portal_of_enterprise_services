@@ -1,0 +1,82 @@
+﻿@page "/Rooms/Book"
+@model ServiceHub.Pages.Rooms.BookModel
+@{
+    ViewData["Title"] = "Забронировать помещение";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="glass-card overflow-hidden">
+                <div class="card-header py-3 px-4">
+                    <div class="d-flex align-items-center">
+                        <h2 class="glass-title mb-1">Новое бронирование</h2>
+                    </div>
+                </div>
+                <div class="card-body pt-2 pb-4 px-4">
+                    <form method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-4 p-3 bg-light rounded-3"></div>
+
+                        <!-- ID комнаты – передаётся явно -->
+                        <input type="hidden" name="roomId" value="@Model.Room?.Id" />
+
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-medium">Помещение</label>
+                                <input class="form-control shadow-sm" value="@Model.Room?.Name" readonly />
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="RoomRequest.Topic" class="form-label fw-medium">Тема встречи</label>
+                                <input asp-for="RoomRequest.Topic" class="form-control shadow-sm" placeholder="Планирование проекта" maxlength="50" />
+                                <span asp-validation-for="RoomRequest.Topic" class="text-danger small"></span>
+                            </div>
+
+                            <!-- Дата и время – теперь обычные поля с явными именами -->
+                            <div class="col-md-4">
+                                <label for="bookingDate" class="form-label fw-medium">Дата</label>
+                                <input type="date" id="bookingDate" name="bookingDate" class="form-control shadow-sm"
+                                       value="@(ViewData["PresetDate"] ?? DateTime.Today.ToString("yyyy-MM-dd"))"
+                                       min="@DateTime.Today.ToString("yyyy-MM-dd")"
+                                       max="@DateTime.Today.AddDays(90).ToString("yyyy-MM-dd")" />
+                            </div>
+                            <div class="col-md-4">
+                                <label for="startTime" class="form-label fw-medium">Начало</label>
+                                <input type="time" id="startTime" name="startTime" class="form-control shadow-sm"
+                                       value="@(ViewData["PresetStart"] ?? "09:00")" />
+                            </div>
+                            <div class="col-md-4">
+                                <label for="endTime" class="form-label fw-medium">Окончание</label>
+                                <input type="time" id="endTime" name="endTime" class="form-control shadow-sm"
+                                       value="@(ViewData["PresetEnd"] ?? "")" />
+                            </div>
+
+                            <div class="col-md-4">
+                                <label asp-for="RoomRequest.ParticipantsCount" class="form-label fw-medium">Количество участников</label>
+                                <input asp-for="RoomRequest.ParticipantsCount" class="form-control shadow-sm" type="number" min="1" max="@Model.Room?.Capacity" value="1" />
+                                <span asp-validation-for="RoomRequest.ParticipantsCount" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-8">
+                                <label asp-for="RoomRequest.Description" class="form-label fw-medium">Дополнительные пожелания</label>
+                                <input asp-for="RoomRequest.Description" class="form-control shadow-sm" maxlength="100" />
+                                <span asp-validation-for="RoomRequest.Description" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-end flex-column flex-md-row align-items-center mt-4 gap-3">
+                            <button type="submit" class="btn btn-glass rounded-pill px-3 shadow-sm text-nowrap">
+                                <i class="fas fa-check me-2"></i>Отправить
+                            </button>
+                            <a asp-page="/Rooms/Index" class="btn btn-outline-glass rounded-pill px-3 text-nowrap">
+                                <i class="fas fa-times me-2"></i>Отмена
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

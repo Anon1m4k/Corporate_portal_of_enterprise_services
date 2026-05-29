@@ -1,6 +1,6 @@
 ﻿using ServiceHub.Models.Rooms;
 
-namespace ServiceHub.Tests.Unit.Model
+namespace ServiceHub.Tests.Unit.Model.Rooms
 {
     [TestClass]
     public class RoomRequestTests

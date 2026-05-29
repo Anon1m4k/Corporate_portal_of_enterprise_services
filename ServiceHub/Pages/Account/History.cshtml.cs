@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using ServiceHub.Data;
 using ServiceHub.Models;
-using ServiceHub.Models.Account;
+using ServiceHub.Models.Rooms;
 using System.Security.Claims;
 
 namespace ServiceHub.Pages.Account
@@ -37,9 +37,15 @@ namespace ServiceHub.Pages.Account
                 .ToList();
 
             var transportRequests = _context.TransportRequests
-                .Include(tr => tr.Car)  
+                .Include(tr => tr.Car)
                 .Where(tr => tr.UserId == userId)
                 .OrderByDescending(tr => tr.CreatedAt)
+                .ToList();
+
+            var roomRequests = _context.RoomRequests
+                .Include(r => r.Room)
+                .Where(r => r.UserId == userId)
+                .OrderByDescending(r => r.CreatedAt)
                 .ToList();
 
             var allRequests = new List<ServiceRequest>();
@@ -49,7 +55,6 @@ namespace ServiceHub.Pages.Account
             {
                 var carInfo = tr.Car != null ? $"{tr.Car.Brand} {tr.Car.Model}" : "не указан";
                 var description = $"{tr.StartPoint} → {tr.EndPoint}, {tr.PassengerCount} чел., авто: {carInfo}. Цель: {tr.Purpose}";
-
                 allRequests.Add(new ServiceRequest
                 {
                     Id = tr.Id,
@@ -60,6 +65,23 @@ namespace ServiceHub.Pages.Account
                     CreatedAt = tr.CreatedAt,
                     User = tr.User,
                     UserId = tr.UserId
+                });
+            }
+
+            foreach (var rr in roomRequests)
+            {
+                var roomName = rr.Room?.Name ?? "Не указано";
+                var description = $"Помещение: {roomName}, {rr.ParticipantsCount} уч., {rr.StartTime:dd.MM.yyyy HH:mm}–{rr.EndTime:HH:mm}";
+                allRequests.Add(new ServiceRequest
+                {
+                    Id = rr.Id,
+                    ServiceType = "Помещения",
+                    Title = rr.Topic,
+                    Description = description,
+                    Status = rr.Status,
+                    CreatedAt = rr.CreatedAt,
+                    User = rr.User,
+                    UserId = rr.UserId
                 });
             }
 

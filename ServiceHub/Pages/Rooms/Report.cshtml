@@ -1,0 +1,99 @@
+﻿@page
+@model ServiceHub.Pages.Rooms.ReportModel
+@{
+    ViewData["Title"] = "Предпросмотр отчёта по бронированиям";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="glass-title">Предпросмотр отчёта по бронированиям помещений</h2>
+    </div>
+
+    <div class="glass-container p-3">
+        <p><strong>Период:</strong> @Model.StartDate.ToString("dd.MM.yyyy") – @Model.EndDate.ToString("dd.MM.yyyy")</p>
+        <p><strong>Пользователь:</strong> @Model.UserName</p>
+        <p><strong>Сформирован:</strong> @Model.GeneratedAt.ToString("dd.MM.yyyy HH:mm")</p>
+
+        <div class="table-responsive">
+            <table class="table table-hover table-report align-middle text-center">
+                <thead class="table-light">
+                    <tr>
+                        <th>№</th>
+                        <th>ID</th>
+                        <th>Помещение</th>
+                        <th>Дата</th>
+                        <th>Время</th>
+                        <th>Участников</th>
+                        <th>Тема</th>
+                        <th>Пожелания</th>
+                        <th>Статус</th>
+                    </tr>
+                </thead>
+            <tbody>
+                @{
+                    int index = 1;
+                }
+                @foreach (var b in Model.Bookings)
+                {
+                    <tr>
+                        <td>@index</td>
+                        <td>@b.Id</td>
+                        <td>@(b.Room?.Name ?? "—")</td>
+                        <td>@b.StartTime.ToString("dd.MM.yyyy")</td>
+                        <td>@b.StartTime.ToString("HH:mm") – @b.EndTime.ToString("HH:mm")</td>
+                        <td>@b.ParticipantsCount</td>
+                        <td>@b.Topic</td>
+                        <td>@(string.IsNullOrWhiteSpace(b.Description) ? "—" : b.Description)</td>
+                        <td>
+                            @switch (b.Status)
+                            {
+                                case "На согласовании":
+                                        <span class="badge badge-glass bg-warning text-dark">@b.Status</span>
+                                    break;
+                                case "Подтверждена":
+                                        <span class="badge badge-glass bg-success">@b.Status</span>
+                                    break;
+                                case "Завершена":
+                                        <span class="badge badge-glass bg-info text-dark">@b.Status</span>
+                                    break;
+                                case "Отклонена":
+                                        <span class="badge badge-glass bg-danger">@b.Status</span>
+                                    break;
+                                default:
+                                        <span class="badge badge-glass bg-secondary">@b.Status</span>
+                                    break;
+                            }
+                        </td>
+                    </tr>
+                    index++;
+                }
+            </tbody>
+        </table>
+        </div>
+
+        <!-- Итоги -->
+        @{
+            int confirmed = Model.Bookings.Count(r => r.Status == "Подтверждена");
+            int completed = Model.Bookings.Count(r => r.Status == "Завершена");
+            int rejected = Model.Bookings.Count(r => r.Status == "Отклонена");
+            int pending = Model.Bookings.Count(r => r.Status == "На согласовании");
+        }
+        <div class="mt-3">
+            <p><strong>Итого бронирований: @Model.Bookings.Count</strong></p>
+            <p>Подтверждено: @confirmed | Завершено: @completed | Отклонено: @rejected | На согласовании: @pending</p>
+        </div>
+
+        <div class="d-flex gap-2 mt-4">
+            <form method="post" asp-page-handler="Download">
+                <input type="hidden" name="startDate" value="@Model.StartDate.ToString("yyyy-MM-dd")" />
+                <input type="hidden" name="endDate" value="@Model.EndDate.ToString("yyyy-MM-dd")" />
+                <button type="submit" class="btn btn-glass px-4">
+                    <i class="fas fa-save me-2"></i>Сохранить в Excel
+                </button>
+            </form>
+            <a asp-page="/Rooms/MyBookings" class="btn btn-outline-glass px-4">
+                <i class="fas fa-times me-2"></i>Отмена
+            </a>
+        </div>
+    </div>
+</div>

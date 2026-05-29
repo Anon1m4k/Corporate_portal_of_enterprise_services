@@ -1,11 +1,13 @@
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ServiceHub.Data;
+using ServiceHub.Helpers;
 using ServiceHub.Models.Account;
 using System.Security.Claims;
-using Microsoft.AspNetCore.Authentication;
 
 namespace ServiceHub.Pages.Account
 {
@@ -23,6 +25,8 @@ namespace ServiceHub.Pages.Account
         public AuthUser CurrentUser { get; set; } = new();
 
         public bool IsAdmin => User.IsInRole("Admin");
+
+        public List<SelectListItem> RoleOptions { get; set; } = new();
 
         public async Task<IActionResult> OnGetAsync(int? id = null)
         {
@@ -43,6 +47,15 @@ namespace ServiceHub.Pages.Account
             }
 
             CurrentUser = user;
+
+            // Заполняем список ролей с отображаемыми названиями
+            RoleOptions = new List<SelectListItem>
+            {
+                new SelectListItem(RoleHelper.GetRoleDisplay("User"), "User"),
+                new SelectListItem(RoleHelper.GetRoleDisplay("Chief"), "Chief"),
+                new SelectListItem(RoleHelper.GetRoleDisplay("Admin"), "Admin")
+            };
+
             return Page();
         }
 
@@ -66,11 +79,10 @@ namespace ServiceHub.Pages.Account
             user.LastName = CurrentUser.LastName;
             user.Email = CurrentUser.Email;
             user.Department = CurrentUser.Department;
-            user.Role = CurrentUser.Role; // администратор может менять роль
+            user.Role = CurrentUser.Role;
 
             await _context.SaveChangesAsync();
-
-            // Если редактировали свой профиль – обновляем клэймы
+            
             var currentUserId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
             if (user.Id == currentUserId)
             {

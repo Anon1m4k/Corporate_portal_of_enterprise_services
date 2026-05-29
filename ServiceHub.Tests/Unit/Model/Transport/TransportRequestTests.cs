@@ -1,6 +1,6 @@
 ﻿using ServiceHub.Models.Transport;
 
-namespace ServiceHub.Tests.Unit.Model
+namespace ServiceHub.Tests.Unit.Model.Transport
 {
     [TestClass]
     public class TransportRequestTests

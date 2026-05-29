@@ -1,0 +1,139 @@
+﻿@page
+@model ServiceHub.Pages.Rooms.MyBookingsModel
+@{
+    ViewData["Title"] = "Мои бронирования";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+        <div>
+    <h2 class="glass-title mb-1">Мои бронирования помещений</h2>
+        </div>
+        <a asp-page="/Rooms/Index" class="btn btn-outline-glass px-4 text-nowrap">
+            <i class="fas fa-arrow-left me-2"></i>К помещениям
+        </a>
+    </div>             
+
+    <!-- Блок формирования отчёта -->
+    <div class="glass-container p-4 mb-4">
+        <h5 class="mb-3 fw-bold">Сформировать отчёт</h5>
+        <form method="get" asp-page="/Rooms/Report" class="row g-3 align-items-end">
+            <div class="col-md-4">
+                <label class="form-label fw-medium">Начальная дата</label>
+                <input type="date" name="startDate" class="form-control" required />
+            </div>
+            <div class="col-md-4">
+                <label class="form-label fw-medium">Конечная дата</label>
+                <input type="date" name="endDate" class="form-control" required />
+            </div>
+            <div class="col-md-4 d-flex justify-content-center align-items-end">
+                <button type="submit" class="btn btn-glass px-4 shadow-sm text-nowrap">
+                    <i class="fas fa-file-excel me-2"></i>Сформировать
+                </button>
+            </div>
+        </form>
+    </div>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+    }
+
+    <div class="glass-container mt-3 p-3">
+        @if (Model.Bookings.Any())
+        {
+            <div class="row g-3">
+                @foreach (var booking in Model.Bookings)
+                {
+                    var statusClass = booking.Status switch
+                    {
+                        "На согласовании" => "bg-warning text-dark",
+                        "Подтверждена" => "bg-success",
+                        "Отклонена" => "bg-danger",
+                        "Завершена" => "bg-info text-dark",
+                        _ => "bg-secondary"
+                    };
+
+                    <div class="col-12 col-md-6">
+                        <div class="glass-card p-4 h-100">
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <h6 class="fw-bold">@booking.Room?.Name</h6>
+                                <span class="badge badge-glass @statusClass">@booking.Status</span>
+                            </div>
+
+                            <div class="mb-2 small text-muted">
+                                <i class="far fa-calendar-alt me-1"></i> @booking.StartTime.ToString("dd.MM.yyyy")
+                            </div>
+                            <div class="mb-3 small text-muted">
+                                <i class="far fa-clock me-1"></i> @booking.StartTime.ToString("HH:mm") – @booking.EndTime.ToString("HH:mm")
+                            </div>
+
+                            <div class="mb-2 small">
+                                <strong>Тема:</strong> @booking.Topic
+                            </div>
+                            @if (!string.IsNullOrWhiteSpace(booking.Description))
+                            {
+                                <div class="mb-2 small">
+                                    <strong>Пожелания:</strong> @booking.Description
+                                </div>
+                            }
+                            <div class="mb-3 small">
+                                <strong>Участников:</strong> @booking.ParticipantsCount
+                            </div>
+
+                            <div class="d-flex justify-content-end gap-2">
+                                @if (booking.Status == "На согласовании")
+                                {
+                                    <button type="button" class="btn btn-sm btn-danger" title="Отменить"
+                                            data-bs-toggle="modal" data-bs-target="#deleteModal-@booking.Id">
+                                        <i class="fas fa-trash me-2"></i>Отменить
+                                    </button>
+                                }
+                                @if (booking.Status == "Подтверждена")
+                                {
+                                    <form method="post" asp-page-handler="Complete" asp-route-id="@booking.Id">
+                                        <button type="submit" class="btn btn-glass px-3 shadow-sm" title="Завершить">
+                                            <i class="fas fa-check me-2"></i>Завершить
+                                        </button>
+                                    </form>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <p class="text-muted">У вас пока нет бронирований.</p>
+        }
+    </div>
+</div>
+
+<!-- Модальные окна подтверждения удаления -->
+@foreach (var booking in Model.Bookings)
+{
+    @if (booking.Status == "На согласовании")
+    {
+        <div class="modal fade modal-glass" id="deleteModal-@booking.Id" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header border-0 pb-0">
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body text-center p-4">
+                        <i class="fas fa-exclamation-circle fa-3x text-danger mb-3"></i>
+                        <h5 class="fw-bold mb-3">Удалить бронирование?</h5>
+                        <p class="text-muted">Вы действительно хотите удалить это бронирование? Действие нельзя отменить.</p>
+                    </div>
+                    <div class="modal-footer border-0 justify-content-center pb-4">
+                        <button type="button" class="btn btn-outline-glass px-4" data-bs-dismiss="modal">Нет, оставить</button>
+                        <form method="post" asp-page-handler="Cancel" asp-route-id="@booking.Id">
+                            <button type="submit" class="btn btn-danger px-4">Да, удалить</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}

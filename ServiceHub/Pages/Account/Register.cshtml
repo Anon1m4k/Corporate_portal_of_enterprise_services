@@ -7,73 +7,63 @@
 <div class="container mt-5">
     <div class="row justify-content-center">
         <div class="col-md-8 col-lg-6">
-            <div class="card shadow-lg rounded-3">
-                <div class="card-body p-5">
-                    <div class="text-center mb-4">
-                        <div class="d-inline-flex align-items-center justify-content-center bg-primary rounded-circle p-3 mx-auto mb-4" style="width: 80px; height: 80px;">
-                            <i class="fas fa-user-plus fa-2x text-white"></i>
+            <div class="glass-card p-5 text-center">
+                <div class="auth-icon mb-4">
+                    <i class="fas fa-user-plus fa-2x"></i>
+                </div>
+                <h2 class="fw-bold glass-title mb-3">Создать аккаунт</h2>
+                <p class="lead" style="color: var(--text-muted);">Заполните форму для регистрации</p>
+
+                <form method="post" class="mt-4 text-start">
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Input.FirstName" class="form-label fw-medium">Имя</label>
+                            <input asp-for="Input.FirstName" class="form-control" placeholder="Иван" />
+                            <span asp-validation-for="Input.FirstName" class="text-danger"></span>
                         </div>
-                        <h2 class="mt-3 fw-bold text-primary">Создать аккаунт</h2>
-                        <p class="text-muted lead">Заполните форму для регистрации</p>     
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Input.LastName" class="form-label fw-medium">Фамилия</label>
+                            <input asp-for="Input.LastName" class="form-control" placeholder="Петров" />
+                            <span asp-validation-for="Input.LastName" class="text-danger"></span>
+                        </div>
                     </div>
 
-                    <form method="post">
-                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
-
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label asp-for="Input.FirstName" class="form-label fw-medium">Имя</label>
-                                <input asp-for="Input.FirstName" class="form-control" placeholder="Иван" />
-                                <span asp-validation-for="Input.FirstName" class="text-danger"></span>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label asp-for="Input.LastName" class="form-label fw-medium">Фамилия</label>
-                                <input asp-for="Input.LastName" class="form-control" placeholder="Петров" />
-                                <span asp-validation-for="Input.LastName" class="text-danger"></span>
-                            </div>
-                        </div>
-
-                        <div class="mb-3">
-                            <label asp-for="Input.Email" class="form-label fw-medium">Email</label>
-                            <div class="input-group">
-                                <input asp-for="Input.Email" class="form-control" placeholder="name@example.com" />
-                            </div>
-                            <span asp-validation-for="Input.Email" class="text-danger"></span>
-                        </div>
-
-                        <div class="mb-3">
-                            <label asp-for="Input.Department" class="form-label fw-medium">Отдел</label>
-                            <input asp-for="Input.Department" class="form-control" placeholder="Отдел разработки" />
-                            <span asp-validation-for="Input.Department" class="text-danger"></span>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label asp-for="Input.Password" class="form-label fw-medium">Пароль</label>
-                                <div class="input-group">
-                                    <input asp-for="Input.Password" type="password" class="form-control" />
-                                </div>
-                                <span asp-validation-for="Input.Password" class="text-danger"></span>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label asp-for="Input.ConfirmPassword" class="form-label fw-medium">Подтверждение</label>
-                                <div class="input-group">
-                                    <input asp-for="Input.ConfirmPassword" type="password" class="form-control" />
-                                </div>
-                                <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
-                            </div>
-                        </div>
-
-                        <button type="submit" class="btn btn-primary w-100 py-3 mt-3 rounded-pill">
-                            <i class="fas fa-user-check me-2"></i>Зарегистрироваться
-                        </button>
-                    </form>
-
-                    <div class="text-center mt-4">
-                        <a asp-page="/Account/Login" class="text-decoration-none">
-                            <i class="fas fa-sign-in-alt me-1"></i>Уже есть аккаунт? Войти
-                        </a>
+                    <div class="mb-3">
+                        <label asp-for="Input.Email" class="form-label fw-medium">Email</label>
+                        <input asp-for="Input.Email" class="form-control" placeholder="name@example.com" />
+                        <span asp-validation-for="Input.Email" class="text-danger"></span>
                     </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Input.Department" class="form-label fw-medium">Отдел</label>
+                        <input asp-for="Input.Department" class="form-control" placeholder="Отдел разработки" />
+                        <span asp-validation-for="Input.Department" class="text-danger"></span>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Input.Password" class="form-label fw-medium">Пароль</label>
+                            <input asp-for="Input.Password" type="password" class="form-control" />
+                            <span asp-validation-for="Input.Password" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Input.ConfirmPassword" class="form-label fw-medium">Подтверждение</label>
+                            <input asp-for="Input.ConfirmPassword" type="password" class="form-control" />
+                            <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-glass w-100 py-3 mt-3 rounded-pill">
+                        <i class="fas fa-user-check me-2"></i>Зарегистрироваться
+                    </button>
+                </form>
+
+                <div class="text-center mt-4">
+                    <a asp-page="/Account/Login" class="text-decoration-none" style="color: var(--text-primary);">
+                        <i class="fas fa-sign-in-alt me-1"></i>Уже есть аккаунт? Войти
+                    </a>
                 </div>
             </div>
         </div>
