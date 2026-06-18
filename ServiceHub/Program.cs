@@ -4,20 +4,21 @@ using ServiceHub.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// ----- Только в продакшене используем порт из переменной окружения -----
-if (builder.Environment.IsProduction())
+// ----- Если переменная PORT задана (облачная среда) - переопределяем порт -----
+var port = Environment.GetEnvironmentVariable("PORT");
+if (!string.IsNullOrEmpty(port))
 {
-    var port = Environment.GetEnvironmentVariable("PORT") ?? "5000";
     builder.WebHost.UseKestrel(options =>
     {
-        options.ListenAnyIP(int.Parse(port));
+        options.ListenAnyIP(int.Parse(port)); // Слушаем на всех интерфейсах
     });
 }
+// Если PORT не задан — используем стандартные настройки (launchSettings.json)
 
 builder.Services.AddRazorPages();
 builder.Services.AddHttpContextAccessor();
 
-// Путь к SQLite (локально — в папке проекта, на сервере — можно /tmp, но оставим как есть)
+// SQLite строка подключения (можно оставить как есть)
 var connectionString = "Data Source=servicehub.db";
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite(connectionString));
