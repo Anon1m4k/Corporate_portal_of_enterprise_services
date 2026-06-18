@@ -4,11 +4,18 @@ using ServiceHub.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// ====== ВАЖНО: Порт из переменной окружения, либо 5000 по умолчанию ======
+var port = Environment.GetEnvironmentVariable("PORT") ?? "5000";
+builder.WebHost.UseKestrel(options =>
+{
+    options.ListenAnyIP(int.Parse(port)); // Слушаем на всех IP
+});
+
 builder.Services.AddRazorPages();
 builder.Services.AddHttpContextAccessor();
 
-// Подключение SQLite
-var connectionString = "Data Source=servicehub.db";
+// Подключение SQLite (для облака лучше использовать /tmp)
+var connectionString = "Data Source=/tmp/servicehub.db";
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite(connectionString));
 
@@ -21,25 +28,30 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 
 var app = builder.Build();
 
-// Автоматическое применение миграций и инициализация данных
+// Создание БД и инициализация
 using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-    dbContext.Database.EnsureCreated();   // создаёт базу по текущей модели
-    DbInitializer.Initialize(dbContext); // заполняет тестовыми данными
+    dbContext.Database.EnsureCreated();
+    DbInitializer.Initialize(dbContext);
 }
 
-// Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error");
     app.UseHsts();
 }
 
-app.UseHttpsRedirection();
+// В продакшене не перенаправляем на HTTPS (внешний балансировщик сам это делает)
+if (app.Environment.IsDevelopment())
+{
+    app.UseHttpsRedirection();
+}
+
 app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapRazorPages();
+
 app.Run();
