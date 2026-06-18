@@ -4,21 +4,18 @@ using ServiceHub.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// ----- Если переменная PORT задана (облачная среда) - переопределяем порт -----
+// ----- Если переменная PORT задана (облачная среда) — переопределяем порт -----
 var port = Environment.GetEnvironmentVariable("PORT");
 if (!string.IsNullOrEmpty(port))
 {
-    builder.WebHost.UseKestrel(options =>
-    {
-        options.ListenAnyIP(int.Parse(port)); // Слушаем на всех интерфейсах
-    });
+    builder.WebHost.UseUrls($"http://*:{port}"); // Слушаем на всех интерфейсах, порт из переменной
 }
 // Если PORT не задан — используем стандартные настройки (launchSettings.json)
 
 builder.Services.AddRazorPages();
 builder.Services.AddHttpContextAccessor();
 
-// SQLite строка подключения (можно оставить как есть)
+// SQLite — оставляем как есть (локально и на сервере будет создавать в рабочей папке)
 var connectionString = "Data Source=servicehub.db";
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite(connectionString));
@@ -46,7 +43,6 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-// Перенаправление на HTTPS только в разработке
 if (app.Environment.IsDevelopment())
 {
     app.UseHttpsRedirection();
