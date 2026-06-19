@@ -7,6 +7,7 @@ using ServiceHub.Models.Transport;
 using ServiceHub.Models.Rooms;
 using ClosedXML.Excel;
 using System.Security.Claims;
+using System.Text; // Добавлено
 
 namespace ServiceHub.Pages.Admin
 {
@@ -27,6 +28,22 @@ namespace ServiceHub.Pages.Admin
         public string UserName { get; set; } = string.Empty;
         public DateTime GeneratedAt { get; set; }
 
+        // Вспомогательный метод для перекодирования строки из Windows-1251 в UTF-8
+        private string FixEncoding(string input)
+        {
+            if (string.IsNullOrEmpty(input))
+                return input;
+            try
+            {
+                byte[] bytes = Encoding.GetEncoding("Windows-1251").GetBytes(input);
+                return Encoding.UTF8.GetString(bytes);
+            }
+            catch
+            {
+                return input; // если что-то пошло не так, возвращаем как есть
+            }
+        }
+
         public async Task OnGetAsync(DateTime startDate, DateTime endDate, string? status)
         {
             Response.ContentType = "text/html; charset=utf-8";
@@ -34,13 +51,12 @@ namespace ServiceHub.Pages.Admin
             EndDate = endDate;
             FilterStatus = status;
 
-            // Получаем текущего пользователя для отображения
             var currentUserEmail = User.FindFirst(ClaimTypes.Email)?.Value ?? User.Identity?.Name;
             var currentUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == currentUserEmail);
             UserName = currentUser != null ? $"{currentUser.LastName} {currentUser.FirstName}" : "Неизвестно";
             GeneratedAt = DateTime.Now;
 
-            // Транспортные заявки
+            // --- Транспортные заявки ---
             IQueryable<TransportRequest> transportQuery = _context.TransportRequests
                 .Include(tr => tr.User)
                 .Include(tr => tr.Car)
@@ -53,9 +69,13 @@ namespace ServiceHub.Pages.Admin
             {
                 var car = tr.Car;
                 var details = $"{tr.StartPoint} --> {tr.EndPoint}, {tr.PassengerCount} чел., авто: {(car != null ? $"{car.Brand} {car.Model} ({car.LicensePlate})" : "—")}";
-                // Добавляем цель поездки
                 if (!string.IsNullOrWhiteSpace(tr.Purpose))
                     details += $". Цель: {tr.Purpose}";
+
+                // Принудительное перекодирование
+                details = FixEncoding(details);
+
+                Console.WriteLine($"Debug: {details}");
 
                 Items.Add(new ReportItem
                 {
@@ -68,7 +88,7 @@ namespace ServiceHub.Pages.Admin
                 });
             }
 
-            // Бронирования помещений
+            // --- Бронирования помещений ---
             IQueryable<RoomRequest> roomQuery = _context.RoomRequests
                 .Include(r => r.User)
                 .Include(r => r.Room)
@@ -80,9 +100,10 @@ namespace ServiceHub.Pages.Admin
             foreach (var rr in rooms)
             {
                 var details = $"Помещение: {rr.Room?.Name ?? "—"}, {rr.ParticipantsCount} уч., {rr.StartTime:dd.MM HH:mm} – {rr.EndTime:HH:mm}";
-                // Добавляем дополнительные пожелания
                 if (!string.IsNullOrWhiteSpace(rr.Description))
                     details += $". Пожелания: {rr.Description}";
+
+                details = FixEncoding(details);
 
                 Items.Add(new ReportItem
                 {
@@ -100,7 +121,7 @@ namespace ServiceHub.Pages.Admin
 
         public async Task<IActionResult> OnPostDownloadAsync(DateTime startDate, DateTime endDate, string? status)
         {
-            // Повторяем логику построения данных
+            // Переиспользуем логику получения данных
             await OnGetAsync(startDate, endDate, status);
             var items = Items;
 
@@ -108,7 +129,7 @@ namespace ServiceHub.Pages.Admin
             {
                 var worksheet = workbook.Worksheets.Add("Сводный отчёт");
 
-                // === Шапка отчёта ===
+                // Шапка
                 worksheet.Cell(1, 1).Value = "ServiceHub — Корпоративный портал";
                 worksheet.Cell(1, 1).Style.Font.FontSize = 14;
                 worksheet.Cell(1, 1).Style.Font.Bold = true;
@@ -169,13 +190,13 @@ namespace ServiceHub.Pages.Admin
                     row++;
                 }
 
-                // Границы таблицы
+                // Границы
                 var dataRange = worksheet.Range(headerRow, 1, row - 1, headers.Length);
                 dataRange.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
                 dataRange.Style.Border.InsideBorder = XLBorderStyleValues.Thin;
                 worksheet.Columns().AdjustToContents();
 
-                // === Итоги ===
+                // Итоги
                 row++;
                 worksheet.Cell(row, 1).Value = $"Итого заявок: {items.Count}";
                 worksheet.Cell(row, 1).Style.Font.Bold = true;
