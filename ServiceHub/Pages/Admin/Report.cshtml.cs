@@ -29,6 +29,7 @@ namespace ServiceHub.Pages.Admin
 
         public async Task OnGetAsync(DateTime startDate, DateTime endDate, string? status)
         {
+            Response.ContentType = "text/html; charset=utf-8";
             StartDate = startDate;
             EndDate = endDate;
             FilterStatus = status;
