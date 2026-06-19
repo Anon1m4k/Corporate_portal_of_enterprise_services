@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authorization;
+п»їusing Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
@@ -36,10 +36,10 @@ namespace ServiceHub.Pages.Admin
 
             var currentUserEmail = User.FindFirst(ClaimTypes.Email)?.Value ?? User.Identity?.Name;
             var currentUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == currentUserEmail);
-            UserName = currentUser != null ? $"{currentUser.LastName} {currentUser.FirstName}" : "Неизвестно";
+            UserName = currentUser != null ? $"{currentUser.LastName} {currentUser.FirstName}" : "РќРµРёР·РІРµСЃС‚РЅРѕ";
             GeneratedAt = DateTime.Now;
 
-            // --- Транспортные заявки ---
+            // --- РўСЂР°РЅСЃРїРѕСЂС‚РЅС‹Рµ Р·Р°СЏРІРєРё ---
             IQueryable<TransportRequest> transportQuery = _context.TransportRequests
                 .Include(tr => tr.User)
                 .Include(tr => tr.Car)
@@ -51,24 +51,24 @@ namespace ServiceHub.Pages.Admin
             foreach (var tr in transports)
             {
                 var car = tr.Car;
-                var details = $"{tr.StartPoint} --> {tr.EndPoint}, {tr.PassengerCount} чел., авто: {(car != null ? $"{car.Brand} {car.Model} ({car.LicensePlate})" : "—")}";
+                var details = $"{tr.StartPoint} --> {tr.EndPoint}, {tr.PassengerCount} С‡РµР»., Р°РІС‚Рѕ: {(car != null ? $"{car.Brand} {car.Model} ({car.LicensePlate})" : "вЂ”")}";
                 if (!string.IsNullOrWhiteSpace(tr.Purpose))
-                    details += $". Цель: {tr.Purpose}";
+                    details += $". Р¦РµР»СЊ: {tr.Purpose}";
 
                 Console.WriteLine($"Debug: {details}");
 
                 Items.Add(new ReportItem
                 {
-                    Type = "Транспорт",
+                    Type = "РўСЂР°РЅСЃРїРѕСЂС‚",
                     UserName = $"{tr.User?.LastName} {tr.User?.FirstName}",
-                    Title = $"Поездка {tr.TripDateTime:dd.MM HH:mm}",
+                    Title = $"РџРѕРµР·РґРєР° {tr.TripDateTime:dd.MM HH:mm}",
                     Details = details,
                     CreatedAt = tr.CreatedAt,
                     Status = tr.Status
                 });
             }
 
-            // --- Бронирования помещений ---
+            // --- Р‘СЂРѕРЅРёСЂРѕРІР°РЅРёСЏ РїРѕРјРµС‰РµРЅРёР№ ---
             IQueryable<RoomRequest> roomQuery = _context.RoomRequests
                 .Include(r => r.User)
                 .Include(r => r.Room)
@@ -79,13 +79,13 @@ namespace ServiceHub.Pages.Admin
             var rooms = await roomQuery.ToListAsync();
             foreach (var rr in rooms)
             {
-                var details = $"Помещение: {rr.Room?.Name ?? "—"}, {rr.ParticipantsCount} уч., {rr.StartTime:dd.MM HH:mm} – {rr.EndTime:HH:mm}";
+                var details = $"РџРѕРјРµС‰РµРЅРёРµ: {rr.Room?.Name ?? "вЂ”"}, {rr.ParticipantsCount} СѓС‡., {rr.StartTime:dd.MM HH:mm} вЂ“ {rr.EndTime:HH:mm}";
                 if (!string.IsNullOrWhiteSpace(rr.Description))
-                    details += $". Пожелания: {rr.Description}";
+                    details += $". РџРѕР¶РµР»Р°РЅРёСЏ: {rr.Description}";
 
                 Items.Add(new ReportItem
                 {
-                    Type = "Помещения",
+                    Type = "РџРѕРјРµС‰РµРЅРёСЏ",
                     UserName = $"{rr.User?.LastName} {rr.User?.FirstName}",
                     Title = rr.Topic,
                     Details = details,
@@ -99,30 +99,30 @@ namespace ServiceHub.Pages.Admin
 
         public async Task<IActionResult> OnPostDownloadAsync(DateTime startDate, DateTime endDate, string? status)
         {
-            // Переиспользуем логику получения данных
+            // РџРµСЂРµРёСЃРїРѕР»СЊР·СѓРµРј Р»РѕРіРёРєСѓ РїРѕР»СѓС‡РµРЅРёСЏ РґР°РЅРЅС‹С…
             await OnGetAsync(startDate, endDate, status);
             var items = Items;
 
             using (var workbook = new XLWorkbook())
             {
-                var worksheet = workbook.Worksheets.Add("Сводный отчёт");
+                var worksheet = workbook.Worksheets.Add("РЎРІРѕРґРЅС‹Р№ РѕС‚С‡С‘С‚");
 
-                // Шапка
-                worksheet.Cell(1, 1).Value = "ServiceHub — Корпоративный портал";
+                // РЁР°РїРєР°
+                worksheet.Cell(1, 1).Value = "ServiceHub вЂ” РљРѕСЂРїРѕСЂР°С‚РёРІРЅС‹Р№ РїРѕСЂС‚Р°Р»";
                 worksheet.Cell(1, 1).Style.Font.FontSize = 14;
                 worksheet.Cell(1, 1).Style.Font.Bold = true;
-                worksheet.Cell(2, 1).Value = "Сводный отчёт по заявкам";
+                worksheet.Cell(2, 1).Value = "РЎРІРѕРґРЅС‹Р№ РѕС‚С‡С‘С‚ РїРѕ Р·Р°СЏРІРєР°Рј";
                 worksheet.Cell(2, 1).Style.Font.FontSize = 12;
                 worksheet.Cell(2, 1).Style.Font.Bold = true;
-                worksheet.Cell(3, 1).Value = $"Период: с {startDate:dd.MM.yyyy} по {endDate:dd.MM.yyyy}";
-                worksheet.Cell(4, 1).Value = $"Пользователь: {UserName}";
-                worksheet.Cell(5, 1).Value = $"Сформирован: {DateTime.Now:dd.MM.yyyy HH:mm}";
+                worksheet.Cell(3, 1).Value = $"РџРµСЂРёРѕРґ: СЃ {startDate:dd.MM.yyyy} РїРѕ {endDate:dd.MM.yyyy}";
+                worksheet.Cell(4, 1).Value = $"РџРѕР»СЊР·РѕРІР°С‚РµР»СЊ: {UserName}";
+                worksheet.Cell(5, 1).Value = $"РЎС„РѕСЂРјРёСЂРѕРІР°РЅ: {DateTime.Now:dd.MM.yyyy HH:mm}";
 
                 if (!string.IsNullOrEmpty(status))
-                    worksheet.Cell(5, 1).Value = $"Фильтр по статусу: {status}";
+                    worksheet.Cell(5, 1).Value = $"Р¤РёР»СЊС‚СЂ РїРѕ СЃС‚Р°С‚СѓСЃСѓ: {status}";
 
                 int headerRow = string.IsNullOrEmpty(status) ? 6 : 7;
-                var headers = new[] { "№", "Тип", "Автор", "Заголовок", "Детали", "Дата создания", "Статус" };
+                var headers = new[] { "в„–", "РўРёРї", "РђРІС‚РѕСЂ", "Р—Р°РіРѕР»РѕРІРѕРє", "Р”РµС‚Р°Р»Рё", "Р”Р°С‚Р° СЃРѕР·РґР°РЅРёСЏ", "РЎС‚Р°С‚СѓСЃ" };
                 var tableHeaderRange = worksheet.Range(headerRow, 1, headerRow, headers.Length);
                 tableHeaderRange.Style.Font.Bold = true;
                 tableHeaderRange.Style.Font.FontColor = XLColor.White;
@@ -145,22 +145,22 @@ namespace ServiceHub.Pages.Admin
 
                     var statusCell = worksheet.Cell(row, 7);
                     string itemStatus = item.Status;
-                    if (itemStatus == "На согласовании")
+                    if (itemStatus == "РќР° СЃРѕРіР»Р°СЃРѕРІР°РЅРёРё")
                     {
                         statusCell.Style.Fill.BackgroundColor = XLColor.FromHtml("#FFC107");
                         statusCell.Style.Font.FontColor = XLColor.Black;
                     }
-                    else if (itemStatus == "Подтверждена")
+                    else if (itemStatus == "РџРѕРґС‚РІРµСЂР¶РґРµРЅР°")
                     {
                         statusCell.Style.Fill.BackgroundColor = XLColor.FromHtml("#28A745");
                         statusCell.Style.Font.FontColor = XLColor.White;
                     }
-                    else if (itemStatus == "Завершена")
+                    else if (itemStatus == "Р—Р°РІРµСЂС€РµРЅР°")
                     {
                         statusCell.Style.Fill.BackgroundColor = XLColor.FromHtml("#17A2B8");
                         statusCell.Style.Font.FontColor = XLColor.White;
                     }
-                    else if (itemStatus == "Отклонена")
+                    else if (itemStatus == "РћС‚РєР»РѕРЅРµРЅР°")
                     {
                         statusCell.Style.Fill.BackgroundColor = XLColor.FromHtml("#DC3545");
                         statusCell.Style.Font.FontColor = XLColor.White;
@@ -168,23 +168,23 @@ namespace ServiceHub.Pages.Admin
                     row++;
                 }
 
-                // Границы
+                // Р“СЂР°РЅРёС†С‹
                 var dataRange = worksheet.Range(headerRow, 1, row - 1, headers.Length);
                 dataRange.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
                 dataRange.Style.Border.InsideBorder = XLBorderStyleValues.Thin;
                 worksheet.Columns().AdjustToContents();
 
-                // Итоги
+                // РС‚РѕРіРё
                 row++;
-                worksheet.Cell(row, 1).Value = $"Итого заявок: {items.Count}";
+                worksheet.Cell(row, 1).Value = $"РС‚РѕРіРѕ Р·Р°СЏРІРѕРє: {items.Count}";
                 worksheet.Cell(row, 1).Style.Font.Bold = true;
 
                 row++;
-                int confirmed = items.Count(i => i.Status == "Подтверждена");
-                int completed = items.Count(i => i.Status == "Завершена");
-                int rejected = items.Count(i => i.Status == "Отклонена");
-                int pending = items.Count(i => i.Status == "На согласовании");
-                worksheet.Cell(row, 1).Value = $"Подтверждено: {confirmed} | Завершено: {completed} | Отклонено: {rejected} | На согласовании: {pending}";
+                int confirmed = items.Count(i => i.Status == "РџРѕРґС‚РІРµСЂР¶РґРµРЅР°");
+                int completed = items.Count(i => i.Status == "Р—Р°РІРµСЂС€РµРЅР°");
+                int rejected = items.Count(i => i.Status == "РћС‚РєР»РѕРЅРµРЅР°");
+                int pending = items.Count(i => i.Status == "РќР° СЃРѕРіР»Р°СЃРѕРІР°РЅРёРё");
+                worksheet.Cell(row, 1).Value = $"РџРѕРґС‚РІРµСЂР¶РґРµРЅРѕ: {confirmed} | Р—Р°РІРµСЂС€РµРЅРѕ: {completed} | РћС‚РєР»РѕРЅРµРЅРѕ: {rejected} | РќР° СЃРѕРіР»Р°СЃРѕРІР°РЅРёРё: {pending}";
 
                 using (var stream = new MemoryStream())
                 {
