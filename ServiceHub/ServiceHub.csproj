@@ -20,6 +20,9 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="System.Text.Encoding.CodePages" Version="10.0.9" />
+
+	  <Content Remove="Properties\launchSettings.json" />
+	  <None Include="Properties\launchSettings.json" />
   </ItemGroup>
 
 </Project>
