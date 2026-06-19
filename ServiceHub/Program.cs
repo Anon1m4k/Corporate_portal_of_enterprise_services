@@ -6,6 +6,8 @@ using System.Text;
 var builder = WebApplication.CreateBuilder(args);
 
 Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+Console.OutputEncoding = Encoding.UTF8;
+Console.InputEncoding = Encoding.UTF8;
 
 // ----- Если переменная PORT задана (облачная среда) — переопределяем порт -----
 var port = Environment.GetEnvironmentVariable("PORT");
@@ -19,7 +21,7 @@ builder.Services.AddRazorPages();
 builder.Services.AddHttpContextAccessor();
 
 // SQLite — оставляем как есть (локально и на сервере будет создавать в рабочей папке)
-var connectionString = "Data Source=servicehub.db";
+var connectionString = "Data Source=servicehub.db;UTF8Encoding=True";
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite(connectionString));
 
@@ -50,6 +52,12 @@ if (app.Environment.IsDevelopment())
 {
     app.UseHttpsRedirection();
 }
+
+app.Use(async (context, next) =>
+{
+    context.Response.ContentType = "text/html; charset=utf-8";
+    await next();
+});
 
 app.UseStaticFiles();
 app.UseRouting();
