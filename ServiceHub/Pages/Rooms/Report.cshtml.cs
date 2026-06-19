@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authorization;
+Ôªøusing Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
@@ -64,25 +64,25 @@ namespace ServiceHub.Pages.Rooms
 
             using (var workbook = new XLWorkbook())
             {
-                var worksheet = workbook.Worksheets.Add("¡ÓÌËÓ‚‡ÌËˇ ÔÓÏÂ˘ÂÌËÈ");
+                var worksheet = workbook.Worksheets.Add("–ë—Ä–æ–Ω–∏—Ä–æ–≤–∞–Ω–∏—è –ø–æ–º–µ—â–µ–Ω–∏–π");
 
-                // === ÿ‡ÔÍ‡ ÓÚ˜∏Ú‡ ===
-                worksheet.Cell(1, 1).Value = "ServiceHub ó  ÓÔÓ‡ÚË‚Ì˚È ÔÓÚ‡Î";
+                // === –®–∞–ø–∫–∞ –æ—Ç—á—ë—Ç–∞ ===
+                worksheet.Cell(1, 1).Value = "ServiceHub ‚Äî –ö–æ—Ä–ø–æ—Ä–∞—Ç–∏–≤–Ω—ã–π –ø–æ—Ä—Ç–∞–ª";
                 worksheet.Cell(1, 1).Style.Font.FontSize = 14;
                 worksheet.Cell(1, 1).Style.Font.Bold = true;
 
-                worksheet.Cell(2, 1).Value = "ŒÚ˜∏Ú ÔÓ ·ÓÌËÓ‚‡ÌËˇÏ ÔÓÏÂ˘ÂÌËÈ";
+                worksheet.Cell(2, 1).Value = "–û—Ç—á—ë—Ç –ø–æ –±—Ä–æ–Ω–∏—Ä–æ–≤–∞–Ω–∏—è–º –ø–æ–º–µ—â–µ–Ω–∏–π";
                 worksheet.Cell(2, 1).Style.Font.FontSize = 12;
                 worksheet.Cell(2, 1).Style.Font.Bold = true;
 
-                worksheet.Cell(3, 1).Value = $"œÂËÓ‰: Ò {startDate:dd.MM.yyyy} ÔÓ {endDate:dd.MM.yyyy}";
-                worksheet.Cell(4, 1).Value = $"œÓÎ¸ÁÓ‚‡ÚÂÎ¸: {user.LastName} {user.FirstName}";
-                worksheet.Cell(5, 1).Value = $"—ÙÓÏËÓ‚‡Ì: {DateTime.Now:dd.MM.yyyy HH:mm}";
+                worksheet.Cell(3, 1).Value = $"–ü–µ—Ä–∏–æ–¥: —Å {startDate:dd.MM.yyyy} –ø–æ {endDate:dd.MM.yyyy}";
+                worksheet.Cell(4, 1).Value = $"–ü–æ–ª—å–∑–æ–≤–∞—Ç–µ–ª—å: {user.LastName} {user.FirstName}";
+                worksheet.Cell(5, 1).Value = $"–°—Ñ–æ—Ä–º–∏—Ä–æ–≤–∞–Ω: {DateTime.Now:dd.MM.yyyy HH:mm}";
 
 
-                // === “‡·ÎËˆ‡ ‰‡ÌÌ˚ı ===
+                // === –¢–∞–±–ª–∏—Ü–∞ –¥–∞–Ω–Ω—ã—Ö ===
                 int headerRow = 6;
-                var headers = new[] { "π", "ID", "œÓÏÂ˘ÂÌËÂ", "ƒ‡Ú‡", "¬ÂÏˇ", "”˜‡ÒÚÌËÍÓ‚", "“ÂÏ‡", "œÓÊÂÎ‡ÌËˇ", "—Ú‡ÚÛÒ" };
+                var headers = new[] { "‚Ññ", "ID", "–ü–æ–º–µ—â–µ–Ω–∏–µ", "–î–∞—Ç–∞", "–í—Ä–µ–º—è", "–£—á–∞—Å—Ç–Ω–∏–∫–æ–≤", "–¢–µ–º–∞", "–ü–æ–∂–µ–ª–∞–Ω–∏—è", "–°—Ç–∞—Ç—É—Å" };
                 var tableHeaderRange = worksheet.Range(headerRow, 1, headerRow, headers.Length);
                 tableHeaderRange.Style.Font.Bold = true;
                 tableHeaderRange.Style.Font.FontColor = XLColor.White;
@@ -97,32 +97,32 @@ namespace ServiceHub.Pages.Rooms
                     var b = bookings[i];
                     worksheet.Cell(row, 1).Value = i + 1;
                     worksheet.Cell(row, 2).Value = b.Id;
-                    worksheet.Cell(row, 3).Value = b.Room?.Name ?? "ó";
+                    worksheet.Cell(row, 3).Value = b.Room?.Name ?? "‚Äî";
                     worksheet.Cell(row, 4).Value = b.StartTime.ToString("dd.MM.yyyy");
-                    worksheet.Cell(row, 5).Value = $"{b.StartTime:HH:mm} ñ {b.EndTime:HH:mm}";
-                    worksheet.Cell(row, 6).Value = b.ParticipantsCount.ToString() ?? "ó";
+                    worksheet.Cell(row, 5).Value = $"{b.StartTime:HH:mm} ‚Äì {b.EndTime:HH:mm}";
+                    worksheet.Cell(row, 6).Value = b.ParticipantsCount.ToString() ?? "‚Äî";
                     worksheet.Cell(row, 7).Value = b.Topic;
-                    worksheet.Cell(row, 8).Value = string.IsNullOrWhiteSpace(b.Description) ? "ó" : b.Description;
+                    worksheet.Cell(row, 8).Value = string.IsNullOrWhiteSpace(b.Description) ? "‚Äî" : b.Description;
                     worksheet.Cell(row, 9).Value = b.Status;
 
                     var statusCell = worksheet.Cell(row, 9);
                     string status = b.Status;
-                    if (status == "Õ‡ ÒÓ„Î‡ÒÓ‚‡ÌËË")
+                    if (status == "–ù–∞ —Å–æ–≥–ª–∞—Å–æ–≤–∞–Ω–∏–∏")
                     {
                         statusCell.Style.Fill.BackgroundColor = XLColor.FromHtml("#FFC107");
                         statusCell.Style.Font.FontColor = XLColor.Black;
                     }
-                    else if (status == "œÓ‰Ú‚ÂÊ‰ÂÌ‡")
+                    else if (status == "–ü–æ–¥—Ç–≤–µ—Ä–∂–¥–µ–Ω–∞")
                     {
                         statusCell.Style.Fill.BackgroundColor = XLColor.FromHtml("#28A745");
                         statusCell.Style.Font.FontColor = XLColor.White;
                     }
-                    else if (status == "«‡‚Â¯ÂÌ‡")
+                    else if (status == "–ó–∞–≤–µ—Ä—à–µ–Ω–∞")
                     {
                         statusCell.Style.Fill.BackgroundColor = XLColor.FromHtml("#17A2B8");
                         statusCell.Style.Font.FontColor = XLColor.White;
                     }
-                    else if (status == "ŒÚÍÎÓÌÂÌ‡")
+                    else if (status == "–û—Ç–∫–ª–æ–Ω–µ–Ω–∞")
                     {
                         statusCell.Style.Fill.BackgroundColor = XLColor.FromHtml("#DC3545");
                         statusCell.Style.Font.FontColor = XLColor.White;
@@ -130,23 +130,23 @@ namespace ServiceHub.Pages.Rooms
                     row++;
                 }
 
-                // √‡ÌËˆ˚ Ú‡·ÎËˆ˚
+                // –ì—Ä–∞–Ω–∏—Ü—ã —Ç–∞–±–ª–∏—Ü—ã
                 var dataRange = worksheet.Range(headerRow, 1, row - 1, headers.Length);
                 dataRange.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
                 dataRange.Style.Border.InsideBorder = XLBorderStyleValues.Thin;
                 worksheet.Columns().AdjustToContents();
 
-                // === »ÚÓ„Ë ===
+                // === –ò—Ç–æ–≥–∏ ===
                 row++;
-                worksheet.Cell(row, 1).Value = $"»ÚÓ„Ó ·ÓÌËÓ‚‡ÌËÈ: {bookings.Count}";
+                worksheet.Cell(row, 1).Value = $"–ò—Ç–æ–≥–æ –±—Ä–æ–Ω–∏—Ä–æ–≤–∞–Ω–∏–π: {bookings.Count}";
                 worksheet.Cell(row, 1).Style.Font.Bold = true;
 
                 row++;
-                int confirmed = bookings.Count(r => r.Status == "œÓ‰Ú‚ÂÊ‰ÂÌ‡");
-                int completed = bookings.Count(r => r.Status == "«‡‚Â¯ÂÌ‡");
-                int rejected = bookings.Count(r => r.Status == "ŒÚÍÎÓÌÂÌ‡");
-                int pending = bookings.Count(r => r.Status == "Õ‡ ÒÓ„Î‡ÒÓ‚‡ÌËË");
-                worksheet.Cell(row, 1).Value = $"œÓ‰Ú‚ÂÊ‰ÂÌÓ: {confirmed} | «‡‚Â¯ÂÌÓ: {completed} | ŒÚÍÎÓÌÂÌÓ: {rejected} | Õ‡ ÒÓ„Î‡ÒÓ‚‡ÌËË: {pending}";
+                int confirmed = bookings.Count(r => r.Status == "–ü–æ–¥—Ç–≤–µ—Ä–∂–¥–µ–Ω–∞");
+                int completed = bookings.Count(r => r.Status == "–ó–∞–≤–µ—Ä—à–µ–Ω–∞");
+                int rejected = bookings.Count(r => r.Status == "–û—Ç–∫–ª–æ–Ω–µ–Ω–∞");
+                int pending = bookings.Count(r => r.Status == "–ù–∞ —Å–æ–≥–ª–∞—Å–æ–≤–∞–Ω–∏–∏");
+                worksheet.Cell(row, 1).Value = $"–ü–æ–¥—Ç–≤–µ—Ä–∂–¥–µ–Ω–æ: {confirmed} | –ó–∞–≤–µ—Ä—à–µ–Ω–æ: {completed} | –û—Ç–∫–ª–æ–Ω–µ–Ω–æ: {rejected} | –ù–∞ —Å–æ–≥–ª–∞—Å–æ–≤–∞–Ω–∏–∏: {pending}";
 
                 using (var stream = new MemoryStream())
                 {

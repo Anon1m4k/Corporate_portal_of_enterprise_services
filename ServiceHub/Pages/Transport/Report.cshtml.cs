@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authorization;
+п»їusing Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
@@ -64,28 +64,28 @@ namespace ServiceHub.Pages.Transport
 
             using (var workbook = new XLWorkbook())
             {
-                var worksheet = workbook.Worksheets.Add("Транспортные заявки");
+                var worksheet = workbook.Worksheets.Add("РўСЂР°РЅСЃРїРѕСЂС‚РЅС‹Рµ Р·Р°СЏРІРєРё");
 
-                // === Шапка отчёта ===
-                worksheet.Cell(1, 1).Value = "ServiceHub — Корпоративный портал";
+                // === РЁР°РїРєР° РѕС‚С‡С‘С‚Р° ===
+                worksheet.Cell(1, 1).Value = "ServiceHub вЂ” РљРѕСЂРїРѕСЂР°С‚РёРІРЅС‹Р№ РїРѕСЂС‚Р°Р»";
                 worksheet.Cell(1, 1).Style.Font.FontSize = 14;
                 worksheet.Cell(1, 1).Style.Font.Bold = true;
 
-                worksheet.Cell(2, 1).Value = "Отчёт по транспортным заявкам";
+                worksheet.Cell(2, 1).Value = "РћС‚С‡С‘С‚ РїРѕ С‚СЂР°РЅСЃРїРѕСЂС‚РЅС‹Рј Р·Р°СЏРІРєР°Рј";
                 worksheet.Cell(2, 1).Style.Font.FontSize = 12;
                 worksheet.Cell(2, 1).Style.Font.Bold = true;
 
-                worksheet.Cell(3, 1).Value = $"Период: с {startDate:dd.MM.yyyy} по {endDate:dd.MM.yyyy}";
-                worksheet.Cell(4, 1).Value = $"Пользователь: {user.LastName} {user.FirstName}";
-                worksheet.Cell(5, 1).Value = $"Сформирован: {DateTime.Now:dd.MM.yyyy HH:mm}";
+                worksheet.Cell(3, 1).Value = $"РџРµСЂРёРѕРґ: СЃ {startDate:dd.MM.yyyy} РїРѕ {endDate:dd.MM.yyyy}";
+                worksheet.Cell(4, 1).Value = $"РџРѕР»СЊР·РѕРІР°С‚РµР»СЊ: {user.LastName} {user.FirstName}";
+                worksheet.Cell(5, 1).Value = $"РЎС„РѕСЂРјРёСЂРѕРІР°РЅ: {DateTime.Now:dd.MM.yyyy HH:mm}";
 
 
-                // === Таблица данных ===
+                // === РўР°Р±Р»РёС†Р° РґР°РЅРЅС‹С… ===
                 int headerRow = 6;
-                var tableHeaders = new[] { "№", "ID", "Дата и время", "Откуда", "Куда",
-                    "Пассажиров", "Автомобиль", "Госномер", "Цель", "Статус" };
+                var tableHeaders = new[] { "в„–", "ID", "Р”Р°С‚Р° Рё РІСЂРµРјСЏ", "РћС‚РєСѓРґР°", "РљСѓРґР°",
+                    "РџР°СЃСЃР°Р¶РёСЂРѕРІ", "РђРІС‚РѕРјРѕР±РёР»СЊ", "Р“РѕСЃРЅРѕРјРµСЂ", "Р¦РµР»СЊ", "РЎС‚Р°С‚СѓСЃ" };
 
-                // Стиль шапки таблицы
+                // РЎС‚РёР»СЊ С€Р°РїРєРё С‚Р°Р±Р»РёС†С‹
                 var tableHeaderRange = worksheet.Range(headerRow, 1, headerRow, tableHeaders.Length);
                 tableHeaderRange.Style.Font.Bold = true;
                 tableHeaderRange.Style.Font.FontColor = XLColor.White;
@@ -96,7 +96,7 @@ namespace ServiceHub.Pages.Transport
                     worksheet.Cell(headerRow, i + 1).Value = tableHeaders[i];
                 }
 
-                // Данные
+                // Р”Р°РЅРЅС‹Рµ
                 int row = headerRow + 1;
                 for (int i = 0; i < requests.Count; i++)
                 {
@@ -109,29 +109,29 @@ namespace ServiceHub.Pages.Transport
                     worksheet.Cell(row, 4).Value = req.StartPoint;
                     worksheet.Cell(row, 5).Value = req.EndPoint;
                     worksheet.Cell(row, 6).Value = req.PassengerCount.ToString();
-                    worksheet.Cell(row, 7).Value = car != null ? $"{car.Brand} {car.Model}" : "—";
-                    worksheet.Cell(row, 8).Value = car?.LicensePlate ?? "—";
+                    worksheet.Cell(row, 7).Value = car != null ? $"{car.Brand} {car.Model}" : "вЂ”";
+                    worksheet.Cell(row, 8).Value = car?.LicensePlate ?? "вЂ”";
                     worksheet.Cell(row, 9).Value = req.Purpose;
                     worksheet.Cell(row, 10).Value = req.Status;
 
                     var statusCell = worksheet.Cell(row, 10);
                     string status = req.Status;
-                    if (status == "На согласовании")
+                    if (status == "РќР° СЃРѕРіР»Р°СЃРѕРІР°РЅРёРё")
                     {
                         statusCell.Style.Fill.BackgroundColor = XLColor.FromHtml("#FFC107");
                         statusCell.Style.Font.FontColor = XLColor.Black;
                     }
-                    else if (status == "Подтверждена")
+                    else if (status == "РџРѕРґС‚РІРµСЂР¶РґРµРЅР°")
                     {
                         statusCell.Style.Fill.BackgroundColor = XLColor.FromHtml("#28A745");
                         statusCell.Style.Font.FontColor = XLColor.White;
                     }
-                    else if (status == "Завершена")
+                    else if (status == "Р—Р°РІРµСЂС€РµРЅР°")
                     {
                         statusCell.Style.Fill.BackgroundColor = XLColor.FromHtml("#17A2B8");
                         statusCell.Style.Font.FontColor = XLColor.White;
                     }
-                    else if (status == "Отклонена")
+                    else if (status == "РћС‚РєР»РѕРЅРµРЅР°")
                     {
                         statusCell.Style.Fill.BackgroundColor = XLColor.FromHtml("#DC3545");
                         statusCell.Style.Font.FontColor = XLColor.White;
@@ -140,25 +140,25 @@ namespace ServiceHub.Pages.Transport
                     row++;
                 }
 
-                // Границы таблицы
+                // Р“СЂР°РЅРёС†С‹ С‚Р°Р±Р»РёС†С‹
                 var dataRange = worksheet.Range(headerRow, 1, row - 1, tableHeaders.Length);
                 dataRange.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
                 dataRange.Style.Border.InsideBorder = XLBorderStyleValues.Thin;
 
-                // Автоширина
+                // РђРІС‚РѕС€РёСЂРёРЅР°
                 worksheet.Columns().AdjustToContents();
 
-                // === Итоги ===
-                row++; // пустая строка
-                worksheet.Cell(row, 1).Value = $"Итого заявок: {requests.Count}";
+                // === РС‚РѕРіРё ===
+                row++; // РїСѓСЃС‚Р°СЏ СЃС‚СЂРѕРєР°
+                worksheet.Cell(row, 1).Value = $"РС‚РѕРіРѕ Р·Р°СЏРІРѕРє: {requests.Count}";
                 worksheet.Cell(row, 1).Style.Font.Bold = true;
 
                 row++;
-                int confirmed = requests.Count(r => r.Status == "Подтверждена");
-                int completed = requests.Count(r => r.Status == "Завершена");
-                int rejected = requests.Count(r => r.Status == "Отклонена");
-                int pending = requests.Count(r => r.Status == "На согласовании");
-                worksheet.Cell(row, 1).Value = $"Подтверждено: {confirmed} | Завершено: {completed} | Отклонено: {rejected} | На согласовании: {pending}";
+                int confirmed = requests.Count(r => r.Status == "РџРѕРґС‚РІРµСЂР¶РґРµРЅР°");
+                int completed = requests.Count(r => r.Status == "Р—Р°РІРµСЂС€РµРЅР°");
+                int rejected = requests.Count(r => r.Status == "РћС‚РєР»РѕРЅРµРЅР°");
+                int pending = requests.Count(r => r.Status == "РќР° СЃРѕРіР»Р°СЃРѕРІР°РЅРёРё");
+                worksheet.Cell(row, 1).Value = $"РџРѕРґС‚РІРµСЂР¶РґРµРЅРѕ: {confirmed} | Р—Р°РІРµСЂС€РµРЅРѕ: {completed} | РћС‚РєР»РѕРЅРµРЅРѕ: {rejected} | РќР° СЃРѕРіР»Р°СЃРѕРІР°РЅРёРё: {pending}";
 
                 using (var stream = new MemoryStream())
                 {
