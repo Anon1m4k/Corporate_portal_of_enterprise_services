@@ -1,8 +1,11 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using ServiceHub.Data;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
+
+Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
 // ----- Если переменная PORT задана (облачная среда) — переопределяем порт -----
 var port = Environment.GetEnvironmentVariable("PORT");
