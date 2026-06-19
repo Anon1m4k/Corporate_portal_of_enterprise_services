@@ -21,7 +21,7 @@ builder.Services.AddRazorPages();
 builder.Services.AddHttpContextAccessor();
 
 // SQLite — оставляем как есть (локально и на сервере будет создавать в рабочей папке)
-var connectionString = "Data Source=servicehub.db;UTF8Encoding=True";
+var connectionString = "Data Source=servicehub.db";
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite(connectionString));
 
