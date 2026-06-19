@@ -9,21 +9,11 @@ Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 Console.OutputEncoding = Encoding.UTF8;
 Console.InputEncoding = Encoding.UTF8;
 
-// ----- Если переменная PORT задана (облачная среда) — переопределяем порт -----
-var port = Environment.GetEnvironmentVariable("PORT");
-if (!string.IsNullOrEmpty(port))
-{
-    builder.WebHost.UseUrls($"http://*:{port}"); // Слушаем на всех интерфейсах, порт из переменной
-}
-// Если PORT не задан — используем стандартные настройки (launchSettings.json)
-
 builder.Services.AddRazorPages();
 builder.Services.AddHttpContextAccessor();
 
-// Этот код принудительно заставит базу данных создаваться в папке с запущенным приложением,
-// игнорируя баг хостинга с нерабочим WORKDIR
-var dbPath = Path.Combine(AppContext.BaseDirectory, "servicehub.db");
-var connectionString = $"Data Source={dbPath}";
+
+var connectionString = "Data Source=servicehub.db";
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite(connectionString));
 
@@ -50,7 +40,7 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-if (app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment()) //чтото новое
 {
     app.UseHttpsRedirection();
 }
