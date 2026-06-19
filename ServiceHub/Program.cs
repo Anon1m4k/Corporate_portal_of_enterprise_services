@@ -20,8 +20,10 @@ if (!string.IsNullOrEmpty(port))
 builder.Services.AddRazorPages();
 builder.Services.AddHttpContextAccessor();
 
-// SQLite — оставляем как есть (локально и на сервере будет создавать в рабочей папке)
-var connectionString = "Data Source=servicehub.db";
+// Этот код принудительно заставит базу данных создаваться в папке с запущенным приложением,
+// игнорируя баг хостинга с нерабочим WORKDIR
+var dbPath = Path.Combine(AppContext.BaseDirectory, "servicehub.db");
+var connectionString = $"Data Source={dbPath}";
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite(connectionString));
 
@@ -52,12 +54,6 @@ if (app.Environment.IsDevelopment())
 {
     app.UseHttpsRedirection();
 }
-
-app.Use(async (context, next) =>
-{
-    context.Response.ContentType = "text/html; charset=utf-8";
-    await next();
-});
 
 app.UseStaticFiles();
 app.UseRouting();
