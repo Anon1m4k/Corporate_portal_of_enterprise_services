@@ -7,7 +7,6 @@ using ServiceHub.Models.Transport;
 using ServiceHub.Models.Rooms;
 using ClosedXML.Excel;
 using System.Security.Claims;
-using System.Text; // Добавлено
 
 namespace ServiceHub.Pages.Admin
 {
@@ -27,22 +26,6 @@ namespace ServiceHub.Pages.Admin
         public string? FilterStatus { get; set; }
         public string UserName { get; set; } = string.Empty;
         public DateTime GeneratedAt { get; set; }
-
-        // Вспомогательный метод для перекодирования строки из Windows-1251 в UTF-8
-        private string FixEncoding(string input)
-        {
-            if (string.IsNullOrEmpty(input))
-                return input;
-            try
-            {
-                byte[] bytes = Encoding.GetEncoding("Windows-1251").GetBytes(input);
-                return Encoding.UTF8.GetString(bytes);
-            }
-            catch
-            {
-                return input; // если что-то пошло не так, возвращаем как есть
-            }
-        }
 
         public async Task OnGetAsync(DateTime startDate, DateTime endDate, string? status)
         {
@@ -72,9 +55,6 @@ namespace ServiceHub.Pages.Admin
                 if (!string.IsNullOrWhiteSpace(tr.Purpose))
                     details += $". Цель: {tr.Purpose}";
 
-                // Принудительное перекодирование
-                details = FixEncoding(details);
-
                 Console.WriteLine($"Debug: {details}");
 
                 Items.Add(new ReportItem
@@ -102,8 +82,6 @@ namespace ServiceHub.Pages.Admin
                 var details = $"Помещение: {rr.Room?.Name ?? "—"}, {rr.ParticipantsCount} уч., {rr.StartTime:dd.MM HH:mm} – {rr.EndTime:HH:mm}";
                 if (!string.IsNullOrWhiteSpace(rr.Description))
                     details += $". Пожелания: {rr.Description}";
-
-                details = FixEncoding(details);
 
                 Items.Add(new ReportItem
                 {
