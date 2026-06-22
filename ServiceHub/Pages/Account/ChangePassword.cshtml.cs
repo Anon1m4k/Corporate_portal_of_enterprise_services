@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authorization;
+п»їusing Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
@@ -37,17 +37,17 @@ namespace ServiceHub.Pages.Account
             if (user == null)
                 return NotFound();
 
-            // Проверяем старый пароль
+            // РџСЂРѕРІРµСЂСЏРµРј СЃС‚Р°СЂС‹Р№ РїР°СЂРѕР»СЊ
             if (!user.VerifyPassword(Input.CurrentPassword))
             {
-                ModelState.AddModelError("Input.CurrentPassword", "Текущий пароль неверен");
+                ModelState.AddModelError("Input.CurrentPassword", "РўРµРєСѓС‰РёР№ РїР°СЂРѕР»СЊ РЅРµРІРµСЂРµРЅ");
                 return Page();
             }
 
             user.HashPassword(Input.NewPassword);
             await _context.SaveChangesAsync();
 
-            TempData["PasswordChangeSuccess"] = "Пароль успешно изменён";
+            TempData["PasswordChangeSuccess"] = "РџР°СЂРѕР»СЊ СѓСЃРїРµС€РЅРѕ РёР·РјРµРЅС‘РЅ";
             return RedirectToPage();
         }
     }

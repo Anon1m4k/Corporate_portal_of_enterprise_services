@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authorization;
+п»їusing Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
@@ -40,14 +40,14 @@ namespace ServiceHub.Pages.Admin
             var currentUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
             if (user.Id == currentUserId)
             {
-                TempData["ErrorMessage"] = "Нельзя удалить свою учётную запись.";
+                TempData["ErrorMessage"] = "РќРµР»СЊР·СЏ СѓРґР°Р»РёС‚СЊ СЃРІРѕСЋ СѓС‡С‘С‚РЅСѓСЋ Р·Р°РїРёСЃСЊ.";
                 return RedirectToPage();
             }
 
             _context.Users.Remove(user);
             await _context.SaveChangesAsync();
 
-            TempData["SuccessMessage"] = $"Пользователь {user.FirstName} {user.LastName} удалён.";
+            TempData["SuccessMessage"] = $"РџРѕР»СЊР·РѕРІР°С‚РµР»СЊ {user.FirstName} {user.LastName} СѓРґР°Р»С‘РЅ.";
             return RedirectToPage();
         }
 
@@ -62,14 +62,14 @@ namespace ServiceHub.Pages.Admin
             var currentUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
             if (user.Id == currentUserId && !isActive)
             {
-                TempData["ErrorMessage"] = "Нельзя деактивировать свою учётную запись.";
+                TempData["ErrorMessage"] = "РќРµР»СЊР·СЏ РґРµР°РєС‚РёРІРёСЂРѕРІР°С‚СЊ СЃРІРѕСЋ СѓС‡С‘С‚РЅСѓСЋ Р·Р°РїРёСЃСЊ.";
                 return RedirectToPage();
             }
 
             user.IsActive = isActive;
             await _context.SaveChangesAsync();
 
-            TempData["SuccessMessage"] = $"Пользователь {user.FirstName} {user.LastName} {(isActive ? "активирован" : "деактивирован")}.";
+            TempData["SuccessMessage"] = $"РџРѕР»СЊР·РѕРІР°С‚РµР»СЊ {user.FirstName} {user.LastName} {(isActive ? "Р°РєС‚РёРІРёСЂРѕРІР°РЅ" : "РґРµР°РєС‚РёРІРёСЂРѕРІР°РЅ")}.";
             return RedirectToPage();
         }
     }

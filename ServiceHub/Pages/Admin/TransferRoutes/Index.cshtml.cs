@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authorization;
+п»їusing Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
@@ -29,7 +29,7 @@ namespace ServiceHub.Pages.Admin.TransferRoutes
 
             CarId = carId;
             CarName = $"{car.Brand} {car.Model}";
-            CanAddRoute = car.VehicleType == "Минивэн" || car.VehicleType == "Автобус";
+            CanAddRoute = car.VehicleType == "РњРёРЅРёРІСЌРЅ" || car.VehicleType == "РђРІС‚РѕР±СѓСЃ";
 
             Routes = await _context.TransferRoutes
                 .Include(r => r.Stops.OrderBy(s => s.Order))
@@ -61,7 +61,7 @@ namespace ServiceHub.Pages.Admin.TransferRoutes
             _context.TransferRoutes.Remove(route);
             await _context.SaveChangesAsync();
 
-            TempData["SuccessMessage"] = "Маршрут удалён.";
+            TempData["SuccessMessage"] = "РњР°СЂС€СЂСѓС‚ СѓРґР°Р»С‘РЅ.";
             return RedirectToPage(new { carId = route.CarId });
         }
     }

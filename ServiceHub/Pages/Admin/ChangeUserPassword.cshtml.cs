@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authorization;
+п»їusing Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
@@ -22,15 +22,15 @@ namespace ServiceHub.Pages.Admin
         public int UserId { get; set; }
 
         [BindProperty]
-        [Required(ErrorMessage = "Введите новый пароль")]
+        [Required(ErrorMessage = "Р’РІРµРґРёС‚Рµ РЅРѕРІС‹Р№ РїР°СЂРѕР»СЊ")]
         [DataType(DataType.Password)]
-        [StringLength(25, MinimumLength = 8, ErrorMessage = "Пароль должен быть от 8 до 25 символов")]
+        [StringLength(25, MinimumLength = 8, ErrorMessage = "РџР°СЂРѕР»СЊ РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ РѕС‚ 8 РґРѕ 25 СЃРёРјРІРѕР»РѕРІ")]
         public string NewPassword { get; set; } = string.Empty;
 
         [BindProperty]
         [DataType(DataType.Password)]
-        [Required(ErrorMessage = "Подтвердите пароль")]
-        [Compare("NewPassword", ErrorMessage = "Пароли не совпадают")]
+        [Required(ErrorMessage = "РџРѕРґС‚РІРµСЂРґРёС‚Рµ РїР°СЂРѕР»СЊ")]
+        [Compare("NewPassword", ErrorMessage = "РџР°СЂРѕР»Рё РЅРµ СЃРѕРІРїР°РґР°СЋС‚")]
         public string ConfirmPassword { get; set; } = string.Empty;
 
         public AuthUser? User { get; set; }
@@ -59,7 +59,7 @@ namespace ServiceHub.Pages.Admin
             user.HashPassword(NewPassword);
             await _context.SaveChangesAsync();
 
-            TempData["SuccessMessage"] = "Пароль успешно изменён.";
+            TempData["SuccessMessage"] = "РџР°СЂРѕР»СЊ СѓСЃРїРµС€РЅРѕ РёР·РјРµРЅС‘РЅ.";
             return RedirectToPage("/Admin/Users");
         }
     }

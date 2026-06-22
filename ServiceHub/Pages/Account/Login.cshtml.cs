@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authentication;
+п»їusing Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -50,7 +50,7 @@ namespace ServiceHub.Pages
                 return RedirectToPage("/Index");
             }
 
-            ModelState.AddModelError(string.Empty, "Неверный email или пароль");
+            ModelState.AddModelError(string.Empty, "РќРµРІРµСЂРЅС‹Р№ email РёР»Рё РїР°СЂРѕР»СЊ");
             return Page();
         }
     }

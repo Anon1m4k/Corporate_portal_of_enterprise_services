@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authorization;
+п»їusing Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using ServiceHub.Data;
@@ -32,7 +32,7 @@ namespace ServiceHub.Pages.Admin.Rooms
             _context.Rooms.Add(Room);
             await _context.SaveChangesAsync();
 
-            TempData["SuccessMessage"] = "Помещение добавлено.";
+            TempData["SuccessMessage"] = "РџРѕРјРµС‰РµРЅРёРµ РґРѕР±Р°РІР»РµРЅРѕ.";
             return RedirectToPage("Index");
         }
     }

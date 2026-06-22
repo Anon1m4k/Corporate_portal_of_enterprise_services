@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authentication.Cookies;
+п»їusing Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using ServiceHub.Data;
 using System.Text;
@@ -32,7 +32,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 
 var app = builder.Build();
 
-// Инициализация БД
+// РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ Р‘Р”
 using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
@@ -46,7 +46,7 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-if (app.Environment.IsDevelopment()) //чтото новое
+if (app.Environment.IsDevelopment()) //С‡С‚РѕС‚Рѕ РЅРѕРІРѕРµ
 {
     app.UseHttpsRedirection();
 }

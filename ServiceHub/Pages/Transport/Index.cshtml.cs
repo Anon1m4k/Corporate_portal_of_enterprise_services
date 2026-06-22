@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authorization;
+п»їusing Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
@@ -22,10 +22,10 @@ namespace ServiceHub.Pages.Transport
         public List<TransportRequest> Requests { get; set; } = new();
         public List<string> AllStatuses { get; } = new()
         {
-            "На согласовании",
-            "Подтверждена",
-            "Завершена",
-            "Отклонена"
+            "РќР° СЃРѕРіР»Р°СЃРѕРІР°РЅРёРё",
+            "РџРѕРґС‚РІРµСЂР¶РґРµРЅР°",
+            "Р—Р°РІРµСЂС€РµРЅР°",
+            "РћС‚РєР»РѕРЅРµРЅР°"
         };
         public string? CurrentStatus { get; set; }
 
@@ -66,15 +66,15 @@ namespace ServiceHub.Pages.Transport
                 .FirstOrDefaultAsync(r => r.Id == id && r.UserId == user.Id);
             if (request == null) return NotFound();
 
-            if (request.Status == "На согласовании")
+            if (request.Status == "РќР° СЃРѕРіР»Р°СЃРѕРІР°РЅРёРё")
             {
                 _context.TransportRequests.Remove(request);
                 await _context.SaveChangesAsync();
-                TempData["TransportSuccess"] = "Заявка удалена.";
+                TempData["TransportSuccess"] = "Р—Р°СЏРІРєР° СѓРґР°Р»РµРЅР°.";
             }
             else
             {
-                TempData["ErrorMessage"] = "Нельзя удалить заявку в текущем статусе.";
+                TempData["ErrorMessage"] = "РќРµР»СЊР·СЏ СѓРґР°Р»РёС‚СЊ Р·Р°СЏРІРєСѓ РІ С‚РµРєСѓС‰РµРј СЃС‚Р°С‚СѓСЃРµ.";
             }
 
             return RedirectToPage(new { status = CurrentStatus });
@@ -90,16 +90,16 @@ namespace ServiceHub.Pages.Transport
                 .FirstOrDefaultAsync(r => r.Id == id && r.UserId == user.Id);
             if (request == null) return NotFound();
 
-            if (request.Status == "Подтверждена")
+            if (request.Status == "РџРѕРґС‚РІРµСЂР¶РґРµРЅР°")
             {
-                request.Status = "Завершена";
+                request.Status = "Р—Р°РІРµСЂС€РµРЅР°";
                 request.UpdatedAt = DateTime.UtcNow;
                 await _context.SaveChangesAsync();
-                TempData["TransportSuccess"] = "Заявка отмечена как завершённая.";
+                TempData["TransportSuccess"] = "Р—Р°СЏРІРєР° РѕС‚РјРµС‡РµРЅР° РєР°Рє Р·Р°РІРµСЂС€С‘РЅРЅР°СЏ.";
             }
             else
             {
-                TempData["ErrorMessage"] = "Завершить можно только подтверждённые заявки.";
+                TempData["ErrorMessage"] = "Р—Р°РІРµСЂС€РёС‚СЊ РјРѕР¶РЅРѕ С‚РѕР»СЊРєРѕ РїРѕРґС‚РІРµСЂР¶РґС‘РЅРЅС‹Рµ Р·Р°СЏРІРєРё.";
             }
 
             return RedirectToPage(new { status = CurrentStatus });

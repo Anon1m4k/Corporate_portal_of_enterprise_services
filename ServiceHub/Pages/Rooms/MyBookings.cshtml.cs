@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authorization;
+п»їusing Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
@@ -41,13 +41,13 @@ namespace ServiceHub.Pages.Rooms
 
             var booking = await _context.RoomRequests
                 .FirstOrDefaultAsync(r => r.Id == id && r.UserId == user.Id);
-            if (booking == null || booking.Status != "На согласовании")
+            if (booking == null || booking.Status != "РќР° СЃРѕРіР»Р°СЃРѕРІР°РЅРёРё")
                 return BadRequest();
 
             _context.RoomRequests.Remove(booking);
             await _context.SaveChangesAsync();
 
-            TempData["SuccessMessage"] = "Бронирование удалено.";
+            TempData["SuccessMessage"] = "Р‘СЂРѕРЅРёСЂРѕРІР°РЅРёРµ СѓРґР°Р»РµРЅРѕ.";
             return RedirectToPage();
         }
 
@@ -59,14 +59,14 @@ namespace ServiceHub.Pages.Rooms
 
             var booking = await _context.RoomRequests
                 .FirstOrDefaultAsync(r => r.Id == id && r.UserId == user.Id);
-            if (booking == null || booking.Status != "Подтверждена")
+            if (booking == null || booking.Status != "РџРѕРґС‚РІРµСЂР¶РґРµРЅР°")
                 return BadRequest();
 
-            booking.Status = "Завершена";
+            booking.Status = "Р—Р°РІРµСЂС€РµРЅР°";
             booking.UpdatedAt = DateTime.UtcNow;
             await _context.SaveChangesAsync();
 
-            TempData["SuccessMessage"] = "Бронирование отмечено как завершённое.";
+            TempData["SuccessMessage"] = "Р‘СЂРѕРЅРёСЂРѕРІР°РЅРёРµ РѕС‚РјРµС‡РµРЅРѕ РєР°Рє Р·Р°РІРµСЂС€С‘РЅРЅРѕРµ.";
             return RedirectToPage();
         }
     }

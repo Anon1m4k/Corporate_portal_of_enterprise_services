@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authorization;
+п»їusing Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using ServiceHub.Data;
@@ -27,9 +27,9 @@ namespace ServiceHub.Pages.Admin.TransferRoutes
             if (car == null)
                 return NotFound();
 
-            if (car.VehicleType != "Минивэн" && car.VehicleType != "Автобус")
+            if (car.VehicleType != "РњРёРЅРёРІСЌРЅ" && car.VehicleType != "РђРІС‚РѕР±СѓСЃ")
             {
-                TempData["ErrorMessage"] = "Маршруты можно добавлять только для автомобилей типа Минивэн или Автобус.";
+                TempData["ErrorMessage"] = "РњР°СЂС€СЂСѓС‚С‹ РјРѕР¶РЅРѕ РґРѕР±Р°РІР»СЏС‚СЊ С‚РѕР»СЊРєРѕ РґР»СЏ Р°РІС‚РѕРјРѕР±РёР»РµР№ С‚РёРїР° РњРёРЅРёРІСЌРЅ РёР»Рё РђРІС‚РѕР±СѓСЃ.";
                 return RedirectToPage("/Admin/Cars/Index");
             }
 
@@ -51,7 +51,7 @@ namespace ServiceHub.Pages.Admin.TransferRoutes
             if (ModelState.ContainsKey("TransferRoute.Car"))
                 ModelState.Remove("TransferRoute.Car");
 
-            // Преобразуем ICollection в List для индексации
+            // РџСЂРµРѕР±СЂР°Р·СѓРµРј ICollection РІ List РґР»СЏ РёРЅРґРµРєСЃР°С†РёРё
             var stopsList = TransferRoute.Stops?.ToList() ?? new List<TransferStop>();
 
             for (int i = 0; i < stopsList.Count; i++)
@@ -61,10 +61,10 @@ namespace ServiceHub.Pages.Admin.TransferRoutes
                     ModelState.Remove(key);
             }
 
-            // Дополнительная проверка остановок
+            // Р”РѕРїРѕР»РЅРёС‚РµР»СЊРЅР°СЏ РїСЂРѕРІРµСЂРєР° РѕСЃС‚Р°РЅРѕРІРѕРє
             if (stopsList.Count == 0)
             {
-                ModelState.AddModelError("TransferRoute.Stops", "Добавьте хотя бы одну остановку");
+                ModelState.AddModelError("TransferRoute.Stops", "Р”РѕР±Р°РІСЊС‚Рµ С…РѕС‚СЏ Р±С‹ РѕРґРЅСѓ РѕСЃС‚Р°РЅРѕРІРєСѓ");
             }
             else
             {
@@ -72,20 +72,20 @@ namespace ServiceHub.Pages.Admin.TransferRoutes
                 {
                     if (string.IsNullOrWhiteSpace(stopsList[i].Address))
                     {
-                        ModelState.AddModelError($"TransferRoute.Stops[{i}].Address", "Адрес обязателен");
+                        ModelState.AddModelError($"TransferRoute.Stops[{i}].Address", "РђРґСЂРµСЃ РѕР±СЏР·Р°С‚РµР»РµРЅ");
                     }
                 }
             }
 
             if (!ModelState.IsValid)
             {
-                // Восстанавливаем CarName для отображения
+                // Р’РѕСЃСЃС‚Р°РЅР°РІР»РёРІР°РµРј CarName РґР»СЏ РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ
                 var car = await _context.Cars.FindAsync(TransferRoute.CarId);
                 CarName = car != null ? $"{car.Brand} {car.Model}" : "";
                 return Page();
             }
 
-            // Устанавливаем Order на основе позиции в списке
+            // РЈСЃС‚Р°РЅР°РІР»РёРІР°РµРј Order РЅР° РѕСЃРЅРѕРІРµ РїРѕР·РёС†РёРё РІ СЃРїРёСЃРєРµ
             for (int i = 0; i < stopsList.Count; i++)
             {
                 stopsList[i].Order = i + 1;
@@ -96,7 +96,7 @@ namespace ServiceHub.Pages.Admin.TransferRoutes
             _context.TransferRoutes.Add(TransferRoute);
             await _context.SaveChangesAsync();
 
-            TempData["SuccessMessage"] = "Маршрут успешно добавлен.";
+            TempData["SuccessMessage"] = "РњР°СЂС€СЂСѓС‚ СѓСЃРїРµС€РЅРѕ РґРѕР±Р°РІР»РµРЅ.";
             return RedirectToPage("Index", new { carId = TransferRoute.CarId });
         }
     }

@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authorization;
+п»їusing Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
@@ -39,18 +39,18 @@ namespace ServiceHub.Pages.Admin.Rooms
             var room = await _context.Rooms.FindAsync(id);
             if (room == null) return NotFound();
 
-            // Проверим, нет ли связанных бронирований
+            // РџСЂРѕРІРµСЂРёРј, РЅРµС‚ Р»Рё СЃРІСЏР·Р°РЅРЅС‹С… Р±СЂРѕРЅРёСЂРѕРІР°РЅРёР№
             bool hasRequests = await _context.RoomRequests.AnyAsync(r => r.RoomId == id);
             if (hasRequests)
             {
-                TempData["ErrorMessage"] = "Нельзя удалить помещение, на которое есть бронирования.";
+                TempData["ErrorMessage"] = "РќРµР»СЊР·СЏ СѓРґР°Р»РёС‚СЊ РїРѕРјРµС‰РµРЅРёРµ, РЅР° РєРѕС‚РѕСЂРѕРµ РµСЃС‚СЊ Р±СЂРѕРЅРёСЂРѕРІР°РЅРёСЏ.";
                 return RedirectToPage();
             }
 
             _context.Rooms.Remove(room);
             await _context.SaveChangesAsync();
 
-            TempData["SuccessMessage"] = $"Помещение «{room.Name}» удалено.";
+            TempData["SuccessMessage"] = $"РџРѕРјРµС‰РµРЅРёРµ В«{room.Name}В» СѓРґР°Р»РµРЅРѕ.";
             return RedirectToPage();
         }
     }

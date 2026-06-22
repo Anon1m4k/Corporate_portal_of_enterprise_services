@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
+п»їusing Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using ServiceHub.Data;
@@ -15,23 +15,23 @@ namespace ServiceHub.Pages.Rooms
             _context = context;
         }
 
-        // Список всех активных помещений для фильтра
+        // РЎРїРёСЃРѕРє РІСЃРµС… Р°РєС‚РёРІРЅС‹С… РїРѕРјРµС‰РµРЅРёР№ РґР»СЏ С„РёР»СЊС‚СЂР°
         public List<Room> AllRooms { get; set; } = new();
 
-        // Параметры выбранного месяца
+        // РџР°СЂР°РјРµС‚СЂС‹ РІС‹Р±СЂР°РЅРЅРѕРіРѕ РјРµСЃСЏС†Р°
         public int SelectedYear { get; set; }
         public int SelectedMonth { get; set; }
         public int? SelectedRoomId { get; set; }
 
-        // Данные для календарной сетки
+        // Р”Р°РЅРЅС‹Рµ РґР»СЏ РєР°Р»РµРЅРґР°СЂРЅРѕР№ СЃРµС‚РєРё
         public DateTime FirstDayOfMonth { get; set; }
         public int DaysInMonth { get; set; }
-        public int StartDayOfWeek { get; set; } // воскресенье = 0
+        public int StartDayOfWeek { get; set; } // РІРѕСЃРєСЂРµСЃРµРЅСЊРµ = 0
 
-        // Сгруппированные бронирования по дням
+        // РЎРіСЂСѓРїРїРёСЂРѕРІР°РЅРЅС‹Рµ Р±СЂРѕРЅРёСЂРѕРІР°РЅРёСЏ РїРѕ РґРЅСЏРј
         public Dictionary<int, List<RoomRequest>> BookingsByDay { get; set; } = new();
 
-        // Навигация
+        // РќР°РІРёРіР°С†РёСЏ
         public DateTime PreviousMonth => new DateTime(SelectedYear, SelectedMonth, 1).AddMonths(-1);
         public DateTime NextMonth => new DateTime(SelectedYear, SelectedMonth, 1).AddMonths(1);
 
@@ -55,7 +55,7 @@ namespace ServiceHub.Pages.Rooms
             var query = _context.RoomRequests
                 .Include(r => r.Room)
                 .Where(r => r.StartTime.Date >= startDate.Date && r.StartTime.Date <= endDate.Date &&
-                            (r.Status == "Подтверждена" || r.Status == "На согласовании"));
+                            (r.Status == "РџРѕРґС‚РІРµСЂР¶РґРµРЅР°" || r.Status == "РќР° СЃРѕРіР»Р°СЃРѕРІР°РЅРёРё"));
 
             if (SelectedRoomId.HasValue && SelectedRoomId > 0)
                 query = query.Where(r => r.RoomId == SelectedRoomId.Value);

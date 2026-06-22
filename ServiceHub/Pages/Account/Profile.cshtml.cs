@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authentication;
+п»їusing Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -48,7 +48,7 @@ namespace ServiceHub.Pages.Account
 
             CurrentUser = user;
 
-            // Заполняем список ролей с отображаемыми названиями
+            // Р—Р°РїРѕР»РЅСЏРµРј СЃРїРёСЃРѕРє СЂРѕР»РµР№ СЃ РѕС‚РѕР±СЂР°Р¶Р°РµРјС‹РјРё РЅР°Р·РІР°РЅРёСЏРјРё
             RoleOptions = new List<SelectListItem>
             {
                 new SelectListItem(RoleHelper.GetRoleDisplay("User"), "User"),
@@ -61,20 +61,20 @@ namespace ServiceHub.Pages.Account
 
         public async Task<IActionResult> OnPostAsync()
         {
-            // Только администратор может изменять профили
+            // РўРѕР»СЊРєРѕ Р°РґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂ РјРѕР¶РµС‚ РёР·РјРµРЅСЏС‚СЊ РїСЂРѕС„РёР»Рё
             if (!IsAdmin) return Forbid();
 
             var user = await _context.Users.FindAsync(CurrentUser.Id);
             if (user == null) return NotFound();
 
-            // Проверка уникальности email
+            // РџСЂРѕРІРµСЂРєР° СѓРЅРёРєР°Р»СЊРЅРѕСЃС‚Рё email
             if (await _context.Users.AnyAsync(u => u.Email == CurrentUser.Email && u.Id != CurrentUser.Id))
             {
-                ModelState.AddModelError("CurrentUser.Email", "Пользователь с таким email уже существует");
+                ModelState.AddModelError("CurrentUser.Email", "РџРѕР»СЊР·РѕРІР°С‚РµР»СЊ СЃ С‚Р°РєРёРј email СѓР¶Рµ СЃСѓС‰РµСЃС‚РІСѓРµС‚");
                 return Page();
             }
 
-            // Обновление полей
+            // РћР±РЅРѕРІР»РµРЅРёРµ РїРѕР»РµР№
             user.FirstName = CurrentUser.FirstName;
             user.LastName = CurrentUser.LastName;
             user.Email = CurrentUser.Email;
@@ -89,7 +89,7 @@ namespace ServiceHub.Pages.Account
                 await RefreshUserClaims(user);
             }
 
-            TempData["SuccessMessage"] = "Профиль обновлён";
+            TempData["SuccessMessage"] = "РџСЂРѕС„РёР»СЊ РѕР±РЅРѕРІР»С‘РЅ";
             if (user.Id != currentUserId)
                 return RedirectToPage("/Admin/Users");
 

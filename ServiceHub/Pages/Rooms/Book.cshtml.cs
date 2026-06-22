@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authorization;
+п»їusing Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
@@ -43,31 +43,31 @@ namespace ServiceHub.Pages.Rooms
     TimeSpan startTime,
     TimeSpan endTime)
         {
-            // Очищаем состояние модели, так как недостающие поля будем заполнять вручную
+            // РћС‡РёС‰Р°РµРј СЃРѕСЃС‚РѕСЏРЅРёРµ РјРѕРґРµР»Рё, С‚Р°Рє РєР°Рє РЅРµРґРѕСЃС‚Р°СЋС‰РёРµ РїРѕР»СЏ Р±СѓРґРµРј Р·Р°РїРѕР»РЅСЏС‚СЊ РІСЂСѓС‡РЅСѓСЋ
             ModelState.Clear();
 
             Room = await _context.Rooms.FindAsync(roomId);
             if (Room == null)
             {
-                ModelState.AddModelError(string.Empty, "Помещение не найдено.");
+                ModelState.AddModelError(string.Empty, "РџРѕРјРµС‰РµРЅРёРµ РЅРµ РЅР°Р№РґРµРЅРѕ.");
                 return Page();
             }
 
             RoomRequest.RoomId = roomId;
 
-            // Полная проверка на прошедшее время (дата + время)
+            // РџРѕР»РЅР°СЏ РїСЂРѕРІРµСЂРєР° РЅР° РїСЂРѕС€РµРґС€РµРµ РІСЂРµРјСЏ (РґР°С‚Р° + РІСЂРµРјСЏ)
             DateTime requestedStart = bookingDate.Date + startTime;
             if (requestedStart < DateTime.Now)
-                ModelState.AddModelError(string.Empty, "Нельзя бронировать помещение на прошедшее время.");
+                ModelState.AddModelError(string.Empty, "РќРµР»СЊР·СЏ Р±СЂРѕРЅРёСЂРѕРІР°С‚СЊ РїРѕРјРµС‰РµРЅРёРµ РЅР° РїСЂРѕС€РµРґС€РµРµ РІСЂРµРјСЏ.");
 
             if (bookingDate.Date < DateTime.Today)
-                ModelState.AddModelError(string.Empty, "Дата не может быть раньше сегодняшнего дня.");
+                ModelState.AddModelError(string.Empty, "Р”Р°С‚Р° РЅРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ СЂР°РЅСЊС€Рµ СЃРµРіРѕРґРЅСЏС€РЅРµРіРѕ РґРЅСЏ.");
             if (bookingDate.Date > DateTime.Today.AddDays(30))
-                ModelState.AddModelError(string.Empty, "Бронирование возможно не более чем на 30 дней вперёд.");
+                ModelState.AddModelError(string.Empty, "Р‘СЂРѕРЅРёСЂРѕРІР°РЅРёРµ РІРѕР·РјРѕР¶РЅРѕ РЅРµ Р±РѕР»РµРµ С‡РµРј РЅР° 30 РґРЅРµР№ РІРїРµСЂС‘Рґ.");
             if (endTime <= startTime)
-                ModelState.AddModelError(string.Empty, "Время окончания должно быть позже времени начала.");
+                ModelState.AddModelError(string.Empty, "Р’СЂРµРјСЏ РѕРєРѕРЅС‡Р°РЅРёСЏ РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ РїРѕР·Р¶Рµ РІСЂРµРјРµРЅРё РЅР°С‡Р°Р»Р°.");
             if (endTime - startTime < TimeSpan.FromMinutes(30))
-                ModelState.AddModelError(string.Empty, "Минимальная длительность бронирования — 30 минут.");
+                ModelState.AddModelError(string.Empty, "РњРёРЅРёРјР°Р»СЊРЅР°СЏ РґР»РёС‚РµР»СЊРЅРѕСЃС‚СЊ Р±СЂРѕРЅРёСЂРѕРІР°РЅРёСЏ вЂ” 30 РјРёРЅСѓС‚.");
 
             if (!ModelState.IsValid)
                 return Page();
@@ -76,11 +76,11 @@ namespace ServiceHub.Pages.Rooms
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == userEmail);
             if (user == null)
             {
-                ModelState.AddModelError(string.Empty, "Пользователь не найден.");
+                ModelState.AddModelError(string.Empty, "РџРѕР»СЊР·РѕРІР°С‚РµР»СЊ РЅРµ РЅР°Р№РґРµРЅ.");
                 return Page();
             }
 
-            // Заполняем обязательные поля модели
+            // Р—Р°РїРѕР»РЅСЏРµРј РѕР±СЏР·Р°С‚РµР»СЊРЅС‹Рµ РїРѕР»СЏ РјРѕРґРµР»Рё
             RoomRequest.UserId = user.Id;
             RoomRequest.StartTime = bookingDate.Date + startTime;
             RoomRequest.EndTime = bookingDate.Date + endTime;
@@ -88,33 +88,33 @@ namespace ServiceHub.Pages.Rooms
             if (RoomRequest.ParticipantsCount > Room.Capacity)
             {
                 ModelState.AddModelError("RoomRequest.ParticipantsCount",
-                    $"Вместимость помещения не более {Room.Capacity} человек.");
+                    $"Р’РјРµСЃС‚РёРјРѕСЃС‚СЊ РїРѕРјРµС‰РµРЅРёСЏ РЅРµ Р±РѕР»РµРµ {Room.Capacity} С‡РµР»РѕРІРµРє.");
                 return Page();
             }
 
-            // Повторная валидация полной модели
+            // РџРѕРІС‚РѕСЂРЅР°СЏ РІР°Р»РёРґР°С†РёСЏ РїРѕР»РЅРѕР№ РјРѕРґРµР»Рё
             if (!TryValidateModel(RoomRequest))
                 return Page();
 
             var conflict = await _context.RoomRequests.AnyAsync(r =>
                 r.RoomId == roomId &&
-                r.Status != "Отклонена" &&
+                r.Status != "РћС‚РєР»РѕРЅРµРЅР°" &&
                 r.StartTime < RoomRequest.EndTime &&
                 r.EndTime > RoomRequest.StartTime);
 
             if (conflict)
             {
-                ModelState.AddModelError(string.Empty, "Выбранное время занято другим бронированием.");
+                ModelState.AddModelError(string.Empty, "Р’С‹Р±СЂР°РЅРЅРѕРµ РІСЂРµРјСЏ Р·Р°РЅСЏС‚Рѕ РґСЂСѓРіРёРј Р±СЂРѕРЅРёСЂРѕРІР°РЅРёРµРј.");
                 return Page();
             }
 
-            RoomRequest.Status = "На согласовании";
+            RoomRequest.Status = "РќР° СЃРѕРіР»Р°СЃРѕРІР°РЅРёРё";
             RoomRequest.CreatedAt = DateTime.UtcNow;
             _context.RoomRequests.Add(RoomRequest);
 
             await _context.SaveChangesAsync();
 
-            TempData["SuccessMessage"] = "Бронирование создано и отправлено на согласование.";
+            TempData["SuccessMessage"] = "Р‘СЂРѕРЅРёСЂРѕРІР°РЅРёРµ СЃРѕР·РґР°РЅРѕ Рё РѕС‚РїСЂР°РІР»РµРЅРѕ РЅР° СЃРѕРіР»Р°СЃРѕРІР°РЅРёРµ.";
             return RedirectToPage("/Rooms/Index");
         }
     }

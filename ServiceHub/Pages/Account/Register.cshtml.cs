@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authentication;
+п»їusing Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -28,17 +28,17 @@ namespace ServiceHub.Pages.Account
             if (!ModelState.IsValid)
                 return Page();
 
-            // Проверяем наличие пользователя с таким email по всей базе
+            // РџСЂРѕРІРµСЂСЏРµРј РЅР°Р»РёС‡РёРµ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ СЃ С‚Р°РєРёРј email РїРѕ РІСЃРµР№ Р±Р°Р·Рµ
             var existingUser = _context.Users.FirstOrDefault(u => u.Email == Input.Email);
             if (existingUser != null)
             {
-                ModelState.AddModelError(string.Empty, "Пользователь с таким email уже существует");
+                ModelState.AddModelError(string.Empty, "РџРѕР»СЊР·РѕРІР°С‚РµР»СЊ СЃ С‚Р°РєРёРј email СѓР¶Рµ СЃСѓС‰РµСЃС‚РІСѓРµС‚");
                 return Page();
             }
 
             bool isFirstUser = !_context.Users.Any();
             var role = isFirstUser ? "Admin" : "User";
-            var isActive = isFirstUser; // только первый пользователь активен сразу
+            var isActive = isFirstUser; // С‚РѕР»СЊРєРѕ РїРµСЂРІС‹Р№ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ Р°РєС‚РёРІРµРЅ СЃСЂР°Р·Сѓ
 
             var user = new AuthUser
             {
@@ -55,7 +55,7 @@ namespace ServiceHub.Pages.Account
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
-            // Автоматический вход только для активной учётной записи
+            // РђРІС‚РѕРјР°С‚РёС‡РµСЃРєРёР№ РІС…РѕРґ С‚РѕР»СЊРєРѕ РґР»СЏ Р°РєС‚РёРІРЅРѕР№ СѓС‡С‘С‚РЅРѕР№ Р·Р°РїРёСЃРё
             if (user.IsActive)
             {
                 var claims = new List<Claim>
@@ -73,7 +73,7 @@ namespace ServiceHub.Pages.Account
             }
             else
             {
-                TempData["RegistrationMessage"] = "Регистрация успешна. Ожидайте активации учётной записи администратором.";
+                TempData["RegistrationMessage"] = "Р РµРіРёСЃС‚СЂР°С†РёСЏ СѓСЃРїРµС€РЅР°. РћР¶РёРґР°Р№С‚Рµ Р°РєС‚РёРІР°С†РёРё СѓС‡С‘С‚РЅРѕР№ Р·Р°РїРёСЃРё Р°РґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂРѕРј.";
                 return RedirectToPage("/Account/Login");
             }
         }

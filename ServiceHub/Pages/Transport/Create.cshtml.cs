@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authorization;
+п»їusing Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -24,7 +24,7 @@ namespace ServiceHub.Pages.Transport
 
         public List<SelectListItem> CarOptions { get; set; } = new();
 
-        // Дополнительные свойства для формы
+        // Р”РѕРїРѕР»РЅРёС‚РµР»СЊРЅС‹Рµ СЃРІРѕР№СЃС‚РІР° РґР»СЏ С„РѕСЂРјС‹
         [BindProperty]
         public DateTime? TripDate { get; set; }
         [BindProperty]
@@ -37,22 +37,22 @@ namespace ServiceHub.Pages.Transport
                 .Select(c => new SelectListItem
                 {
                     Value = c.Id.ToString(),
-                    Text = $"{c.Brand} {c.Model} ({c.VehicleType}) - {c.PassengerCapacity} мест"
+                    Text = $"{c.Brand} {c.Model} ({c.VehicleType}) - {c.PassengerCapacity} РјРµСЃС‚"
                 })
                 .ToListAsync();
 
-            CarOptions.Insert(0, new SelectListItem("Выберите автомобиль", ""));
+            CarOptions.Insert(0, new SelectListItem("Р’С‹Р±РµСЂРёС‚Рµ Р°РІС‚РѕРјРѕР±РёР»СЊ", ""));
         }
 
         public async Task<IActionResult> OnPostAsync()
         {
-            // Собираем дату и время
+            // РЎРѕР±РёСЂР°РµРј РґР°С‚Сѓ Рё РІСЂРµРјСЏ
             if (TripDate.HasValue && TripTime.HasValue)
             {
                 TransportRequest.TripDateTime = TripDate.Value.Date + TripTime.Value;
             }
 
-            // Убираем ошибку валидации поля TripDateTime, т.к. мы его собрали вручную
+            // РЈР±РёСЂР°РµРј РѕС€РёР±РєСѓ РІР°Р»РёРґР°С†РёРё РїРѕР»СЏ TripDateTime, С‚.Рє. РјС‹ РµРіРѕ СЃРѕР±СЂР°Р»Рё РІСЂСѓС‡РЅСѓСЋ
             ModelState.Remove("TransportRequest.TripDateTime");
 
             if (!ModelState.IsValid)
@@ -64,21 +64,21 @@ namespace ServiceHub.Pages.Transport
             var car = await _context.Cars.FindAsync(TransportRequest.CarId);
             if (car == null)
             {
-                ModelState.AddModelError("TransportRequest.CarId", "Выбранный автомобиль не существует");
+                ModelState.AddModelError("TransportRequest.CarId", "Р’С‹Р±СЂР°РЅРЅС‹Р№ Р°РІС‚РѕРјРѕР±РёР»СЊ РЅРµ СЃСѓС‰РµСЃС‚РІСѓРµС‚");
                 await OnGetAsync();
                 return Page();
             }
 
             if (!car.PassengerCapacity.HasValue)
             {
-                ModelState.AddModelError("TransportRequest.CarId", "У выбранного автомобиля не указана вместимость");
+                ModelState.AddModelError("TransportRequest.CarId", "РЈ РІС‹Р±СЂР°РЅРЅРѕРіРѕ Р°РІС‚РѕРјРѕР±РёР»СЏ РЅРµ СѓРєР°Р·Р°РЅР° РІРјРµСЃС‚РёРјРѕСЃС‚СЊ");
                 await OnGetAsync();
                 return Page();
             }
             if (TransportRequest.PassengerCount > car.PassengerCapacity.Value)
             {
                 ModelState.AddModelError("TransportRequest.PassengerCount",
-                    $"Выбранный автомобиль вмещает не более {car.PassengerCapacity.Value} пассажиров");
+                    $"Р’С‹Р±СЂР°РЅРЅС‹Р№ Р°РІС‚РѕРјРѕР±РёР»СЊ РІРјРµС‰Р°РµС‚ РЅРµ Р±РѕР»РµРµ {car.PassengerCapacity.Value} РїР°СЃСЃР°Р¶РёСЂРѕРІ");
                 await OnGetAsync();
                 return Page();
             }
@@ -86,16 +86,16 @@ namespace ServiceHub.Pages.Transport
             var userEmail = User.FindFirst(ClaimTypes.Email)?.Value ?? User.Identity?.Name;
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == userEmail);
             if (user == null)
-                return NotFound("Пользователь не найден.");
+                return NotFound("РџРѕР»СЊР·РѕРІР°С‚РµР»СЊ РЅРµ РЅР°Р№РґРµРЅ.");
 
             TransportRequest.UserId = user.Id;
-            TransportRequest.Status = "На согласовании";
+            TransportRequest.Status = "РќР° СЃРѕРіР»Р°СЃРѕРІР°РЅРёРё";
             TransportRequest.CreatedAt = DateTime.UtcNow;
 
             _context.TransportRequests.Add(TransportRequest);
             await _context.SaveChangesAsync();
 
-            TempData["TransportSuccess"] = "Заявка успешно создана и отправлена на согласование.";
+            TempData["TransportSuccess"] = "Р—Р°СЏРІРєР° СѓСЃРїРµС€РЅРѕ СЃРѕР·РґР°РЅР° Рё РѕС‚РїСЂР°РІР»РµРЅР° РЅР° СЃРѕРіР»Р°СЃРѕРІР°РЅРёРµ.";
             return RedirectToPage("/Transport/Index");
         }
     }
